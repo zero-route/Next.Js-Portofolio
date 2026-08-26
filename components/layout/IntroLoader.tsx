@@ -7,7 +7,6 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
   const [hide, setHide] = useState(false);
   const [typed, setTyped] = useState("");
 
-  // Fix Typing Effect: Menggunakan slice() agar teks terpotong rapi tanpa duplikasi huruf
   useEffect(() => {
     const text = " Zero Route";
     let i = 0;
@@ -23,7 +22,6 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Timer 3 detik untuk animasi fade out
   useEffect(() => {
     const barTimer = setTimeout(() => {
       setFadeOut(true);
@@ -41,13 +39,13 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
 
   return (
     <header
-      className={`fixed inset-0 z-[9999] flex h-screen w-full max-w-full overflow-hidden flex-col items-center justify-center bg-[#030712] text-center transition-all duration-700 ease-in-out ${
+      className={`fixed inset-0 z-[9999] flex h-screen w-full overflow-hidden flex-col items-center justify-center bg-[#030712] text-center transition-all duration-700 ease-in-out ${
         fadeOut ? "-translate-y-5 opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      <div className="main-text px-4 w-full max-w-lg mx-auto flex flex-col items-center justify-center">
-        {/* Fix Layout Melenceng: Ditambahkan tracking, max-w, dan responsive text size */}
-        <h1 className="font-display text-[18px] sm:text-[24px] md:text-[28px] text-white tracking-normal leading-snug">
+      <div className="main-text px-2 w-full max-w-none mx-auto flex flex-col items-center justify-center">
+        {/* Tambahkan whitespace-nowrap & sesuaikan ukuran teks agar wajib 1 baris */}
+        <h1 className="font-display text-[15px] sm:text-[22px] md:text-[26px] text-white whitespace-nowrap tracking-wide">
           <span className="inline-block animate-slide-down [animation-delay:0.2s] opacity-0">WELCOME</span>{" "}
           <span className="inline-block animate-slide-down [animation-delay:0.6s] opacity-0">TO</span>{" "}
           <span className="inline-block animate-slide-down [animation-delay:1s] opacity-0">MY</span>{" "}

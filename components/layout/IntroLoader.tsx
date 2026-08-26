@@ -2,67 +2,80 @@
 
 import { useEffect, useState } from "react";
 
-export default function IntroLoader({ onFinish }: { onFinish?: () => void }) {
-  const [text, setText] = useState("");
-  const targetText = "Zero Route";
-  const [progress, setProgress] = useState(0);
+export default function IntroLoader({ onDone }: { onDone: () => void }) {
+  const [fadeOut, setFadeOut] = useState(false);
+  const [hide, setHide] = useState(false);
+  const [typed, setTyped] = useState("");
 
+  // Fix Typing Effect: Menggunakan slice() agar teks tidak terduplikasi saat re-render
   useEffect(() => {
-    let index = 0;
-    // 1. Ketik teks secara konsisten
-    const typingInterval = setInterval(() => {
-      if (index <= targetText.length) {
-        setText(targetText.slice(0, index));
-        index++;
+    const text = " Zero Route";
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i <= text.length) {
+        setTyped(text.slice(0, i));
+        i++;
       } else {
-        clearInterval(typingInterval);
+        clearInterval(interval);
       }
-    }, 150); // Kecepatan ketik (150ms)
+    }, 120);
 
-    // 2. Progress bar berjalan halus sampai 100%
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          setTimeout(() => {
-            if (onFinish) onFinish();
-          }, 300);
-          return 100;
-        }
-        return prev + 2;
-      });
-    }, 50); // Kecepatan loading bar (50ms * 50 = ~2.5 detik)
-
-    // Cleanup interval untuk mencegah glitching/duplikasi typing
-    return () => {
-      clearInterval(typingInterval);
-      clearInterval(progressInterval);
-    };
+    return () => clearInterval(interval);
   }, []);
 
+  // Timer 3 detik untuk animasi fade out
+  useEffect(() => {
+    const barTimer = setTimeout(() => {
+      setFadeOut(true);
+      const hideTimer = setTimeout(() => {
+        setHide(true);
+        if (onDone) onDone();
+      }, 800);
+      return () => clearTimeout(hideTimer);
+    }, 3000);
+
+    return () => clearTimeout(barTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (hide) return null;
+
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#030712] px-4 text-center overflow-hidden">
-      <div className="flex flex-col items-center max-w-full">
-        {/* Header Teks dengan Responsif & Centering Presisi */}
-        <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold tracking-wider text-white whitespace-nowrap mb-4">
-          WELCOME TO MY <span className="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">PORTOFOLIO</span> WEBSITE
+    <header
+      className={`fixed inset-0 z-[9999] flex h-screen w-full max-w-full overflow-hidden flex-col items-center justify-center bg-[#030712] text-center transition-all duration-700 ease-in-out ${
+        fadeOut ? "-translate-y-5 opacity-0 pointer-events-none" : "opacity-100"
+      }`}
+    >
+      <div className="main-text px-4 w-full max-w-md mx-auto">
+        <h1 className="font-display text-[22px] sm:text-[25px] text-white whitespace-nowrap">
+          <span className="inline-block animate-slide-down [animation-delay:0.2s] opacity-0">WELCOME</span>{" "}
+          <span className="inline-block animate-slide-down [animation-delay:0.6s] opacity-0">TO</span>{" "}
+          <span className="inline-block animate-slide-down [animation-delay:1s] opacity-0">MY</span>{" "}
+          <span className="inline-block animate-slide-up [animation-delay:1.2s] bg-gradient-text bg-clip-text text-transparent opacity-0 [filter:drop-shadow(0_0_20px_#38bdf8)]">
+            PORTOFOLIO
+          </span>{" "}
+          <span className="inline-block animate-slide-up [animation-delay:1.6s] bg-gradient-text bg-clip-text text-transparent opacity-0 [filter:drop-shadow(0_0_20px_#38bdf8)]">
+            WEBSITE
+          </span>
         </h1>
 
-        {/* Dynamic Typing Text */}
-        <div className="flex items-center justify-center space-x-2 text-sm sm:text-base text-gray-300 font-mono my-2 min-h-[28px]">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-          <span>{text}</span>
-          <span className="animate-pulse text-cyan-400 font-bold">|</span>
-        </div>
+        <p className="mx-auto my-4 flex max-w-[200px] animate-slide-up items-center justify-center rounded-md px-3 py-1.5 text-xs text-text-secondary">
+          <span className="inline-flex items-center gap-2 whitespace-nowrap border-r-2 border-accent-cyan-light pr-1 font-sans text-white min-h-[20px]">
+            {typed}
+          </span>
+        </p>
 
-        {/* Smooth Progress Bar Container */}
-        <div className="w-64 sm:w-80 h-1.5 bg-gray-800 rounded-full overflow-hidden mt-4 border border-gray-700/50">
-          <div
-            className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-75 ease-out shadow-[0_0_10px_#22d3ee]"
-            style={{ width: `${progress}%` }}
-          />
+        <div className="mx-auto mt-2.5 h-1 w-3/5 max-w-[250px] overflow-hidden rounded-full border border-accent-cyan-light/20 bg-bg-card/80">
+          <div className="h-full w-full origin-left bg-gradient-text [animation:loading-slide_3s_ease-in-out_forwards]" />
         </div>
       </div>
-    </div>
+
+      <style jsx>{`
+        @keyframes loading-slide {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(0%); }
+        }
+      `}</style>
+    </header>
   );
 }

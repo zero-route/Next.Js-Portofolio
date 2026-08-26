@@ -7,7 +7,7 @@ import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import { useOnceTypingEffect } from "@/hooks/useTypingEffect";
 
 const ABOUT_TEXT =
-  "passionate individual in various fields of Information Technology. I combine skills from various IT branches to build reliable systems and clean digital experiences — from network infrastructure to full-stack development.";
+  "passionate ndividual in various fields of Information Technology. I combine skills from various IT branches to build reliable systems and clean digital experiences — from network infrastructure to full-stack development.";
 
 export default function About() {
   const header = useRevealOnScroll<HTMLDivElement>();

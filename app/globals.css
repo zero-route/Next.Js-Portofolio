@@ -96,13 +96,13 @@ input[type="range"].player-range::-webkit-slider-thumb {
 }
 
 /* ========================================================= */
-/* FIX ANIMASI STAGGERED & HENTAKAN (KEYFRAMES & UTILITIES)  */
+/* KEYFRAMES AMAN KHUSUS INTRO LOADER & HERO                 */
 /* ========================================================= */
 
 @keyframes slideUp {
   0% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(25px);
   }
   100% {
     opacity: 1;
@@ -113,7 +113,7 @@ input[type="range"].player-range::-webkit-slider-thumb {
 @keyframes slideDown {
   0% {
     opacity: 0;
-    transform: translateY(-30px);
+    transform: translateY(-25px);
   }
   100% {
     opacity: 1;
@@ -132,13 +132,19 @@ input[type="range"].player-range::-webkit-slider-thumb {
   }
 }
 
-/* 'backwards' menahan elemen gaib (0%) saat menunggu animation-delay */
+/* Khusus Intro Loader (Mencegah teks loader kedap-kedip/hilang) */
 .animate-slide-up {
-  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation: slideUp 0.5s ease-out forwards;
 }
 
 .animate-slide-down {
-  animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation: slideDown 0.5s ease-out forwards;
+}
+
+/* Khusus Hero Section (Mencegah efek stretch/hentakan saat delay) */
+.hero-fade-slide {
+  opacity: 0;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-pulse-dot {

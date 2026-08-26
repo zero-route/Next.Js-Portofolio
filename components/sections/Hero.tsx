@@ -23,10 +23,10 @@ export default function Hero({
     <section id="home" className="px-5 pb-16 pt-24 sm:pt-28">
       <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-10 md:flex-row md:items-center md:justify-between md:text-left">
         <div className="w-full text-left md:max-w-[520px]">
-          {/* Badge */}
+          {/* Badge Available */}
           <span
             className={`mb-3 inline-flex items-center gap-2 rounded-full border border-accent-cyan-light/30 bg-black/50 px-3.5 py-1.5 font-mono text-[11px] text-accent-cyan-light ${
-              ready ? "animate-slide-up [animation-delay:0.1s]" : "opacity-0"
+              ready ? "hero-fade-slide [animation-delay:0.1s]" : "opacity-0"
             }`}
           >
             <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]" />
@@ -36,7 +36,7 @@ export default function Hero({
           {/* Floating Action Buttons */}
           <div
             className={`mb-4 flex flex-row items-center gap-2.5 ${
-              ready ? "animate-slide-up [animation-delay:0.2s]" : "opacity-0"
+              ready ? "hero-fade-slide [animation-delay:0.2s]" : "opacity-0"
             }`}
           >
             <FloatingBtn label="Open AI chatbot" onClick={onOpenChatbot}>
@@ -61,14 +61,14 @@ export default function Hero({
             </span>
             <span
               className={`block bg-gradient-text bg-clip-text text-transparent ${
-                ready ? "animate-slide-up [animation-delay:0.4s]" : "opacity-0"
+                ready ? "hero-fade-slide [animation-delay:0.4s]" : "opacity-0"
               }`}
             >
               ENGINEER
             </span>
           </h1>
 
-          {/* Subtitle */}
+          {/* Subtitle Typing */}
           <p className="mb-4 min-h-[20px] font-mono text-sm text-accent-cyan-light">
             {roleLine}
             <span className="ml-0.5 animate-blink-cursor text-accent-cyan-light">|</span>
@@ -77,7 +77,7 @@ export default function Hero({
           {/* Description */}
           <p
             className={`mb-6 max-w-[480px] text-[13px] leading-relaxed text-text-secondary ${
-              ready ? "animate-slide-up [animation-delay:0.5s]" : "opacity-0"
+              ready ? "hero-fade-slide [animation-delay:0.5s]" : "opacity-0"
             }`}
           >
             A passionate individual in various fields (Information Technology), I combine skills from
@@ -85,12 +85,12 @@ export default function Hero({
             Automation Engineer, Robotic Engineer, and Electrical Engineer].
           </p>
 
-          {/* Buttons */}
+          {/* CTA Buttons */}
           <div className="mb-6 flex flex-wrap gap-3">
             <a
               href="#resume"
               className={`inline-flex items-center gap-2 rounded-lg bg-gradient-accent px-4.5 py-2.5 font-mono text-xs text-white shadow-[0_0_15px_rgba(0,102,255,0.4)] transition-shadow hover:shadow-[0_0_25px_rgba(0,102,255,0.6)] ${
-                ready ? "animate-slide-up [animation-delay:0.6s]" : "opacity-0"
+                ready ? "hero-fade-slide [animation-delay:0.6s]" : "opacity-0"
               }`}
             >
               View Projects ↗
@@ -98,14 +98,14 @@ export default function Hero({
             <a
               href="mailto:iostream911@gmail.com"
               className={`inline-flex items-center gap-2 rounded-lg border border-border-active bg-black/40 px-4.5 py-2.5 font-mono text-xs text-white transition-colors hover:bg-accent-cyan-light/10 ${
-                ready ? "animate-slide-up [animation-delay:0.7s]" : "opacity-0"
+                ready ? "hero-fade-slide [animation-delay:0.7s]" : "opacity-0"
               }`}
             >
               Let&apos;s Talk ✉
             </a>
           </div>
 
-          {/* Social Icons (Staggered Animation kembali aktif) */}
+          {/* Social Icons (Staggered Animation Mulus) */}
           <div className="flex gap-3">
             {socials.map((s, i) => (
               <a
@@ -114,7 +114,7 @@ export default function Hero({
                 target="_blank"
                 aria-label={s.name}
                 className={`flex h-8 w-8 items-center justify-center rounded-md border border-border-subtle text-text-secondary transition-colors hover:border-accent-cyan-light hover:text-accent-cyan-light ${
-                  ready ? "animate-slide-up" : "opacity-0"
+                  ready ? "hero-fade-slide" : "opacity-0"
                 }`}
                 style={ready ? { animationDelay: `${0.8 + i * 0.1}s` } : undefined}
               >
@@ -125,7 +125,7 @@ export default function Hero({
         </div>
 
         {/* Code Box */}
-        <div className={`flex w-full justify-center md:flex-1 md:justify-end ${ready ? "animate-slide-up [animation-delay:0.6s]" : "opacity-0"}`}>
+        <div className={`flex w-full justify-center md:flex-1 md:justify-end ${ready ? "hero-fade-slide [animation-delay:0.6s]" : "opacity-0"}`}>
           <div className="w-full max-w-[340px] overflow-hidden rounded-[10px] border border-accent-cyan-light/20 bg-bg-secondary/70 font-mono shadow-[0_8px_20px_rgba(0,0,0,0.5),0_0_15px_rgba(0,102,255,0.15)] backdrop-blur-md">
             <div className="flex items-center justify-between border-b border-white/5 bg-bg-primary/60 px-3 py-2">
               <div className="flex gap-1.5">

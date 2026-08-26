@@ -21,33 +21,31 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-[#030712] text-white overflow-x-hidden">
-      {/* 1. Tampilkan IntroLoader jika durasi loading belum selesai */}
+      {/* 1. IntroLoader tetap berjalan dulu */}
       {!introDone && <IntroLoader onDone={() => setIntroDone(true)} />}
 
-      {/* 2. Konten Utama Portfolio */}
-      <div
-        className={`transition-opacity duration-700 ${
-          introDone ? "opacity-100 block" : "opacity-0 hidden"
-        }`}
-      >
-        <Navbar />
-        <Hero
-          ready={introDone}
-          onOpenChatbot={() => setChatOpen(true)}
-          onOpenMusic={() => setMusicOpen(true)}
-          onOpenTrivia={() => setTriviaOpen(true)}
-        />
-        <About />
-        <ProjectTimeline />
-        <Expertise />
-        <Contact />
-        <Footer />
-      </div>
+      {/* 2. Seluruh Halaman Utama BARU RENDERING setelah Loader Selesai */}
+      {introDone && (
+        <div className="animate-fade-in transition-opacity duration-500">
+          <Navbar />
+          <Hero
+            ready={introDone}
+            onOpenChatbot={() => setChatOpen(true)}
+            onOpenMusic={() => setMusicOpen(true)}
+            onOpenTrivia={() => setTriviaOpen(true)}
+          />
+          <About />
+          <ProjectTimeline />
+          <Expertise />
+          <Contact />
+          <Footer />
 
-      {/* 3. Floating Widgets */}
-      <ChatbotWidget open={chatOpen} onClose={() => setChatOpen(false)} />
-      <MusicPlayerWidget open={musicOpen} onOpen={() => setMusicOpen(true)} onClose={() => setMusicOpen(false)} />
-      <TriviaWidget open={triviaOpen} onClose={() => setTriviaOpen(false)} />
+          {/* Floating Widgets */}
+          <ChatbotWidget open={chatOpen} onClose={() => setChatOpen(false)} />
+          <MusicPlayerWidget open={musicOpen} onOpen={() => setMusicOpen(true)} onClose={() => setMusicOpen(false)} />
+          <TriviaWidget open={triviaOpen} onClose={() => setTriviaOpen(false)} />
+        </div>
+      )}
     </main>
   );
 }

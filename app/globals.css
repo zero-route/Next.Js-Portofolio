@@ -11,7 +11,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Background ambient glow */
+/* Ambient glow */
 .bg-glow-wrapper {
   position: fixed;
   inset: 0;
@@ -46,7 +46,6 @@ body {
   will-change: transform;
 }
 
-/* Typing cursor */
 .typing-cursor::after {
   content: "|";
   margin-left: 2px;
@@ -59,34 +58,6 @@ body {
   50% { opacity: 0; }
 }
 
-/* Vinyl label untuk music player */
-.vinyl-label {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.vinyl-label.loaded {
-  opacity: 1;
-}
-
-/* Range input styling */
-input[type="range"].player-range {
-  -webkit-appearance: none;
-  height: 4px;
-  background: rgba(56, 189, 248, 0.15);
-  border-radius: 10px;
-  outline: none;
-}
-input[type="range"].player-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 8px #38bdf8;
-  cursor: pointer;
-}
-
-/* Scrollbar tipis */
 .thin-scroll::-webkit-scrollbar {
   width: 6px;
 }
@@ -96,57 +67,41 @@ input[type="range"].player-range::-webkit-slider-thumb {
 }
 
 /* ========================================================= */
-/* KEYFRAMES AMAN KHUSUS INTRO LOADER & HERO                 */
+/* ANIMASI MURNI TANPA LAG / HENTAKAN (FIXED KEYFRAMES)      */
 /* ========================================================= */
 
-@keyframes slideUp {
-  0% {
+@keyframes smoothFadeUp {
+  from {
     opacity: 0;
-    transform: translateY(25px);
+    transform: translate3d(0, 20px, 0);
   }
-  100% {
+  to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes slideDown {
-  0% {
+@keyframes smoothFadeDown {
+  from {
     opacity: 0;
-    transform: translateY(-25px);
+    transform: translate3d(0, -20px, 0);
   }
-  100% {
+  to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes pulseDot {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 0.6;
-  }
+/* Class terpisah khusus IntroLoader */
+.loader-slide-up {
+  animation: smoothFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Khusus Intro Loader (Mencegah teks loader kedap-kedip/hilang) */
-.animate-slide-up {
-  animation: slideUp 0.5s ease-out forwards;
+.loader-slide-down {
+  animation: smoothFadeDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.animate-slide-down {
-  animation: slideDown 0.5s ease-out forwards;
-}
-
-/* Khusus Hero Section (Mencegah efek stretch/hentakan saat delay) */
-.hero-fade-slide {
-  opacity: 0;
-  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-pulse-dot {
-  animation: pulseDot 2s infinite ease-in-out;
+/* Class terpisah khusus Hero Section */
+.hero-anim {
+  animation: smoothFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

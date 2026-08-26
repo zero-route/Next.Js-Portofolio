@@ -15,30 +15,26 @@ export default function Hero({
   onOpenMusic: () => void;
   onOpenTrivia: () => void;
 }) {
-  const roleCode = useLoopTypingEffect(rolesList, { startDelay: 300, start: ready });
-  const skillCode = useLoopTypingEffect(skillsTyping, { startDelay: 600, start: ready });
-  const roleLine = useLoopTypingEffect(rolesList, { startDelay: 200, withQuotes: false, start: ready });
+  const roleCode = useLoopTypingEffect(rolesList, { startDelay: 200, start: ready });
+  const skillCode = useLoopTypingEffect(skillsTyping, { startDelay: 400, start: ready });
+  const roleLine = useLoopTypingEffect(rolesList, { startDelay: 100, withQuotes: false, start: ready });
+
+  if (!ready) {
+    return <section id="home" className="min-h-screen" />;
+  }
 
   return (
     <section id="home" className="px-5 pb-16 pt-24 sm:pt-28">
       <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-10 md:flex-row md:items-center md:justify-between md:text-left">
         <div className="w-full text-left md:max-w-[520px]">
-          {/* Badge Available */}
-          <span
-            className={`mb-3 inline-flex items-center gap-2 rounded-full border border-accent-cyan-light/30 bg-black/50 px-3.5 py-1.5 font-mono text-[11px] text-accent-cyan-light ${
-              ready ? "hero-fade-slide [animation-delay:0.1s]" : "opacity-0"
-            }`}
-          >
-            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]" />
+          {/* Badge */}
+          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-accent-cyan-light/30 bg-black/50 px-3.5 py-1.5 font-mono text-[11px] text-accent-cyan-light hero-anim [animation-delay:0.05s]">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]" />
             Available for projects
           </span>
 
-          {/* Floating Action Buttons */}
-          <div
-            className={`mb-4 flex flex-row items-center gap-2.5 ${
-              ready ? "hero-fade-slide [animation-delay:0.2s]" : "opacity-0"
-            }`}
-          >
+          {/* Floating Buttons */}
+          <div className="mb-4 flex flex-row items-center gap-2.5 hero-anim [animation-delay:0.1s]">
             <FloatingBtn label="Open AI chatbot" onClick={onOpenChatbot}>
               <Icon name="robot" className="text-base" />
             </FloatingBtn>
@@ -50,62 +46,46 @@ export default function Hero({
             </FloatingBtn>
           </div>
 
-          {/* Titles */}
+          {/* Title */}
           <h1 className="mb-3 font-display text-[32px] leading-snug text-white md:text-[44px]">
-            <span
-              className={`block ${
-                ready ? "animate-slide-down [animation-delay:0.3s]" : "opacity-0"
-              }`}
-            >
+            <span className="block hero-anim [animation-delay:0.15s]">
               SYSTEM
             </span>
-            <span
-              className={`block bg-gradient-text bg-clip-text text-transparent ${
-                ready ? "hero-fade-slide [animation-delay:0.4s]" : "opacity-0"
-              }`}
-            >
+            <span className="block bg-gradient-text bg-clip-text text-transparent hero-anim [animation-delay:0.2s]">
               ENGINEER
             </span>
           </h1>
 
-          {/* Subtitle Typing */}
-          <p className="mb-4 min-h-[20px] font-mono text-sm text-accent-cyan-light">
+          {/* Typing Line */}
+          <p className="mb-4 min-h-[20px] font-mono text-sm text-accent-cyan-light hero-anim [animation-delay:0.25s]">
             {roleLine}
             <span className="ml-0.5 animate-blink-cursor text-accent-cyan-light">|</span>
           </p>
 
           {/* Description */}
-          <p
-            className={`mb-6 max-w-[480px] text-[13px] leading-relaxed text-text-secondary ${
-              ready ? "hero-fade-slide [animation-delay:0.5s]" : "opacity-0"
-            }`}
-          >
+          <p className="mb-6 max-w-[480px] text-[13px] leading-relaxed text-text-secondary hero-anim [animation-delay:0.3s]">
             A passionate individual in various fields (Information Technology), I combine skills from
             various IT branches, such as [Network Engineer, Full Stack Dev, Penetration Testing,
             Automation Engineer, Robotic Engineer, and Electrical Engineer].
           </p>
 
           {/* CTA Buttons */}
-          <div className="mb-6 flex flex-wrap gap-3">
+          <div className="mb-6 flex flex-wrap gap-3 hero-anim [animation-delay:0.35s]">
             <a
               href="#resume"
-              className={`inline-flex items-center gap-2 rounded-lg bg-gradient-accent px-4.5 py-2.5 font-mono text-xs text-white shadow-[0_0_15px_rgba(0,102,255,0.4)] transition-shadow hover:shadow-[0_0_25px_rgba(0,102,255,0.6)] ${
-                ready ? "hero-fade-slide [animation-delay:0.6s]" : "opacity-0"
-              }`}
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-accent px-4.5 py-2.5 font-mono text-xs text-white shadow-[0_0_15px_rgba(0,102,255,0.4)] transition-all hover:scale-105"
             >
               View Projects ↗
             </a>
             <a
               href="mailto:iostream911@gmail.com"
-              className={`inline-flex items-center gap-2 rounded-lg border border-border-active bg-black/40 px-4.5 py-2.5 font-mono text-xs text-white transition-colors hover:bg-accent-cyan-light/10 ${
-                ready ? "hero-fade-slide [animation-delay:0.7s]" : "opacity-0"
-              }`}
+              className="inline-flex items-center gap-2 rounded-lg border border-border-active bg-black/40 px-4.5 py-2.5 font-mono text-xs text-white transition-all hover:bg-accent-cyan-light/10"
             >
               Let&apos;s Talk ✉
             </a>
           </div>
 
-          {/* Social Icons (Staggered Animation Mulus) */}
+          {/* Social Icons */}
           <div className="flex gap-3">
             {socials.map((s, i) => (
               <a
@@ -113,10 +93,8 @@ export default function Hero({
                 href={s.href}
                 target="_blank"
                 aria-label={s.name}
-                className={`flex h-8 w-8 items-center justify-center rounded-md border border-border-subtle text-text-secondary transition-colors hover:border-accent-cyan-light hover:text-accent-cyan-light ${
-                  ready ? "hero-fade-slide" : "opacity-0"
-                }`}
-                style={ready ? { animationDelay: `${0.8 + i * 0.1}s` } : undefined}
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-border-subtle text-text-secondary transition-colors hover:border-accent-cyan-light hover:text-accent-cyan-light hero-anim"
+                style={{ animationDelay: `${0.4 + i * 0.05}s` }}
               >
                 <Icon name={s.icon} className="text-base" />
               </a>
@@ -125,7 +103,7 @@ export default function Hero({
         </div>
 
         {/* Code Box */}
-        <div className={`flex w-full justify-center md:flex-1 md:justify-end ${ready ? "hero-fade-slide [animation-delay:0.6s]" : "opacity-0"}`}>
+        <div className="flex w-full justify-center md:flex-1 md:justify-end hero-anim [animation-delay:0.3s]">
           <div className="w-full max-w-[340px] overflow-hidden rounded-[10px] border border-accent-cyan-light/20 bg-bg-secondary/70 font-mono shadow-[0_8px_20px_rgba(0,0,0,0.5),0_0_15px_rgba(0,102,255,0.15)] backdrop-blur-md">
             <div className="flex items-center justify-between border-b border-white/5 bg-bg-primary/60 px-3 py-2">
               <div className="flex gap-1.5">
@@ -177,7 +155,7 @@ function FloatingBtn({
     <button
       onClick={onClick}
       aria-label={label}
-      className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-accent-cyan-light/30 bg-bg-secondary/85 text-accent-cyan-light shadow-[0_4px_15px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:scale-105 hover:border-accent-cyan-light hover:bg-gradient-accent hover:text-white hover:shadow-[0_0_15px_rgba(0,102,255,0.6)]"
+      className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-accent-cyan-light/30 bg-bg-secondary/85 text-accent-cyan-light shadow-[0_4px_15px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:scale-105 hover:border-accent-cyan-light hover:bg-gradient-accent hover:text-white"
     >
       {children}
     </button>

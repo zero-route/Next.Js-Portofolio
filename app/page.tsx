@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-[#030712] text-white overflow-x-hidden">
       {/* 1. Tampilkan IntroLoader jika durasi loading belum selesai */}
-      {!introDone && <IntroLoader onFinish={() => setIntroDone(true)} />}
+      {!introDone && <IntroLoader onDone={() => setIntroDone(true)} />}
 
       {/* 2. Konten Utama Portfolio */}
       <div

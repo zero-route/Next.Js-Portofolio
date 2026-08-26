@@ -20,12 +20,14 @@ export default function Home() {
   const [triviaOpen, setTriviaOpen] = useState(false);
 
   return (
-    <>
-      <IntroLoader onDone={() => setIntroDone(true)} />
+    <main className="relative min-h-screen bg-[#030712] text-white overflow-x-hidden">
+      {/* 1. Tampilkan IntroLoader jika durasi loading belum selesai */}
+      {!introDone && <IntroLoader onFinish={() => setIntroDone(true)} />}
 
+      {/* 2. Konten Utama Portfolio */}
       <div
         className={`transition-opacity duration-700 ${
-          introDone ? "visible opacity-100" : "invisible opacity-0"
+          introDone ? "opacity-100 block" : "opacity-0 hidden"
         }`}
       >
         <Navbar />
@@ -42,9 +44,10 @@ export default function Home() {
         <Footer />
       </div>
 
+      {/* 3. Floating Widgets */}
       <ChatbotWidget open={chatOpen} onClose={() => setChatOpen(false)} />
       <MusicPlayerWidget open={musicOpen} onOpen={() => setMusicOpen(true)} onClose={() => setMusicOpen(false)} />
       <TriviaWidget open={triviaOpen} onClose={() => setTriviaOpen(false)} />
-    </>
+    </main>
   );
 }

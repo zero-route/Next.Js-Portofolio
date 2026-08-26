@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #050714;
+  overflow-x: hidden;
+}
+
+/* Background ambient glow (pengganti .bg::before / .bg::after lama) */
+.bg-glow-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background-color: #050714;
+}
+
+.bg-glow-blue {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #0066ff 0%, #1e3a8a 40%, transparent 70%);
+  filter: blur(80px);
+  opacity: 0.45;
+  will-change: transform;
+}
+
+.bg-glow-purple {
+  position: absolute;
+  bottom: -20%;
+  right: -10%;
+  width: 55vw;
+  height: 55vw;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #8b5cf6 0%, #3b0764 50%, transparent 70%);
+  filter: blur(80px);
+  opacity: 0.4;
+  will-change: transform;
+}
+
+/* Typing cursor pengganti #typing-text / .typing-cursor */
+.typing-cursor::after {
+  content: "|";
+  margin-left: 2px;
+  color: #38bdf8;
+  animation: blink-cursor 0.8s infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Vinyl label untuk music player */
+.vinyl-label {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.vinyl-label.loaded {
+  opacity: 1;
+}
+
+/* Range input styling (progress & volume bar music player) */
+input[type="range"].player-range {
+  -webkit-appearance: none;
+  height: 4px;
+  background: rgba(56, 189, 248, 0.15);
+  border-radius: 10px;
+  outline: none;
+}
+input[type="range"].player-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  cursor: pointer;
+}
+
+/* Scrollbar tipis untuk panel widget */
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.25);
+  border-radius: 10px;
+}

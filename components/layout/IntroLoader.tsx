@@ -7,7 +7,7 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
   const [hide, setHide] = useState(false);
   const [typed, setTyped] = useState("");
 
-  // Fix Typing Effect: Menggunakan slice() agar teks tidak terduplikasi saat re-render
+  // Fix Typing Effect: Menggunakan slice() agar teks terpotong rapi tanpa duplikasi huruf
   useEffect(() => {
     const text = " Zero Route";
     let i = 0;
@@ -35,8 +35,7 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
     }, 3000);
 
     return () => clearTimeout(barTimer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onDone]);
 
   if (hide) return null;
 
@@ -46,8 +45,9 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
         fadeOut ? "-translate-y-5 opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      <div className="main-text px-4 w-full max-w-md mx-auto">
-        <h1 className="font-display text-[22px] sm:text-[25px] text-white whitespace-nowrap">
+      <div className="main-text px-4 w-full max-w-lg mx-auto flex flex-col items-center justify-center">
+        {/* Fix Layout Melenceng: Ditambahkan tracking, max-w, dan responsive text size */}
+        <h1 className="font-display text-[18px] sm:text-[24px] md:text-[28px] text-white tracking-normal leading-snug">
           <span className="inline-block animate-slide-down [animation-delay:0.2s] opacity-0">WELCOME</span>{" "}
           <span className="inline-block animate-slide-down [animation-delay:0.6s] opacity-0">TO</span>{" "}
           <span className="inline-block animate-slide-down [animation-delay:1s] opacity-0">MY</span>{" "}

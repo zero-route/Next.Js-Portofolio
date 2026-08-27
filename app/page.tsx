@@ -20,32 +20,31 @@ export default function Home() {
   const [triviaOpen, setTriviaOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen bg-[#030712] text-white overflow-x-hidden">
-      {/* 1. IntroLoader tetap berjalan dulu */}
-      {!introDone && <IntroLoader onDone={() => setIntroDone(true)} />}
+    <>
+      <IntroLoader onDone={() => setIntroDone(true)} />
 
-      {/* 2. Seluruh Halaman Utama BARU RENDERING setelah Loader Selesai */}
-      {introDone && (
-        <div className="animate-fade-in transition-opacity duration-500">
-          <Navbar />
-          <Hero
-            ready={introDone}
-            onOpenChatbot={() => setChatOpen(true)}
-            onOpenMusic={() => setMusicOpen(true)}
-            onOpenTrivia={() => setTriviaOpen(true)}
-          />
-          <About />
-          <ProjectTimeline />
-          <Expertise />
-          <Contact />
-          <Footer />
+      <div
+        className={`transition-opacity duration-700 ${
+          introDone ? "visible opacity-100" : "invisible opacity-0"
+        }`}
+      >
+        <Navbar />
+        <Hero
+          ready={introDone}
+          onOpenChatbot={() => setChatOpen(true)}
+          onOpenMusic={() => setMusicOpen(true)}
+          onOpenTrivia={() => setTriviaOpen(true)}
+        />
+        <About />
+        <ProjectTimeline />
+        <Expertise />
+        <Contact />
+        <Footer />
+      </div>
 
-          {/* Floating Widgets */}
-          <ChatbotWidget open={chatOpen} onClose={() => setChatOpen(false)} />
-          <MusicPlayerWidget open={musicOpen} onOpen={() => setMusicOpen(true)} onClose={() => setMusicOpen(false)} />
-          <TriviaWidget open={triviaOpen} onClose={() => setTriviaOpen(false)} />
-        </div>
-      )}
-    </main>
+      <ChatbotWidget open={chatOpen} onClose={() => setChatOpen(false)} />
+      <MusicPlayerWidget open={musicOpen} onOpen={() => setMusicOpen(true)} onClose={() => setMusicOpen(false)} />
+      <TriviaWidget open={triviaOpen} onClose={() => setTriviaOpen(false)} />
+    </>
   );
 }

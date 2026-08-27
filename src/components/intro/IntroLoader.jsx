@@ -7,18 +7,19 @@ import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
  * IntroLoader
  * - "Welcome To My" : fade-in + slide from top, words appear in order.
  * - "Portofolio Website" : fade-in + slide from bottom, continuing the
- *   SAME stagger sequence right after "My". Gradient blue -> white.
+ *   SAME stagger sequence right after "My". The two words now share
+ *   ONE continuous blue -> white gradient (not two separate gradients),
+ *   plus a diagonal shine sweep that loops behind the phrase.
  * - On mobile: the two groups stack as two lines.
  *   On desktop (sm and up): both groups sit inline on one line.
- * - Loading bar (with "Loading" / percentage labels) fades in + slides
- *   up AFTER the title finishes, fill color is white.
+ * - Loading bar fades/slides in after the title, fill color white.
  *
  * Props:
- *   duration   - ms for the loading bar to go 0 -> 100 (default 5000,
- *                slowed down from the previous 3200 per feedback)
+ *   duration   - ms for the loading bar to go 0 -> 100 (default 6500,
+ *                slowed further per feedback)
  *   onFinish   - called once, when loading completes
  */
-export default function IntroLoader({ duration = 5000, onFinish }) {
+export default function IntroLoader({ duration = 6500, onFinish }) {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
 
@@ -47,8 +48,6 @@ export default function IntroLoader({ duration = 5000, onFinish }) {
 
   if (!visible) return null;
 
-  // slowed down from 220ms -> 420ms per word, and animation itself is
-  // longer (0.9s instead of 0.6s, set below in the <style> block)
   const STEP_MS = 420;
   const topWords = ["Welcome", "To", "My"];
   const bottomWords = ["Portofolio", "Website"];
@@ -72,11 +71,16 @@ export default function IntroLoader({ duration = 5000, onFinish }) {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-x-4">
+        {/* One shared gradient across "Portofolio Website" + shine sweep,
+            instead of each word having its own separate gradient. */}
+        <div
+          className="shine-text relative inline-flex flex-wrap items-center justify-center gap-x-4 text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-space-blue to-white bg-clip-text text-transparent"
+          data-text="Portofolio Website"
+        >
           {bottomWords.map((word, i) => (
             <span
               key={word}
-              className="intro-word intro-word--up text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-space-blue to-white bg-clip-text text-transparent"
+              className="intro-word intro-word--up"
               style={{ animationDelay: `${(topWords.length + i) * STEP_MS}ms` }}
             >
               {word}
@@ -134,6 +138,39 @@ export default function IntroLoader({ duration = 5000, onFinish }) {
           to {
             opacity: 1;
             transform: translateY(0);
+          }
+        }
+
+        /* Shine sweep: a duplicate of the phrase text, overlaid, with a
+           bright diagonal band that loops across it forever. */
+        .shine-text::after {
+          content: attr(data-text);
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-image: linear-gradient(
+            120deg,
+            transparent 35%,
+            rgba(255, 255, 255, 0.85) 50%,
+            transparent 65%
+          );
+          background-size: 250% 100%;
+          background-repeat: no-repeat;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          pointer-events: none;
+          animation: shineSweep 3.2s ease-in-out infinite;
+          animation-delay: 2.4s; /* let the entrance stagger finish first */
+        }
+        @keyframes shineSweep {
+          0% {
+            background-position: 150% 0;
+          }
+          100% {
+            background-position: -150% 0;
           }
         }
       `}</style>

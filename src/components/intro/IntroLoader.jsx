@@ -3,7 +3,22 @@
 import { useEffect, useState } from "react";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 
-export default function IntroLoader({ duration = 3200, onFinish }) {
+/**
+ * IntroLoader
+ * - "Welcome To My" : fade-in + slide from top, words appear in order.
+ * - "Portofolio Website" : fade-in + slide from bottom, continuing the
+ *   SAME stagger sequence right after "My". Gradient blue -> white.
+ * - On mobile: the two groups stack as two lines.
+ *   On desktop (sm and up): both groups sit inline on one line.
+ * - Loading bar (with "Loading" / percentage labels) fades in + slides
+ *   up AFTER the title finishes, fill color is white.
+ *
+ * Props:
+ *   duration   - ms for the loading bar to go 0 -> 100 (default 5000,
+ *                slowed down from the previous 3200 per feedback)
+ *   onFinish   - called once, when loading completes
+ */
+export default function IntroLoader({ duration = 5000, onFinish }) {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
 
@@ -32,11 +47,12 @@ export default function IntroLoader({ duration = 3200, onFinish }) {
 
   if (!visible) return null;
 
-  const STEP_MS = 220;
+  // slowed down from 220ms -> 420ms per word, and animation itself is
+  // longer (0.9s instead of 0.6s, set below in the <style> block)
+  const STEP_MS = 420;
   const topWords = ["Welcome", "To", "My"];
   const bottomWords = ["Portofolio", "Website"];
-  // loading section waits for the last title word to finish animating
-  const LOADING_DELAY_MS = (topWords.length + bottomWords.length - 1) * STEP_MS + 500;
+  const LOADING_DELAY_MS = (topWords.length + bottomWords.length - 1) * STEP_MS + 700;
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-black text-white">
@@ -60,7 +76,7 @@ export default function IntroLoader({ duration = 3200, onFinish }) {
           {bottomWords.map((word, i) => (
             <span
               key={word}
-              className="intro-word intro-word--up text-4xl sm:text-5xl font-bold tracking-tight text-space-blue"
+              className="intro-word intro-word--up text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-space-blue to-white bg-clip-text text-transparent"
               style={{ animationDelay: `${(topWords.length + i) * STEP_MS}ms` }}
             >
               {word}
@@ -90,7 +106,7 @@ export default function IntroLoader({ duration = 3200, onFinish }) {
         .intro-word {
           display: inline-block;
           opacity: 0;
-          animation-duration: 0.6s;
+          animation-duration: 0.9s;
           animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
           animation-fill-mode: forwards;
         }

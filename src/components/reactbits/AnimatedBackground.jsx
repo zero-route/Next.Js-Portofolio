@@ -5,10 +5,12 @@ import { useEffect, useRef } from "react";
 /**
  * AnimatedBackground
  * Deep-space nebula: soft drifting navy-blue cloud blobs blended into
- * black (organic, not a flat blue wash), plus twinkling stars on top.
+ * black, plus twinkling + drifting stars on top.
  *
- * Usage:
- *   <AnimatedBackground className="fixed inset-0 -z-10" starCount={180} />
+ * Note: earlier version used ctx.filter = "blur(...)" recomputed every
+ * frame, which is very expensive on mobile GPUs and made the whole
+ * canvas appear frozen. This version bakes the softness into the
+ * radial gradient stops instead, so it animates smoothly every frame.
  */
 export default function AnimatedBackground({
   className = "",
@@ -23,11 +25,11 @@ export default function AnimatedBackground({
     let width = (canvas.width = canvas.offsetWidth);
     let height = (canvas.height = canvas.offsetHeight);
 
-    // --- Nebula clouds: a handful of large soft blobs that drift + pulse ---
+    // --- Nebula clouds: large soft blobs that drift + pulse ---
     const NEBULA_COLORS = [
       "30, 41, 90",   // deep navy
       "23, 30, 70",   // near-black navy
-      "15, 20, 45",   // almost black
+      "40, 55, 120",  // slightly brighter navy accent
     ];
     const clouds = Array.from({ length: 7 }, () => createCloud(width, height));
 
@@ -35,13 +37,13 @@ export default function AnimatedBackground({
       return {
         x: Math.random() * w,
         y: Math.random() * h,
-        radius: Math.random() * (Math.max(w, h) * 0.35) + Math.max(w, h) * 0.2,
-        vx: (Math.random() - 0.5) * 0.08,
-        vy: (Math.random() - 0.5) * 0.08,
+        radius: Math.random() * (Math.max(w, h) * 0.35) + Math.max(w, h) * 0.22,
+        vx: (Math.random() - 0.5) * 0.35, // visible drift
+        vy: (Math.random() - 0.5) * 0.35,
         color: NEBULA_COLORS[Math.floor(Math.random() * NEBULA_COLORS.length)],
         phase: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.004 + 0.001,
-        baseAlpha: Math.random() * 0.25 + 0.25,
+        pulseSpeed: Math.random() * 0.006 + 0.002,
+        baseAlpha: Math.random() * 0.3 + 0.3,
       };
     }
 
@@ -53,8 +55,8 @@ export default function AnimatedBackground({
         x: Math.random() * w,
         y: Math.random() * h,
         radius: Math.random() * 1.3 + 0.3,
-        vx: (Math.random() - 0.5) * 0.05,
-        vy: (Math.random() - 0.5) * 0.05,
+        vx: (Math.random() - 0.5) * 0.25, // visible drift
+        vy: (Math.random() - 0.5) * 0.25,
         phase: Math.random() * Math.PI * 2,
         twinkleSpeed: Math.random() * 0.02 + 0.005,
         baseAlpha: Math.random() * 0.5 + 0.35,
@@ -68,17 +70,14 @@ export default function AnimatedBackground({
     }
 
     function draw() {
-      // solid black base first
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, width, height);
 
-      // nebula clouds, soft-blurred, drifting
-      ctx.save();
-      ctx.filter = "blur(45px)";
+      // nebula clouds — softness baked into gradient stops, no per-frame blur
       for (const cloud of clouds) {
         cloud.phase += cloud.pulseSpeed;
-        const pulse = (Math.sin(cloud.phase) + 1) / 2; // 0 -> 1
+        const pulse = (Math.sin(cloud.phase) + 1) / 2;
         const alpha = cloud.baseAlpha * (0.6 + pulse * 0.4);
 
         cloud.x += cloud.vx;
@@ -94,6 +93,8 @@ export default function AnimatedBackground({
           cloud.x, cloud.y, cloud.radius
         );
         gradient.addColorStop(0, `rgba(${cloud.color}, ${alpha})`);
+        gradient.addColorStop(0.4, `rgba(${cloud.color}, ${alpha * 0.6})`);
+        gradient.addColorStop(0.75, `rgba(${cloud.color}, ${alpha * 0.2})`);
         gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
 
         ctx.fillStyle = gradient;
@@ -101,9 +102,8 @@ export default function AnimatedBackground({
         ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
         ctx.fill();
       }
-      ctx.restore();
 
-      // stars twinkling on top
+      // stars twinkling + drifting on top
       for (const star of stars) {
         star.phase += star.twinkleSpeed;
         const twinkle = (Math.sin(star.phase) + 1) / 2;

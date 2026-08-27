@@ -7,16 +7,23 @@ import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
  * IntroLoader
  * - "Welcome To My" : fade-in + slide from top, words appear in order.
  * - "Portofolio Website" : fade-in + slide from bottom, continuing the
- *   SAME stagger sequence right after "My". The two words now share
- *   ONE continuous blue -> white gradient (not two separate gradients),
- *   plus a diagonal shine sweep that loops behind the phrase.
+ *   SAME stagger sequence right after "My". The two words share ONE
+ *   continuous blue -> white gradient, with a soft glowing "shine" behind
+ *   it (like a neon halo), pulsing gently.
+ *
+ *   NOTE: an earlier version faked the shine with a duplicated text layer
+ *   (::after + content: attr(data-text)) sitting on top. That duplicate
+ *   rendered fully visible from frame 1, so it looked like a second block
+ *   of text stamped over the real one, and masked the fade/slide/stagger
+ *   entrance entirely. This version uses a glow (drop-shadow filter) on
+ *   the SAME element instead of a separate overlay, so it animates in
+ *   together with the text rather than covering it.
  * - On mobile: the two groups stack as two lines.
  *   On desktop (sm and up): both groups sit inline on one line.
  * - Loading bar fades/slides in after the title, fill color white.
  *
  * Props:
- *   duration   - ms for the loading bar to go 0 -> 100 (default 6500,
- *                slowed further per feedback)
+ *   duration   - ms for the loading bar to go 0 -> 100 (default 6500)
  *   onFinish   - called once, when loading completes
  */
 export default function IntroLoader({ duration = 6500, onFinish }) {
@@ -71,12 +78,10 @@ export default function IntroLoader({ duration = 6500, onFinish }) {
           ))}
         </div>
 
-        {/* One shared gradient across "Portofolio Website" + shine sweep,
-            instead of each word having its own separate gradient. */}
-        <div
-          className="shine-text relative inline-flex flex-wrap items-center justify-center gap-x-4 text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-space-blue to-white bg-clip-text text-transparent"
-          data-text="Portofolio Website"
-        >
+        {/* One shared gradient across "Portofolio Website" + glow behind it.
+            No duplicate text layer this time — the glow is a filter on
+            this same element, so it fades/slides in with the real words. */}
+        <div className="shine-text relative inline-flex flex-wrap items-center justify-center gap-x-4 text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-space-blue to-white bg-clip-text text-transparent">
           {bottomWords.map((word, i) => (
             <span
               key={word}
@@ -141,36 +146,24 @@ export default function IntroLoader({ duration = 6500, onFinish }) {
           }
         }
 
-        /* Shine sweep: a duplicate of the phrase text, overlaid, with a
-           bright diagonal band that loops across it forever. */
-        .shine-text::after {
-          content: attr(data-text);
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-image: linear-gradient(
-            120deg,
-            transparent 35%,
-            rgba(255, 255, 255, 0.85) 50%,
-            transparent 65%
-          );
-          background-size: 250% 100%;
-          background-repeat: no-repeat;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          pointer-events: none;
-          animation: shineSweep 3.2s ease-in-out infinite;
-          animation-delay: 2.4s; /* let the entrance stagger finish first */
+        /* Soft glowing halo behind "Portofolio Website", pulsing gently.
+           This is a filter on the text itself, so it fades/slides in
+           together with the words instead of covering them. */
+        .shine-text {
+          filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.55))
+            drop-shadow(0 0 26px rgba(147, 197, 253, 0.35));
+          animation: shinePulse 2.6s ease-in-out infinite;
+          animation-delay: ${(topWords.length + bottomWords.length - 1) * STEP_MS}ms;
         }
-        @keyframes shineSweep {
-          0% {
-            background-position: 150% 0;
-          }
+        @keyframes shinePulse {
+          0%,
           100% {
-            background-position: -150% 0;
+            filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.5))
+              drop-shadow(0 0 24px rgba(147, 197, 253, 0.3));
+          }
+          50% {
+            filter: drop-shadow(0 0 16px rgba(96, 165, 250, 0.75))
+              drop-shadow(0 0 36px rgba(147, 197, 253, 0.5));
           }
         }
       `}</style>

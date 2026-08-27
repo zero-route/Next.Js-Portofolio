@@ -11,7 +11,7 @@ module.exports = {
         space: {
           black: "#000005",
           navy: "#0a1230",
-          blue: "#60a5fa",
+          blue: "#1d4ed8",
         },
       },
     },

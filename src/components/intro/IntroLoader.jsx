@@ -19,7 +19,6 @@ export default function IntroLoader({ duration = 3200, onFinish }) {
       if (pct < 100) {
         frameId = requestAnimationFrame(tick);
       } else {
-        // small pause on 100% before revealing the page
         setTimeout(() => {
           setVisible(false);
           onFinish?.();
@@ -33,18 +32,18 @@ export default function IntroLoader({ duration = 3200, onFinish }) {
 
   if (!visible) return null;
 
-  // Continuous stagger across both word groups: Welcome(0) To(1) My(2)
-  // Portofolio(3) Website(4) — each waits for the previous to (almost) finish.
   const STEP_MS = 220;
   const topWords = ["Welcome", "To", "My"];
   const bottomWords = ["Portofolio", "Website"];
+  // loading section waits for the last title word to finish animating
+  const LOADING_DELAY_MS = (topWords.length + bottomWords.length - 1) * STEP_MS + 500;
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-black text-white">
-      <AnimatedBackground className="absolute inset-0" starCount={220} />
+      <AnimatedBackground className="absolute inset-0" starCount={180} />
 
-      {/* Title */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6">
+      {/* Title: stacked on mobile, inline on desktop */}
+      <div className="relative z-10 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-y-1 sm:gap-x-3 text-center px-6">
         <div className="flex flex-wrap items-center justify-center gap-x-3">
           {topWords.map((word, i) => (
             <span
@@ -57,11 +56,11 @@ export default function IntroLoader({ duration = 3200, onFinish }) {
           ))}
         </div>
 
-        <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4">
+        <div className="flex flex-wrap items-center justify-center gap-x-4">
           {bottomWords.map((word, i) => (
             <span
               key={word}
-              className="intro-word intro-word--up text-4xl sm:text-6xl font-bold tracking-tight text-blue-400"
+              className="intro-word intro-word--up text-4xl sm:text-5xl font-bold tracking-tight text-space-blue"
               style={{ animationDelay: `${(topWords.length + i) * STEP_MS}ms` }}
             >
               {word}
@@ -70,15 +69,18 @@ export default function IntroLoader({ duration = 3200, onFinish }) {
         </div>
       </div>
 
-      {/* Loading bar */}
-      <div className="relative z-10 mt-14 w-[78%] max-w-md">
+      {/* Loading bar: fades in + slides up after the title finishes */}
+      <div
+        className="intro-word intro-word--up relative z-10 mt-14 w-[78%] max-w-md"
+        style={{ animationDelay: `${LOADING_DELAY_MS}ms`, display: "block" }}
+      >
         <div className="mb-2 flex items-center justify-between text-xs sm:text-sm font-medium tracking-wide text-white/80">
           <span>Loading</span>
           <span>{progress}%</span>
         </div>
         <div className="h-[3px] w-full overflow-hidden rounded-full bg-white/15">
           <div
-            className="h-full rounded-full bg-blue-400 shadow-[0_0_8px_2px_rgba(96,165,250,0.6)] transition-[width] duration-150 ease-linear"
+            className="h-full rounded-full bg-white shadow-[0_0_8px_2px_rgba(255,255,255,0.5)] transition-[width] duration-150 ease-linear"
             style={{ width: `${progress}%` }}
           />
         </div>

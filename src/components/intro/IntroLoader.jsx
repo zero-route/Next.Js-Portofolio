@@ -1,77 +1,171 @@
- // src/components/intro/IntroLoader.jsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 
-export default function IntroLoader({ onComplete }) {
+, when loading completes
+ */
+export default function IntroLoader({ duration = 6500, onFinish }) {
   const [progress, setProgress] = useState(0);
-  const [isFading, setIsFading] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const duration = 2500; // Total waktu loading dalam ms
-    const intervalTime = 30;
-    const steps = duration / intervalTime;
-    let currentStep = 0;
+    const startTime = performance.now();
 
-    const timer = setInterval(() => {
-      currentStep++;
-      const currentProgress = Math.min(
-        100,
-        Math.floor((currentStep / steps) * 100)
-      );
-      setProgress(currentProgress);
+    let frameId;
+    const tick = (now) => {
+      const elapsed = now - startTime;
+      const pct = Math.min(100, Math.round((elapsed / duration) * 100));
+      setProgress(pct);
 
-      if (currentStep >= steps) {
-        clearInterval(timer);
+      if (pct < 100) {
+        frameId = requestAnimationFrame(tick);
+      } else {
         setTimeout(() => {
-          setIsFading(true);
-          setTimeout(() => {
-            if (onComplete) onComplete();
-          }, 800); // Durasi animasi fade-out
-        }, 300);
+          setVisible(false);
+          onFinish?.();
+        }, 400);
       }
-    }, intervalTime);
+    };
 
-    return () => clearInterval(timer);
-  }, [onComplete]);
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, [duration, onFinish]);
+
+  if (!visible) return null;
+
+  const STEP_MS = 420;
+  const topWords = ["Welcome", "To", "My"];
+
+  const PHRASE_LENGTH = "Portofolio Website".length; // 18
+  const bottomWords = [
+    { text: "Portofolio", start: 0, end: 10 },
+    { text: "Website", start: 11, end: 18 },
+  ];
+
+  const LOADING_DELAY_MS = (topWords.length + bottomWords.length - 1) * STEP_MS + 300;
 
   return (
-    <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#030712] text-white transition-opacity duration-800 ${
-        isFading ? "opacity-0 pointer-events-none" : "opacity-100"
-      }`}
-    >
-      {/* Background Bintang Interaktif */}
-      <AnimatedBackground />
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-black text-white">
+      <AnimatedBackground className="absolute inset-0" starCount={180} />
 
-      {/* Konten Utama Intro */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4">
-        {/* Judul Utama */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-500 drop-shadow-[0_0_25px_rgba(59,130,246,0.5)]">
-          Welcome To My
-          <br />
-          <span className="text-4xl sm:text-6xl md:text-7xl mt-2 inline-block">
-            Portofolio Website
-          </span>
-        </h1>
-
-        {/* Teks Loading & Persentase */}
-        <div className="flex items-center space-x-3 text-lg sm:text-2xl font-mono text-gray-300 tracking-wider">
-          <span className="animate-pulse font-semibold">Loading</span>
-          <span className="text-blue-400 font-bold min-w-[60px] text-left">
-            {progress}%
-          </span>
+      {/* Title: stacked on mobile, inline on desktop */}
+      <div className="relative z-10 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-y-3 sm:gap-x-3 text-center px-6">
+        <div className="flex w-full sm:w-auto flex-wrap items-center justify-center gap-x-3">
+          {topWords.map((word, i) => (
+            <span
+              key={word}
+              className="intro-word intro-word--down text-3xl sm:text-5xl font-semibold tracking-tight text-white"
+              style={{ animationDelay: `${i * STEP_MS}ms` }}
+            >
+              {word}
+            </span>
+          ))}
         </div>
 
-        {/* Progress Bar Custom */}
-        <div className="w-64 sm:w-80 h-1.5 bg-gray-800/80 rounded-full mt-6 overflow-hidden border border-blue-500/20 backdrop-blur-sm shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+        {/* Glow lives on this wrapper (filter doesn't conflict with the
+            per-word opacity animations below, unlike background-clip). */}
+        <div className="shine-text flex w-full sm:w-auto flex-wrap items-center justify-center gap-x-4">
+          {bottomWords.map((word, i) => {
+            const wordChars = word.end - word.start;
+            const bgSizePercent = (PHRASE_LENGTH / wordChars) * 100;
+            const bgPositionPercent = -(word.start / wordChars) * 100;
+
+            return (
+              <span
+                key={word.text}
+                className="intro-word intro-word--up text-4xl sm:text-5xl font-bold tracking-tight"
+                style={{
+                  animationDelay: `${(topWords.length + i) * STEP_MS}ms`,
+                  backgroundImage: "linear-gradient(to right, #1d4ed8, #ffffff)",
+                  backgroundSize: `${bgSizePercent}% 100%`,
+                  backgroundPositionX: `${bgPositionPercent}%`,
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                {word.text}
+              </span>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Loading bar: fades in + slides up after the title finishes */}
+      <div
+        className="intro-word intro-word--up relative z-10 mt-14 w-[78%] max-w-md"
+        style={{ animationDelay: `${LOADING_DELAY_MS}ms`, display: "block" }}
+      >
+        <div className="mb-2 flex items-center justify-between text-xs sm:text-sm font-medium tracking-wide text-white/80">
+          <span>Loading</span>
+          <span>{progress}%</span>
+        </div>
+        <div className="h-[3px] w-full overflow-hidden rounded-full bg-white/15">
           <div
-            className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-400 transition-all duration-100 ease-out rounded-full shadow-[0_0_12px_rgba(59,130,246,0.8)]"
+            className="h-full rounded-full bg-white shadow-[0_0_8px_2px_rgba(255,255,255,0.5)] transition-[width] duration-150 ease-linear"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
+
+      <style jsx>{`
+        .intro-word {
+          display: inline-block;
+          opacity: 0;
+          animation-duration: 0.9s;
+          animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+          animation-fill-mode: forwards;
+        }
+        .intro-word--down {
+          animation-name: fadeSlideDown;
+        }
+        .intro-word--up {
+          animation-name: fadeSlideUp;
+        }
+        @keyframes fadeSlideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-28px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeSlideUp {
+          from {
+            opacity: 0;
+            transform: translateY(28px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Soft glowing halo behind "Portofolio Website", pulsing gently.
+           This is a filter on the WRAPPER, not on the gradient-clipped
+           words themselves, so it never interferes with their entrance
+           animation. */
+        .shine-text {
+          filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.55))
+            drop-shadow(0 0 26px rgba(147, 197, 253, 0.35));
+          animation: shinePulse 2.6s ease-in-out infinite;
+          animation-delay: ${(topWords.length + bottomWords.length - 1) * STEP_MS}ms;
+        }
+        @keyframes shinePulse {
+          0%,
+          100% {
+            filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.5))
+              drop-shadow(0 0 24px rgba(147, 197, 253, 0.3));
+          }
+          50% {
+            filter: drop-shadow(0 0 16px rgba(96, 165, 250, 0.75))
+              drop-shadow(0 0 36px rgba(147, 197, 253, 0.5));
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 
-, when loading completes
- */
 export default function IntroLoader({ duration = 6500, onFinish }) {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -37,7 +35,7 @@ export default function IntroLoader({ duration = 6500, onFinish }) {
   const STEP_MS = 420;
   const topWords = ["Welcome", "To", "My"];
 
-  const PHRASE_LENGTH = "Portofolio Website".length; // 18
+  const PHRASE_LENGTH = "Portofolio Website".length;
   const bottomWords = [
     { text: "Portofolio", start: 0, end: 10 },
     { text: "Website", start: 11, end: 18 },
@@ -49,7 +47,6 @@ export default function IntroLoader({ duration = 6500, onFinish }) {
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-black text-white">
       <AnimatedBackground className="absolute inset-0" starCount={180} />
 
-      {/* Title: stacked on mobile, inline on desktop */}
       <div className="relative z-10 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-y-3 sm:gap-x-3 text-center px-6">
         <div className="flex w-full sm:w-auto flex-wrap items-center justify-center gap-x-3">
           {topWords.map((word, i) => (
@@ -63,8 +60,6 @@ export default function IntroLoader({ duration = 6500, onFinish }) {
           ))}
         </div>
 
-        {/* Glow lives on this wrapper (filter doesn't conflict with the
-            per-word opacity animations below, unlike background-clip). */}
         <div className="shine-text flex w-full sm:w-auto flex-wrap items-center justify-center gap-x-4">
           {bottomWords.map((word, i) => {
             const wordChars = word.end - word.start;
@@ -92,7 +87,6 @@ export default function IntroLoader({ duration = 6500, onFinish }) {
         </div>
       </div>
 
-      {/* Loading bar: fades in + slides up after the title finishes */}
       <div
         className="intro-word intro-word--up relative z-10 mt-14 w-[78%] max-w-md"
         style={{ animationDelay: `${LOADING_DELAY_MS}ms`, display: "block" }}
@@ -143,11 +137,6 @@ export default function IntroLoader({ duration = 6500, onFinish }) {
             transform: translateY(0);
           }
         }
-
-        /* Soft glowing halo behind "Portofolio Website", pulsing gently.
-           This is a filter on the WRAPPER, not on the gradient-clipped
-           words themselves, so it never interferes with their entrance
-           animation. */
         .shine-text {
           filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.55))
             drop-shadow(0 0 26px rgba(147, 197, 253, 0.35));

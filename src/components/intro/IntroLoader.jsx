@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 
-export default function IntroLoader({ duration = 800, onFinish }) {
+export default function IntroLoader({ duration = 500, onFinish }) {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
 

@@ -3,34 +3,9 @@
 import { useEffect, useState } from "react";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 
-export default function IntroLoader({ duration = 500, onFinish }) {
+export default function IntroLoader({ duration = 2500, onFinish }) {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    const startTime = performance.now();
-
-    let frameId;
-    const tick = (now) => {
-      const elapsed = now - startTime;
-      const pct = Math.min(100, Math.round((elapsed / duration) * 100));
-      setProgress(pct);
-
-      if (pct < 100) {
-        frameId = requestAnimationFrame(tick);
-      } else {
-        setTimeout(() => {
-          setVisible(false);
-          onFinish?.();
-        }, 400);
-      }
-    };
-
-    frameId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frameId);
-  }, [duration, onFinish]);
-
-  if (!visible) return null;
 
   const STEP_MS = 420;
   const topWords = ["Welcome", "To", "My"];
@@ -42,6 +17,39 @@ export default function IntroLoader({ duration = 500, onFinish }) {
   ];
 
   const LOADING_DELAY_MS = (topWords.length + bottomWords.length - 1) * STEP_MS + 300;
+
+  useEffect(() => {
+    let frameId;
+    let startTimeoutId;
+
+    startTimeoutId = setTimeout(() => {
+      const startTime = performance.now();
+
+      const tick = (now) => {
+        const elapsed = now - startTime;
+        const pct = Math.min(100, Math.round((elapsed / duration) * 100));
+        setProgress(pct);
+
+        if (pct < 100) {
+          frameId = requestAnimationFrame(tick);
+        } else {
+          setTimeout(() => {
+            setVisible(false);
+            onFinish?.();
+          }, 400);
+        }
+      };
+
+      frameId = requestAnimationFrame(tick);
+    }, LOADING_DELAY_MS);
+
+    return () => {
+      clearTimeout(startTimeoutId);
+      cancelAnimationFrame(frameId);
+    };
+  }, [duration, onFinish, LOADING_DELAY_MS]);
+
+  if (!visible) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-black text-white">

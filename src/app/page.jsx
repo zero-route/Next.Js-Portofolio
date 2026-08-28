@@ -8,11 +8,7 @@ export default function Page() {
 
   return (
     <>
-      {!introDone && (
-        <IntroLoader duration={6500} onFinish={() => setIntroDone(true)} />
-      )}
-
-      {/* konten halaman utama kamu di sini, tetap dirender di belakang layar */}
+      {!introDone && <IntroLoader onFinish={() => setIntroDone(true)} />}
     </>
   );
 }

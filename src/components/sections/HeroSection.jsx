@@ -1,6 +1,7 @@
-"use client";
+ "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 
 const PROJECT_URL = "/portfolio";
 const CONTACT_EMAIL = "youremail@example.com";
@@ -57,17 +58,63 @@ const ICONS = {
   ),
 };
 
-function computeWordGradients(phrase, words) {
-  let cursor = 0;
-  return words.map((word) => {
-    const start = phrase.indexOf(word, cursor);
-    const end = start + word.length;
-    cursor = end;
-    const wordChars = word.length;
-    const bgSizePercent = (phrase.length / wordChars) * 100;
-    const bgPositionPercent = -(start / wordChars) * 100;
-    return { word, bgSizePercent, bgPositionPercent };
-  });
+function GradientWords({ words, className, style }) {
+  const containerRef = useRef(null);
+  const [measurements, setMeasurements] = useState(null);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const measure = () => {
+      const nodes = Array.from(container.querySelectorAll("[data-gradient-word]"));
+      if (nodes.length === 0) return;
+
+      const firstLeft = nodes[0].offsetLeft;
+      const lastNode = nodes[nodes.length - 1];
+      const totalWidth = lastNode.offsetLeft + lastNode.offsetWidth - firstLeft;
+
+      setMeasurements(
+        nodes.map((node) => ({
+          sizePercent: (totalWidth / node.offsetWidth) * 100,
+          positionPercent: (-(node.offsetLeft - firstLeft) / node.offsetWidth) * 100,
+        }))
+      );
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [words]);
+
+  return (
+    <span ref={containerRef} className={className} style={style}>
+      {words.map((word, i) => {
+        const m = measurements?.[i];
+        return (
+          <span
+            key={word}
+            data-gradient-word
+            className="mr-2"
+            style={
+              m
+                ? {
+                    backgroundImage: "linear-gradient(to right, #1d4ed8, #ffffff)",
+                    backgroundSize: `${m.sizePercent}% 100%`,
+                    backgroundPositionX: `${m.positionPercent}%`,
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                  }
+                : { color: "transparent" }
+            }
+          >
+            {word}
+          </span>
+        );
+      })}
+    </span>
+  );
 }
 
 export default function HeroSection() {
@@ -109,13 +156,13 @@ export default function HeroSection() {
     };
   }, [paragraph, PARAGRAPH_START_DELAY]);
 
-  const titleLine2Phrase = "Engineering Digital Experiences";
   const titleLine2Words = ["Engineering", "Digital", "Experiences"];
-  const gradients = computeWordGradients(titleLine2Phrase, titleLine2Words);
 
   return (
     <section className="relative w-full min-h-screen flex items-center px-6 sm:px-12 py-24 text-white overflow-hidden">
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 w-full max-w-6xl mx-auto items-center">
+      <AnimatedBackground className="absolute inset-0" starCount={180} />
+
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-6xl mx-auto items-center">
         <div>
           <h1 className="font-bold leading-tight text-3xl sm:text-5xl">
             <span
@@ -124,27 +171,11 @@ export default function HeroSection() {
             >
               Building, Securing, &amp;
             </span>
-            <span
+            <GradientWords
+              words={titleLine2Words}
               className="hero-reveal hero-reveal--from-left block mt-1"
               style={{ animationDelay: `${LINE2_DELAY}ms`, animationDuration: `${LINE2_DURATION}ms` }}
-            >
-              {gradients.map((g) => (
-                <span
-                  key={g.word}
-                  className="mr-2"
-                  style={{
-                    backgroundImage: "linear-gradient(to right, #1d4ed8, #ffffff)",
-                    backgroundSize: `${g.bgSizePercent}% 100%`,
-                    backgroundPositionX: `${g.bgPositionPercent}%`,
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    color: "transparent",
-                  }}
-                >
-                  {g.word}
-                </span>
-              ))}
-            </span>
+            />
           </h1>
 
           <p className="mt-6 text-white/80 text-sm sm:text-base leading-relaxed min-h-[6.5rem]">

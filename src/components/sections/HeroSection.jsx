@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
+import BounceCards from "@/components/reactbits/BounceCards";
 
 const PROJECT_URL = "/portfolio";
 const CONTACT_EMAIL = "youremail@example.com";
@@ -13,6 +14,14 @@ const SOCIALS = [
   { name: "Telegram", href: "https://t.me/yourusername" },
   { name: "Instagram", href: "https://instagram.com/yourusername" },
   { name: "TikTok", href: "https://tiktok.com/@yourusername" },
+];
+
+const BOUNCE_IMAGES = [
+  "/images/bounce-1.jpg",
+  "/images/bounce-2.jpg",
+  "/images/bounce-3.jpg",
+  "/images/bounce-4.jpg",
+  "/images/bounce-5.jpg",
 ];
 
 const ICONS = {
@@ -130,9 +139,9 @@ export default function HeroSection() {
   const LINE2_DURATION = 800;
   const IMAGE_DELAY = 500;
   const PARAGRAPH_START_DELAY = LINE2_DELAY + LINE2_DURATION + 200;
-  const TYPE_SPEED_MS = 18;
+  const TYPE_SPEED_MS = 40;
   const CONTAINERS_DELAY = PARAGRAPH_START_DELAY + paragraph.length * TYPE_SPEED_MS + 300;
-  const ICON_STEP_MS = 150;
+  const ICON_STEP_MS = 300;
   const ICONS_START_DELAY = CONTAINERS_DELAY + 500;
 
   useEffect(() => {
@@ -156,7 +165,7 @@ export default function HeroSection() {
     };
   }, [paragraph, PARAGRAPH_START_DELAY]);
 
-  const titleLine2Words = ["Engineering", "Digital", "Experiences"];
+  const titleLine2Words = ["My", "Website"];
 
   return (
     <section className="relative w-full min-h-screen flex items-center px-6 sm:px-12 py-24 text-white overflow-hidden">
@@ -169,7 +178,7 @@ export default function HeroSection() {
               className="hero-reveal hero-reveal--from-right block"
               style={{ animationDelay: `${LINE1_DELAY}ms`, animationDuration: `${LINE1_DURATION}ms` }}
             >
-              Building, Securing, &amp;
+              Helo, Welcome To
             </span>
             <GradientWords
               words={titleLine2Words}
@@ -186,7 +195,7 @@ export default function HeroSection() {
           <div className="mt-8 flex flex-wrap gap-4">
             <a
               href={PROJECT_URL}
-              className="hero-reveal hero-reveal--up inline-flex items-center gap-2 rounded-full bg-space-blue px-6 py-3 font-semibold text-white hover:brightness-110 transition"
+              className="hero-reveal hero-reveal--up shine-button relative overflow-hidden inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition"
               style={{ animationDelay: `${CONTAINERS_DELAY}ms` }}
             >
               View Projects
@@ -218,14 +227,12 @@ export default function HeroSection() {
         </div>
 
         <div
-          className="hero-reveal hero-reveal--scale relative"
+          className="hero-reveal hero-reveal--scale flex justify-center"
           style={{ animationDelay: `${IMAGE_DELAY}ms` }}
         >
-          <img
-            src="/images/spotify-preview.png"
-            alt="Daily Rotation"
-            className="w-full rounded-2xl border border-white/10"
-          />
+          <div className="scale-75 sm:scale-90 md:scale-100 origin-center">
+            <BounceCards images={BOUNCE_IMAGES} containerWidth={360} containerHeight={360} />
+          </div>
         </div>
       </div>
 
@@ -306,6 +313,30 @@ export default function HeroSection() {
           50%,
           100% {
             opacity: 0;
+          }
+        }
+        .shine-button {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        .shine-button::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            120deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.55) 50%,
+            transparent 70%
+          );
+          background-size: 250% 100%;
+          animation: shineSweep 2.6s ease-in-out infinite;
+        }
+        @keyframes shineSweep {
+          0% {
+            background-position: 150% 0;
+          }
+          100% {
+            background-position: -150% 0;
           }
         }
       `}</style>

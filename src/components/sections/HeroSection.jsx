@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 import BounceCards from "@/components/reactbits/BounceCards";
 
@@ -21,7 +21,13 @@ const BOUNCE_IMAGES = [
   "/images/bounce-2.jpg",
   "/images/bounce-3.jpg",
   "/images/bounce-4.jpg",
-  "/images/bounce-5.jpg",
+];
+
+const BOUNCE_TRANSFORMS = [
+  "rotate(8deg) translate(-130px)",
+  "rotate(-4deg) translate(-40px)",
+  "rotate(4deg) translate(40px)",
+  "rotate(-8deg) translate(130px)",
 ];
 
 const ICONS = {
@@ -67,65 +73,6 @@ const ICONS = {
   ),
 };
 
-function GradientWords({ words, className, style }) {
-  const containerRef = useRef(null);
-  const [measurements, setMeasurements] = useState(null);
-
-  useLayoutEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const measure = () => {
-      const nodes = Array.from(container.querySelectorAll("[data-gradient-word]"));
-      if (nodes.length === 0) return;
-
-      const firstLeft = nodes[0].offsetLeft;
-      const lastNode = nodes[nodes.length - 1];
-      const totalWidth = lastNode.offsetLeft + lastNode.offsetWidth - firstLeft;
-
-      setMeasurements(
-        nodes.map((node) => ({
-          sizePercent: (totalWidth / node.offsetWidth) * 100,
-          positionPercent: (-(node.offsetLeft - firstLeft) / node.offsetWidth) * 100,
-        }))
-      );
-    };
-
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [words]);
-
-  return (
-    <span ref={containerRef} className={className} style={style}>
-      {words.map((word, i) => {
-        const m = measurements?.[i];
-        return (
-          <span
-            key={word}
-            data-gradient-word
-            className="mr-2"
-            style={
-              m
-                ? {
-                    backgroundImage: "linear-gradient(to right, #1d4ed8, #ffffff)",
-                    backgroundSize: `${m.sizePercent}% 100%`,
-                    backgroundPositionX: `${m.positionPercent}%`,
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    color: "transparent",
-                  }
-                : { color: "transparent" }
-            }
-          >
-            {word}
-          </span>
-        );
-      })}
-    </span>
-  );
-}
-
 export default function HeroSection() {
   const paragraph =
     "Specializing in software engineering, penetration testing, and network architecture. I build high-performance systems powered by clean code, fortified against cyber threats, and built on reliable infrastructure";
@@ -165,8 +112,6 @@ export default function HeroSection() {
     };
   }, [paragraph, PARAGRAPH_START_DELAY]);
 
-  const titleLine2Words = ["My", "Website"];
-
   return (
     <section className="relative w-full min-h-screen flex items-center px-6 sm:px-12 py-24 text-white overflow-hidden">
       <AnimatedBackground className="absolute inset-0" starCount={180} />
@@ -180,11 +125,19 @@ export default function HeroSection() {
             >
               Helo, Welcome To
             </span>
-            <GradientWords
-              words={titleLine2Words}
+            <span
               className="hero-reveal hero-reveal--from-left block mt-1"
-              style={{ animationDelay: `${LINE2_DELAY}ms`, animationDuration: `${LINE2_DURATION}ms` }}
-            />
+              style={{
+                animationDelay: `${LINE2_DELAY}ms`,
+                animationDuration: `${LINE2_DURATION}ms`,
+                backgroundImage: "linear-gradient(to right, #1d4ed8, #ffffff)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              My Website
+            </span>
           </h1>
 
           <p className="mt-6 text-white/80 text-sm sm:text-base leading-relaxed min-h-[6.5rem]">
@@ -195,7 +148,7 @@ export default function HeroSection() {
           <div className="mt-8 flex flex-wrap gap-4">
             <a
               href={PROJECT_URL}
-              className="hero-reveal hero-reveal--up shine-button relative overflow-hidden inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition"
+              className="hero-reveal hero-reveal--up shine-button inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition"
               style={{ animationDelay: `${CONTAINERS_DELAY}ms` }}
             >
               View Projects
@@ -231,7 +184,12 @@ export default function HeroSection() {
           style={{ animationDelay: `${IMAGE_DELAY}ms` }}
         >
           <div className="scale-75 sm:scale-90 md:scale-100 origin-center">
-            <BounceCards images={BOUNCE_IMAGES} containerWidth={360} containerHeight={360} />
+            <BounceCards
+              images={BOUNCE_IMAGES}
+              transformStyles={BOUNCE_TRANSFORMS}
+              containerWidth={340}
+              containerHeight={340}
+            />
           </div>
         </div>
       </div>
@@ -316,28 +274,7 @@ export default function HeroSection() {
           }
         }
         .shine-button {
-          background: linear-gradient(135deg, #3b82f6, #2563eb);
-        }
-        .shine-button::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            120deg,
-            transparent 30%,
-            rgba(255, 255, 255, 0.55) 50%,
-            transparent 70%
-          );
-          background-size: 250% 100%;
-          animation: shineSweep 2.6s ease-in-out infinite;
-        }
-        @keyframes shineSweep {
-          0% {
-            background-position: 150% 0;
-          }
-          100% {
-            background-position: -150% 0;
-          }
+          background: linear-gradient(135deg, #1d4ed8, #ffffff);
         }
       `}</style>
     </section>

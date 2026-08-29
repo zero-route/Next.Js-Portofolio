@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";

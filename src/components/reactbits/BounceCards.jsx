@@ -136,12 +136,11 @@ export default function BounceCards({
           onMouseEnter={() => pushSiblings(idx)}
           onMouseLeave={resetSiblings}
         >
-          {/* Setiap kartu dibungkus dengan komponen BorderGlow */}
           <BorderGlow
             edgeSensitivity={5}
             glowColor="210 100 60"
             backgroundColor="transparent"
-            borderRadius={20}
+            borderRadius={16}
             glowRadius={30}
             glowIntensity={1.2}
             coneSpread={35}

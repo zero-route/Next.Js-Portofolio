@@ -122,8 +122,8 @@ export default function HeroSection({ startAnimations = false }) {
   const line1 = reveal("hero-reveal--from-right block", LINE1_DELAY, LINE1_DURATION);
   const line2 = reveal("hero-reveal--from-left block mt-1", LINE2_DELAY, LINE2_DURATION);
   const imageReveal = reveal("hero-reveal--scale flex justify-center", IMAGE_DELAY, 800);
-  const btnProject = reveal("hero-reveal--up shine-button inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition", CONTAINERS_DELAY, 800);
-  const btnContact = reveal("hero-reveal--up inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10 transition", CONTAINERS_DELAY + 100, 800);
+  const btnProject = reveal("hero-reveal--up shine-button inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white transition", CONTAINERS_DELAY, 800);
+  const btnContact = reveal("hero-reveal--up inline-flex items-center gap-2 rounded-lg border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10 transition", CONTAINERS_DELAY + 100, 800);
 
   return (
     <section className="relative w-full min-h-screen flex items-center px-6 sm:px-12 py-24 text-white overflow-hidden">

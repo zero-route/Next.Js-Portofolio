@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import styles from "./BounceCards.module.css";
+import BorderGlow from "./BorderGlow";
 
 export default function BounceCards({
   className = "",
@@ -26,7 +27,7 @@ export default function BounceCards({
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        `.${styles.card}`,
+        `.${styles.cardWrapper}`,
         { scale: 0 },
         {
           scale: 1,
@@ -130,12 +131,26 @@ export default function BounceCards({
       {images.map((src, idx) => (
         <div
           key={idx}
-          className={`${styles.card} card-${idx}`}
+          className={`${styles.cardWrapper} card-${idx}`}
           style={{ transform: transformStyles[idx] ?? "none" }}
           onMouseEnter={() => pushSiblings(idx)}
           onMouseLeave={resetSiblings}
         >
-          <img className={styles.image} src={src} alt={`card-${idx}`} />
+          {/* Setiap kartu dibungkus dengan komponen BorderGlow */}
+          <BorderGlow
+            edgeSensitivity={5}
+            glowColor="210 100 60"
+            backgroundColor="transparent"
+            borderRadius={20}
+            glowRadius={30}
+            glowIntensity={1.2}
+            coneSpread={35}
+            colors={["#38bdf8", "#818cf8", "#c084fc"]}
+          >
+            <div className={styles.cardContent}>
+              <img className={styles.image} src={src} alt={`card-${idx}`} />
+            </div>
+          </BorderGlow>
         </div>
       ))}
     </div>

@@ -17,10 +17,10 @@ const SOCIALS = [
 ];
 
 const BOUNCE_IMAGES = [
-  "/images/bounce-1.jpg",
-  "/images/bounce-2.jpg",
-  "/images/bounce-3.jpg",
-  "/images/bounce-4.jpg",
+  "/images/image-1.jpg",
+  "/images/image-2.jpg",
+  "/images/image-3.jpg",
+  "/images/image-4.jpg",
 ];
 
 const BOUNCE_TRANSFORMS = [

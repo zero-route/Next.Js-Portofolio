@@ -1,99 +1,103 @@
 .border-glow-card {
   --edge-proximity: 0;
   --cursor-angle: 45deg;
-  --edge-sensitivity: 0;
-  --color-sensitivity: 0;
   --border-radius: 16px;
-  --glow-padding: 35px;
-  --cone-spread: 30;
+  --glow-padding: 25px;
+  --cone-spread: 30deg;
 
   position: relative;
   border-radius: var(--border-radius);
   isolation: isolate;
-  transform: translate3d(0, 0, 0.01px);
-  display: grid;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   background: transparent;
   overflow: visible;
   touch-action: pan-y;
 }
 
-.border-glow-card--light {
-  border-color: rgba(255, 255, 255, 0.2);
+/* Container Konten Gambar di Dalam */
+.border-glow-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
 
-.border-glow-card::before,
-.border-glow-card > .edge-light {
-  content: "";
+/* 1. GARIS BORDER TEPI (Border Highlight) */
+.border-glow-border {
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-  transition: opacity 0.15s ease-out;
-  z-index: -1;
-}
-
-/* Sembunyikan jika tidak ada interaksi */
-.border-glow-card:not(:hover):not(.touch-active):not(.sweep-active)::before,
-.border-glow-card:not(:hover):not(.touch-active):not(.sweep-active) > .edge-light {
+  border-radius: var(--border-radius);
+  padding: 1.5px; /* Ketebalan garis border */
+  pointer-events: none;
+  z-index: 3;
   opacity: 0;
-  transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.25s ease;
+
+  /* Membuat garis border hanya dari bagian yang tersiram sudut sentuhan */
+  background: conic-gradient(
+    from var(--cursor-angle) at 50% 50%,
+    rgba(255, 255, 255, 1) 0deg,
+    rgba(255, 255, 255, 0.9) var(--cone-spread),
+    transparent calc(var(--cone-spread) + 20deg),
+    transparent calc(360deg - var(--cone-spread) - 20deg),
+    rgba(255, 255, 255, 0.9) calc(360deg - var(--cone-spread)),
+    rgba(255, 255, 255, 1) 360deg
+  );
+
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }
 
-/* Garis Border Putih Shining Transparan */
-.border-glow-card::before {
-  border: 1.5px solid transparent;
-  background:
-    linear-gradient(var(--card-bg, transparent) 0 100%) padding-box,
-    linear-gradient(rgb(255 255 255 / 0%) 0% 100%) border-box,
-    var(--gradient-one, radial-gradient(at 80% 55%, rgba(255, 255, 255, 0.9) 0px, transparent 50%)) border-box,
-    var(--gradient-two, radial-gradient(at 69% 34%, rgba(255, 255, 255, 0.7) 0px, transparent 50%)) border-box,
-    var(--gradient-three, radial-gradient(at 8% 6%, rgba(255, 255, 255, 0.8) 0px, transparent 50%)) border-box,
-    var(--gradient-base, linear-gradient(rgba(255, 255, 255, 0.8) 0 100%)) border-box;
-
-  opacity: calc(var(--edge-proximity) / 100);
-
-  mask-image:
-    conic-gradient(
-      from var(--cursor-angle) at center,
-      black calc(var(--cone-spread) * 1%),
-      transparent calc((var(--cone-spread) + 15) * 1%),
-      transparent calc((100 - var(--cone-spread) - 15) * 1%),
-      black calc((100 - var(--cone-spread)) * 1%)
-    );
-}
-
-/* Pendaran Luar Putih Bening (Glowing White Effect) */
-.border-glow-card > .edge-light {
+/* 2. EFEK GLOW RADIUS LUAR (Pendaran Sinar di Luar Border) */
+.border-glow-light {
+  position: absolute;
   inset: calc(var(--glow-padding) * -1);
   border-radius: calc(var(--border-radius) + var(--glow-padding));
   pointer-events: none;
   z-index: 1;
+  opacity: 0;
+  transition: opacity 0.25s ease;
 
-  mask-image:
-    conic-gradient(
-      from var(--cursor-angle) at center, black 2.5%, transparent 10%, transparent 90%, black 97.5%
-    );
-
-  opacity: calc(var(--edge-proximity) / 100);
-  mix-blend-mode: plus-lighter;
+  /* Pendaran luar dibatasi sudut yang sama agar seirama dengan border */
+  -webkit-mask: conic-gradient(
+    from var(--cursor-angle) at 50% 50%,
+    rgba(0, 0, 0, 1) 0deg,
+    rgba(0, 0, 0, 0.8) var(--cone-spread),
+    transparent calc(var(--cone-spread) + 25deg),
+    transparent calc(360deg - var(--cone-spread) - 25deg),
+    rgba(0, 0, 0, 0.8) calc(360deg - var(--cone-spread)),
+    rgba(0, 0, 0, 1) 360deg
+  );
+  mask: conic-gradient(
+    from var(--cursor-angle) at 50% 50%,
+    rgba(0, 0, 0, 1) 0deg,
+    rgba(0, 0, 0, 0.8) var(--cone-spread),
+    transparent calc(var(--cone-spread) + 25deg),
+    transparent calc(360deg - var(--cone-spread) - 25deg),
+    rgba(0, 0, 0, 0.8) calc(360deg - var(--cone-spread)),
+    rgba(0, 0, 0, 1) 360deg
+  );
 }
 
-.border-glow-card > .edge-light::before {
+.border-glow-light::before {
   content: "";
   position: absolute;
   inset: var(--glow-padding);
   border-radius: var(--border-radius);
   box-shadow:
-    0 0 10px 2px rgba(255, 255, 255, 0.8),
-    0 0 20px 4px rgba(255, 255, 255, 0.4),
-    0 0 35px 6px rgba(255, 255, 255, 0.2);
+    0 0 12px 2px rgba(255, 255, 255, 0.8),
+    0 0 24px 4px rgba(255, 255, 255, 0.4),
+    0 0 36px 6px rgba(255, 255, 255, 0.2);
 }
 
-.border-glow-inner {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--border-radius);
-  z-index: 2;
+/* Tampilkan Efek Glow ketika Tersentuh / Di-hover */
+.border-glow-card:hover .border-glow-border,
+.border-glow-card:hover .border-glow-light,
+.border-glow-card.glow-active .border-glow-border,
+.border-glow-card.glow-active .border-glow-light {
+  opacity: 1;
 }

@@ -5,7 +5,7 @@ import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 import BounceCards from "@/components/reactbits/BounceCards";
 
 const PROJECT_URL = "/portfolio";
-const CONTACT_EMAIL = "youremail@example.com";
+const CONTACT_EMAIL = "dimzishere854@gmail.com";
 
 const SOCIALS = [
   { name: "GitHub", href: "https://github.com/yourusername" },
@@ -156,10 +156,37 @@ export default function HeroSection({ startAnimations = false }) {
 
           <div className="mt-8 flex flex-wrap gap-4">
             <a href={PROJECT_URL} className={btnProject.className} style={btnProject.style}>
-              View Projects
+              <span>View Projects</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-4 h-4"
+              >
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
             </a>
             <a href={`mailto:${CONTACT_EMAIL}`} className={btnContact.className} style={btnContact.style}>
-              Contact Me
+              <span>Contact Me</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-4 h-4"
+              >
+                <rect width="20" height="16" x="2" y="4" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
             </a>
           </div>
 

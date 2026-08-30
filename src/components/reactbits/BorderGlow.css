@@ -4,8 +4,8 @@
   --edge-sensitivity: 5;
   --color-sensitivity: calc(var(--edge-sensitivity) + 10);
   --border-radius: 16px;
-  --glow-padding: 20px;
-  --cone-spread: 35;
+  --glow-padding: 25px;
+  --cone-spread: 30;
 
   position: relative;
   border-radius: var(--border-radius);
@@ -17,7 +17,7 @@
   touch-action: pan-y;
 }
 
-/* Layer Border Utama */
+/* 1. Border Utama (Glow hanya di titik kursor) */
 .border-glow-card::before {
   content: "";
   position: absolute;
@@ -31,11 +31,19 @@
     var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)),
     var(--gradient-base, linear-gradient(#c299ff 0 100%));
   
+  /* Masking ganda: membentuk border tipis DAN membatasi sorotan hanya di sudut kursor */
   -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+    conic-gradient(
+      from var(--cursor-angle) at 50% 50%,
+      #fff 0deg,
+      #fff calc(var(--cone-spread) * 1deg),
+      transparent calc((var(--cone-spread) + 25) * 1deg),
+      transparent calc(360deg - (var(--cone-spread) + 25) * 1deg),
+      #fff calc(360deg - var(--cone-spread) * 1deg)
+    ),
+    linear-gradient(#fff 0 0) content-box;
+  -webkit-mask-composite: source-in, xor;
+  mask-composite: intersect, exclude;
 
   opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
   transition: opacity 0.3s ease;
@@ -43,12 +51,7 @@
   z-index: 10;
 }
 
-.border-glow-card:not(:hover):not(.touch-active):not(.sweep-active)::before,
-.border-glow-card:not(:hover):not(.touch-active):not(.sweep-active) > .edge-light {
-  opacity: 0;
-}
-
-/* Layer Pendaran Sinar (Outer Glow) */
+/* 2. Layer Pendaran Sinar Luar (Outer Glow terarah) */
 .border-glow-card > .edge-light {
   content: "";
   position: absolute;
@@ -56,6 +59,25 @@
   border-radius: calc(var(--border-radius) + var(--glow-padding));
   pointer-events: none;
   z-index: 5;
+
+  /* Masking sorotan pendaran luar mengikuti kursor */
+  -webkit-mask: conic-gradient(
+    from var(--cursor-angle) at 50% 50%,
+    #fff 0deg,
+    #fff calc(var(--cone-spread) * 1deg),
+    transparent calc((var(--cone-spread) + 20) * 1deg),
+    transparent calc(360deg - (var(--cone-spread) + 20) * 1deg),
+    #fff calc(360deg - var(--cone-spread) * 1deg)
+  );
+  mask: conic-gradient(
+    from var(--cursor-angle) at 50% 50%,
+    #fff 0deg,
+    #fff calc(var(--cone-spread) * 1deg),
+    transparent calc((var(--cone-spread) + 20) * 1deg),
+    transparent calc(360deg - (var(--cone-spread) + 20) * 1deg),
+    #fff calc(360deg - var(--cone-spread) * 1deg)
+  );
+
   opacity: calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity)));
   transition: opacity 0.3s ease;
 }
@@ -66,8 +88,13 @@
   inset: var(--glow-padding);
   border-radius: var(--border-radius);
   box-shadow:
-    0 0 10px 1px var(--glow-color-60, hsl(210deg 100% 60% / 60%)),
-    0 0 20px 3px var(--glow-color-30, hsl(210deg 100% 60% / 30%));
+    0 0 12px 2px var(--glow-color-60, hsl(210deg 100% 60% / 80%)),
+    0 0 24px 4px var(--glow-color-30, hsl(210deg 100% 60% / 40%));
+}
+
+.border-glow-card:not(:hover):not(.touch-active):not(.sweep-active)::before,
+.border-glow-card:not(:hover):not(.touch-active):not(.sweep-active) > .edge-light {
+  opacity: 0;
 }
 
 .border-glow-inner {

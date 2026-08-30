@@ -1,11 +1,11 @@
 .border-glow-card {
   --edge-proximity: 0;
   --cursor-angle: 45deg;
-  --edge-sensitivity: 5;
-  --color-sensitivity: calc(var(--edge-sensitivity) + 10);
+  --edge-sensitivity: 10;
+  --color-sensitivity: calc(var(--edge-sensitivity) + 15);
   --border-radius: 16px;
-  --glow-padding: 25px;
-  --cone-spread: 30;
+  --glow-padding: 30px;
+  --cone-spread: 25;
 
   position: relative;
   border-radius: var(--border-radius);
@@ -17,69 +17,78 @@
   touch-action: pan-y;
 }
 
-/* 1. Border Utama (Glow hanya di titik kursor) */
+/* Biarkan z-index anak berada di depan */
+.border-glow-inner {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+/* Layer Border Berkilau */
 .border-glow-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: var(--border-radius);
-  padding: 1.5px;
+  border-radius: inherit;
+  padding: 2px;
   background:
     var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 1) 0px, transparent 50%)),
     var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 1) 0px, transparent 50%)),
     var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 1) 0px, transparent 50%)),
     var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)),
     var(--gradient-base, linear-gradient(#c299ff 0 100%));
-  
-  /* Masking ganda: membentuk border tipis DAN membatasi sorotan hanya di sudut kursor */
-  -webkit-mask: 
+
+  /* Masking border dan sudut arah sentuhan */
+  -webkit-mask:
     conic-gradient(
-      from var(--cursor-angle) at 50% 50%,
-      #fff 0deg,
-      #fff calc(var(--cone-spread) * 1deg),
-      transparent calc((var(--cone-spread) + 25) * 1deg),
-      transparent calc(360deg - (var(--cone-spread) + 25) * 1deg),
-      #fff calc(360deg - var(--cone-spread) * 1deg)
+      from var(--cursor-angle) at center,
+      black calc(var(--cone-spread) * 1%),
+      transparent calc((var(--cone-spread) + 20) * 1%),
+      transparent calc((100 - var(--cone-spread) - 20) * 1%),
+      black calc((100 - var(--cone-spread)) * 1%)
     ),
     linear-gradient(#fff 0 0) content-box;
   -webkit-mask-composite: source-in, xor;
   mask-composite: intersect, exclude;
 
   opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease-out;
   pointer-events: none;
-  z-index: 10;
+  z-index: 3;
 }
 
-/* 2. Layer Pendaran Sinar Luar (Outer Glow terarah) */
+/* Layer Pendaran Sinar Luar (Outer Glow) */
 .border-glow-card > .edge-light {
   content: "";
   position: absolute;
   inset: calc(var(--glow-padding) * -1);
   border-radius: calc(var(--border-radius) + var(--glow-padding));
   pointer-events: none;
-  z-index: 5;
+  z-index: 1;
 
-  /* Masking sorotan pendaran luar mengikuti kursor */
   -webkit-mask: conic-gradient(
-    from var(--cursor-angle) at 50% 50%,
-    #fff 0deg,
-    #fff calc(var(--cone-spread) * 1deg),
-    transparent calc((var(--cone-spread) + 20) * 1deg),
-    transparent calc(360deg - (var(--cone-spread) + 20) * 1deg),
-    #fff calc(360deg - var(--cone-spread) * 1deg)
+    from var(--cursor-angle) at center,
+    black 2.5%,
+    transparent 12%,
+    transparent 88%,
+    black 97.5%
   );
   mask: conic-gradient(
-    from var(--cursor-angle) at 50% 50%,
-    #fff 0deg,
-    #fff calc(var(--cone-spread) * 1deg),
-    transparent calc((var(--cone-spread) + 20) * 1deg),
-    transparent calc(360deg - (var(--cone-spread) + 20) * 1deg),
-    #fff calc(360deg - var(--cone-spread) * 1deg)
+    from var(--cursor-angle) at center,
+    black 2.5%,
+    transparent 12%,
+    transparent 88%,
+    black 97.5%
   );
 
   opacity: calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity)));
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease-out;
+  mix-blend-mode: plus-lighter;
 }
 
 .border-glow-card > .edge-light::before {
@@ -88,20 +97,13 @@
   inset: var(--glow-padding);
   border-radius: var(--border-radius);
   box-shadow:
-    0 0 12px 2px var(--glow-color-60, hsl(210deg 100% 60% / 80%)),
-    0 0 24px 4px var(--glow-color-30, hsl(210deg 100% 60% / 40%));
+    0 0 12px 1px var(--glow-color-60, hsl(210deg 100% 60% / 80%)),
+    0 0 24px 3px var(--glow-color-30, hsl(210deg 100% 60% / 40%));
 }
 
+/* Sembunyikan ketika tidak ada interaksi */
 .border-glow-card:not(:hover):not(.touch-active):not(.sweep-active)::before,
 .border-glow-card:not(:hover):not(.touch-active):not(.sweep-active) > .edge-light {
   opacity: 0;
-}
-
-.border-glow-inner {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--border-radius);
-  z-index: 1;
+  transition: opacity 0.5s ease-in-out;
 }

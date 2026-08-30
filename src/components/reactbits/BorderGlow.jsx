@@ -71,16 +71,16 @@ function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease =
 const BorderGlow = ({
   children,
   className = "",
-  edgeSensitivity = 5, // Sensitivitas dinaikkan agar efek lebih mudah terpicu di sentuhan HP
+  edgeSensitivity = 10,
   glowColor = "40 80 80",
-  backgroundColor = "#120F17",
-  borderRadius = 28,
-  glowRadius = 40,
+  backgroundColor = "transparent",
+  borderRadius = 16,
+  glowRadius = 30,
   glowIntensity = 1.0,
-  coneSpread = 35,
+  coneSpread = 25,
   animated = false,
   colors = ["#c084fc", "#f472b6", "#38bdf8"],
-  fillOpacity = 0.5,
+  fillOpacity = 0, // Set 0 agar tidak menutup permukaan gambar
 }) => {
   const cardRef = useRef(null);
 
@@ -111,7 +111,7 @@ const BorderGlow = ({
     return degrees;
   }, [getCenterOfElement]);
 
-  const updatePointerPosition = useCallback((e) => {
+  const handlePointerMove = useCallback((e) => {
     const card = cardRef.current;
     if (!card) return;
 
@@ -178,11 +178,10 @@ const BorderGlow = ({
   return (
     <div
       ref={cardRef}
-      onPointerDown={updatePointerPosition}
-      onPointerMove={updatePointerPosition}
+      onPointerDown={handlePointerMove}
+      onPointerMove={handlePointerMove}
       onPointerUp={handlePointerLeave}
       onPointerLeave={handlePointerLeave}
-      onPointerCancel={handlePointerLeave}
       className={`border-glow-card${lightSurface ? " border-glow-card--light" : ""} ${className}`}
       style={{
         "--card-bg": backgroundColor,

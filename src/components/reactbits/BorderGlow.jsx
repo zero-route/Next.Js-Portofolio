@@ -71,16 +71,16 @@ function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease =
 const BorderGlow = ({
   children,
   className = "",
-  edgeSensitivity = 10,
+  edgeSensitivity = 30,
   glowColor = "40 80 80",
-  backgroundColor = "transparent",
+  backgroundColor = "transparent", // Diubah ke transparent agar tidak menutupi kartu
   borderRadius = 16,
-  glowRadius = 30,
+  glowRadius = 40,
   glowIntensity = 1.0,
   coneSpread = 25,
   animated = false,
   colors = ["#c084fc", "#f472b6", "#38bdf8"],
-  fillOpacity = 0, // Set 0 agar tidak menutup permukaan gambar
+  fillOpacity = 0.5,
 }) => {
   const cardRef = useRef(null);
 
@@ -122,17 +122,9 @@ const BorderGlow = ({
     const edge = getEdgeProximity(card, x, y);
     const angle = getCursorAngle(card, x, y);
 
-    card.classList.add("touch-active");
     card.style.setProperty("--edge-proximity", `${(edge * 100).toFixed(3)}`);
     card.style.setProperty("--cursor-angle", `${angle.toFixed(3)}deg`);
   }, [getEdgeProximity, getCursorAngle]);
-
-  const handlePointerLeave = useCallback(() => {
-    const card = cardRef.current;
-    if (!card) return;
-    card.classList.remove("touch-active");
-    card.style.setProperty("--edge-proximity", "0");
-  }, []);
 
   useEffect(() => {
     if (!animated || !cardRef.current) return;
@@ -178,10 +170,7 @@ const BorderGlow = ({
   return (
     <div
       ref={cardRef}
-      onPointerDown={handlePointerMove}
       onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerLeave}
-      onPointerLeave={handlePointerLeave}
       className={`border-glow-card${lightSurface ? " border-glow-card--light" : ""} ${className}`}
       style={{
         "--card-bg": backgroundColor,

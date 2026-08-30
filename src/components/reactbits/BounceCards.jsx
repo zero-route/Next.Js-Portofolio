@@ -10,9 +10,9 @@ export default function BounceCards({
   images = [],
   containerWidth = 400,
   containerHeight = 400,
-  animationDelay = 0.5,
-  animationStagger = 0.06,
-  easeType = "elastic.out(1, 0.8)",
+  animationDelay = 0.8, // Menunggu delay sedikit lebih lama (0.8s)
+  animationStagger = 0.15, // Jeda antar kartu diperluas biar gak muncul barengan kenceng
+  easeType = "back.out(1.2)", // Membal halus, menggantikan elastic yang terlalu kenceng
   transformStyles = [
     "rotate(10deg) translate(-170px)",
     "rotate(5deg) translate(-85px)",
@@ -31,6 +31,7 @@ export default function BounceCards({
         { scale: 0 },
         {
           scale: 1,
+          duration: 1.2, // DURASI MEKAR DILAMBATKAN (1.2 detik per kartu)
           stagger: animationStagger,
           ease: easeType,
           delay: animationDelay,

@@ -5,7 +5,7 @@ import "./BorderGlow.css";
 
 function parseHSL(hslStr) {
   const match = hslStr.match(/([\d.]+)\s*([\d.]+)%?\s*([\d.]+)%?/);
-  if (!match) return { h: 40, s: 80, l: 80 };
+  if (!match) return { h: 0, s: 0, l: 100 };
   return { h: parseFloat(match[1]), s: parseFloat(match[2]), l: parseFloat(match[3]) };
 }
 
@@ -71,16 +71,16 @@ function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease =
 const BorderGlow = ({
   children,
   className = "",
-  edgeSensitivity = 30,
-  glowColor = "40 80 80",
-  backgroundColor = "transparent", // Diubah ke transparent agar tidak menutupi kartu
+  edgeSensitivity = 0, // Dibuat 0 agar sangat sensitif pada jari
+  glowColor = "0 0 100", // Warna Putih
+  backgroundColor = "transparent",
   borderRadius = 16,
   glowRadius = 40,
-  glowIntensity = 1.0,
-  coneSpread = 25,
+  glowIntensity = 1.2,
+  coneSpread = 30,
   animated = false,
-  colors = ["#c084fc", "#f472b6", "#38bdf8"],
-  fillOpacity = 0.5,
+  colors = ["rgba(255,255,255,0.9)", "rgba(255,255,255,0.6)", "rgba(255,255,255,0.3)"], // Putih shining transparan
+  fillOpacity = 0,
 }) => {
   const cardRef = useRef(null);
 
@@ -111,20 +111,40 @@ const BorderGlow = ({
     return degrees;
   }, [getCenterOfElement]);
 
-  const handlePointerMove = useCallback((e) => {
+  // Handler serbaguna untuk Mouse, Pointer, dan Touch (HP)
+  const handleMove = useCallback((clientX, clientY) => {
     const card = cardRef.current;
     if (!card) return;
 
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
 
     const edge = getEdgeProximity(card, x, y);
     const angle = getCursorAngle(card, x, y);
 
-    card.style.setProperty("--edge-proximity", `${(edge * 100).toFixed(3)}`);
+    card.classList.add("touch-active");
+    // Menggunakan Math.max untuk memaksa nilai proximity tinggi saat tersentuh
+    card.style.setProperty("--edge-proximity", `${Math.max(edge * 100, 80).toFixed(3)}`);
     card.style.setProperty("--cursor-angle", `${angle.toFixed(3)}deg`);
   }, [getEdgeProximity, getCursorAngle]);
+
+  const handlePointerMove = useCallback((e) => {
+    handleMove(e.clientX, e.clientY);
+  }, [handleMove]);
+
+  const handleTouchMove = useCallback((e) => {
+    if (e.touches && e.touches[0]) {
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, [handleMove]);
+
+  const handleLeave = useCallback(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    card.classList.remove("touch-active");
+    card.style.setProperty("--edge-proximity", "0");
+  }, []);
 
   useEffect(() => {
     if (!animated || !cardRef.current) return;
@@ -170,7 +190,13 @@ const BorderGlow = ({
   return (
     <div
       ref={cardRef}
+      onPointerDown={handlePointerMove}
       onPointerMove={handlePointerMove}
+      onPointerUp={handleLeave}
+      onPointerLeave={handleLeave}
+      onTouchStart={handleTouchMove}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleLeave}
       className={`border-glow-card${lightSurface ? " border-glow-card--light" : ""} ${className}`}
       style={{
         "--card-bg": backgroundColor,

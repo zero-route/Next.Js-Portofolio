@@ -133,7 +133,7 @@ export default function HeroSection({ startAnimations = false }) {
         <div>
           <h1 className="font-bold leading-tight text-3xl sm:text-5xl">
             <span className={line1.className} style={line1.style}>
-              Helo, Welcome To
+              Engineering Trust In
             </span>
             <span
               className={line2.className}
@@ -145,7 +145,7 @@ export default function HeroSection({ startAnimations = false }) {
                 color: "transparent",
               }}
             >
-              My Website
+              Every Line of Code
             </span>
           </h1>
 

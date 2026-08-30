@@ -2,7 +2,7 @@
   --edge-proximity: 0;
   --cursor-angle: 45deg;
   --border-radius: 16px;
-  --glow-padding: 25px;
+  --glow-padding: 20px;
   --cone-spread: 30deg;
 
   position: relative;
@@ -13,7 +13,6 @@
   touch-action: pan-y;
 }
 
-/* Container Konten Gambar di Dalam */
 .border-glow-inner {
   position: relative;
   z-index: 2;
@@ -23,25 +22,24 @@
   overflow: hidden;
 }
 
-/* 1. GARIS BORDER TEPI (Border Highlight) */
+/* 1. BORDER TEPI (HIGHLIGHT LIGHT) */
 .border-glow-border {
   position: absolute;
   inset: 0;
   border-radius: var(--border-radius);
-  padding: 1.5px; /* Ketebalan garis border */
+  padding: 1.5px;
   pointer-events: none;
   z-index: 3;
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.2s ease-out;
 
-  /* Membuat garis border hanya dari bagian yang tersiram sudut sentuhan */
   background: conic-gradient(
     from var(--cursor-angle) at 50% 50%,
     rgba(255, 255, 255, 1) 0deg,
-    rgba(255, 255, 255, 0.9) var(--cone-spread),
-    transparent calc(var(--cone-spread) + 20deg),
-    transparent calc(360deg - var(--cone-spread) - 20deg),
-    rgba(255, 255, 255, 0.9) calc(360deg - var(--cone-spread)),
+    rgba(255, 255, 255, 0.7) var(--cone-spread),
+    transparent calc(var(--cone-spread) + 15deg),
+    transparent calc(360deg - var(--cone-spread) - 15deg),
+    rgba(255, 255, 255, 0.7) calc(360deg - var(--cone-spread)),
     rgba(255, 255, 255, 1) 360deg
   );
 
@@ -52,7 +50,7 @@
   mask-composite: exclude;
 }
 
-/* 2. EFEK GLOW RADIUS LUAR (Pendaran Sinar di Luar Border) */
+/* 2. PENDARAN BORDER LUAR (OUTER GLOW) */
 .border-glow-light {
   position: absolute;
   inset: calc(var(--glow-padding) * -1);
@@ -60,25 +58,24 @@
   pointer-events: none;
   z-index: 1;
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.2s ease-out;
 
-  /* Pendaran luar dibatasi sudut yang sama agar seirama dengan border */
   -webkit-mask: conic-gradient(
     from var(--cursor-angle) at 50% 50%,
     rgba(0, 0, 0, 1) 0deg,
-    rgba(0, 0, 0, 0.8) var(--cone-spread),
-    transparent calc(var(--cone-spread) + 25deg),
-    transparent calc(360deg - var(--cone-spread) - 25deg),
-    rgba(0, 0, 0, 0.8) calc(360deg - var(--cone-spread)),
+    rgba(0, 0, 0, 0.6) var(--cone-spread),
+    transparent calc(var(--cone-spread) + 20deg),
+    transparent calc(360deg - var(--cone-spread) - 20deg),
+    rgba(0, 0, 0, 0.6) calc(360deg - var(--cone-spread)),
     rgba(0, 0, 0, 1) 360deg
   );
   mask: conic-gradient(
     from var(--cursor-angle) at 50% 50%,
     rgba(0, 0, 0, 1) 0deg,
-    rgba(0, 0, 0, 0.8) var(--cone-spread),
-    transparent calc(var(--cone-spread) + 25deg),
-    transparent calc(360deg - var(--cone-spread) - 25deg),
-    rgba(0, 0, 0, 0.8) calc(360deg - var(--cone-spread)),
+    rgba(0, 0, 0, 0.6) var(--cone-spread),
+    transparent calc(var(--cone-spread) + 20deg),
+    transparent calc(360deg - var(--cone-spread) - 20deg),
+    rgba(0, 0, 0, 0.6) calc(360deg - var(--cone-spread)),
     rgba(0, 0, 0, 1) 360deg
   );
 }
@@ -89,15 +86,20 @@
   inset: var(--glow-padding);
   border-radius: var(--border-radius);
   box-shadow:
-    0 0 12px 2px rgba(255, 255, 255, 0.8),
-    0 0 24px 4px rgba(255, 255, 255, 0.4),
-    0 0 36px 6px rgba(255, 255, 255, 0.2);
+    0 0 10px 1px rgba(255, 255, 255, 0.8),
+    0 0 20px 3px rgba(255, 255, 255, 0.4);
 }
 
-/* Tampilkan Efek Glow ketika Tersentuh / Di-hover */
-.border-glow-card:hover .border-glow-border,
-.border-glow-card:hover .border-glow-light,
+/* KONDISI AKTIF: Hanya menyala saat jari/kursor sedang menyentuh */
 .border-glow-card.glow-active .border-glow-border,
 .border-glow-card.glow-active .border-glow-light {
   opacity: 1;
+}
+
+/* Saat jari dilepas, hilangkan kelas hover agar tidak membeku/sticky */
+@media (hover: hover) {
+  .border-glow-card:hover .border-glow-border,
+  .border-glow-card:hover .border-glow-light {
+    opacity: 1;
+  }
 }

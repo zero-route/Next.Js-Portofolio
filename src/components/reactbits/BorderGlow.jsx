@@ -24,14 +24,12 @@ function buildGlowVars(glowColor, intensity) {
 const BorderGlow = ({
   children,
   className = "",
-  edgeSensitivity = 0,
-  glowColor = "0 0 100", // Putih terang
+  glowColor = "0 0 100",
   backgroundColor = "transparent",
   borderRadius = 16,
   glowRadius = 30,
   glowIntensity = 1.2,
   coneSpread = 25,
-  animated = false,
 }) => {
   const cardRef = useRef(null);
 
@@ -39,17 +37,6 @@ const BorderGlow = ({
     const { width, height } = el.getBoundingClientRect();
     return [width / 2, height / 2];
   }, []);
-
-  const getEdgeProximity = useCallback((el, x, y) => {
-    const [cx, cy] = getCenterOfElement(el);
-    const dx = x - cx;
-    const dy = y - cy;
-    let kx = Infinity;
-    let ky = Infinity;
-    if (dx !== 0) kx = cx / Math.abs(dx);
-    if (dy !== 0) ky = cy / Math.abs(dy);
-    return Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
-  }, [getCenterOfElement]);
 
   const getCursorAngle = useCallback((el, x, y) => {
     const [cx, cy] = getCenterOfElement(el);
@@ -62,6 +49,13 @@ const BorderGlow = ({
     return degrees;
   }, [getCenterOfElement]);
 
+  const resetGlow = useCallback(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    card.classList.remove("glow-active");
+    card.style.setProperty("--edge-proximity", "0");
+  }, []);
+
   const handleUpdate = useCallback((clientX, clientY) => {
     const card = cardRef.current;
     if (!card) return;
@@ -70,13 +64,17 @@ const BorderGlow = ({
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
-    const edge = getEdgeProximity(card, x, y);
-    const angle = getCursorAngle(card, x, y);
+    // Pastikan posisi berada di dalam / sekitar batas kartu
+    if (x < -20 || y < -20 || x > rect.width + 20 || y > rect.height + 20) {
+      resetGlow();
+      return;
+    }
 
+    const angle = getCursorAngle(card, x, y);
     card.classList.add("glow-active");
-    card.style.setProperty("--edge-proximity", `${Math.max(edge * 100, 100).toFixed(3)}`);
-    card.style.setProperty("--cursor-angle", `${angle.toFixed(3)}deg`);
-  }, [getEdgeProximity, getCursorAngle]);
+    card.style.setProperty("--cursor-angle", `${angle.toFixed(2)}deg`);
+    card.style.setProperty("--edge-proximity", "100");
+  }, [getCursorAngle, resetGlow]);
 
   const handlePointerMove = useCallback((e) => {
     handleUpdate(e.clientX, e.clientY);
@@ -88,12 +86,19 @@ const BorderGlow = ({
     }
   }, [handleUpdate]);
 
-  const handleLeave = useCallback(() => {
-    const card = cardRef.current;
-    if (!card) return;
-    card.classList.remove("glow-active");
-    card.style.setProperty("--edge-proximity", "0");
-  }, []);
+  // Pasang listener global untuk memastikan saat sentuhan/klik dilepas, glow pasti mati
+  useEffect(() => {
+    const handleGlobalEnd = () => resetGlow();
+    window.addEventListener("pointerup", handleGlobalEnd);
+    window.addEventListener("touchend", handleGlobalEnd);
+    window.addEventListener("touchcancel", handleGlobalEnd);
+
+    return () => {
+      window.removeEventListener("pointerup", handleGlobalEnd);
+      window.removeEventListener("touchend", handleGlobalEnd);
+      window.removeEventListener("touchcancel", handleGlobalEnd);
+    };
+  }, [resetGlow]);
 
   const glowVars = buildGlowVars(glowColor, glowIntensity);
 
@@ -102,11 +107,11 @@ const BorderGlow = ({
       ref={cardRef}
       onPointerDown={handlePointerMove}
       onPointerMove={handlePointerMove}
-      onPointerUp={handleLeave}
-      onPointerLeave={handleLeave}
+      onPointerLeave={resetGlow}
       onTouchStart={handleTouchMove}
       onTouchMove={handleTouchMove}
-      onTouchEnd={handleLeave}
+      onTouchEnd={resetGlow}
+      onTouchCancel={resetGlow}
       className={`border-glow-card ${className}`}
       style={{
         "--card-bg": backgroundColor,

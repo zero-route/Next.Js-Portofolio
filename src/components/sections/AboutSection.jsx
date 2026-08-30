@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
+import ErrorBoundary from "@/components/reactbits/ErrorBoundary";
 
 const Lanyard = dynamic(() => import("@/components/reactbits/Lanyard"), { ssr: false });
 
@@ -35,7 +36,9 @@ export default function AboutSection() {
         </div>
 
         <div className="h-[70vh] md:h-[80vh]">
-          <Lanyard />
+          <ErrorBoundary>
+            <Lanyard />
+          </ErrorBoundary>
         </div>
       </div>
     </section>

@@ -73,7 +73,7 @@ const ICONS = {
   ),
 };
 
-export default function HeroSection() {
+export default function HeroSection({ startAnimations = false }) {
   const paragraph =
     "Specializing in software engineering, penetration testing, and network architecture. I build high-performance systems powered by clean code, fortified against cyber threats, and built on reliable infrastructure";
 
@@ -92,6 +92,8 @@ export default function HeroSection() {
   const ICONS_START_DELAY = CONTAINERS_DELAY + 500;
 
   useEffect(() => {
+    if (!startAnimations) return;
+
     let charIndex = 0;
     let intervalId;
 
@@ -110,7 +112,18 @@ export default function HeroSection() {
       clearTimeout(startTimeoutId);
       clearInterval(intervalId);
     };
-  }, [paragraph, PARAGRAPH_START_DELAY]);
+  }, [startAnimations, paragraph, PARAGRAPH_START_DELAY]);
+
+  const reveal = (variant, delay, duration) =>
+    startAnimations
+      ? { className: `hero-reveal ${variant}`, style: { animationDelay: `${delay}ms`, animationDuration: `${duration}ms` } }
+      : { className: "opacity-0", style: {} };
+
+  const line1 = reveal("hero-reveal--from-right block", LINE1_DELAY, LINE1_DURATION);
+  const line2 = reveal("hero-reveal--from-left block mt-1", LINE2_DELAY, LINE2_DURATION);
+  const imageReveal = reveal("hero-reveal--scale flex justify-center", IMAGE_DELAY, 800);
+  const btnProject = reveal("hero-reveal--up shine-button inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition", CONTAINERS_DELAY, 800);
+  const btnContact = reveal("hero-reveal--up inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10 transition", CONTAINERS_DELAY + 100, 800);
 
   return (
     <section className="relative w-full min-h-screen flex items-center px-6 sm:px-12 py-24 text-white overflow-hidden">
@@ -119,17 +132,13 @@ export default function HeroSection() {
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-6xl mx-auto items-center">
         <div>
           <h1 className="font-bold leading-tight text-3xl sm:text-5xl">
-            <span
-              className="hero-reveal hero-reveal--from-right block"
-              style={{ animationDelay: `${LINE1_DELAY}ms`, animationDuration: `${LINE1_DURATION}ms` }}
-            >
+            <span className={line1.className} style={line1.style}>
               Helo, Welcome To
             </span>
             <span
-              className="hero-reveal hero-reveal--from-left block mt-1"
+              className={line2.className}
               style={{
-                animationDelay: `${LINE2_DELAY}ms`,
-                animationDuration: `${LINE2_DURATION}ms`,
+                ...line2.style,
                 backgroundImage: "linear-gradient(to right, #1d4ed8, #ffffff)",
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
@@ -146,51 +155,49 @@ export default function HeroSection() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href={PROJECT_URL}
-              className="hero-reveal hero-reveal--up shine-button inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition"
-              style={{ animationDelay: `${CONTAINERS_DELAY}ms` }}
-            >
+            <a href={PROJECT_URL} className={btnProject.className} style={btnProject.style}>
               View Projects
             </a>
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="hero-reveal hero-reveal--up inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10 transition"
-              style={{ animationDelay: `${CONTAINERS_DELAY + 100}ms` }}
-            >
+            <a href={`mailto:${CONTACT_EMAIL}`} className={btnContact.className} style={btnContact.style}>
               Contact Me
             </a>
           </div>
 
           <div className="mt-8 flex gap-3">
-            {SOCIALS.map((social, i) => (
-              <a
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.name}
-                className="hero-reveal hero-reveal--up flex items-center justify-center w-11 h-11 rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-white/50 transition"
-                style={{ animationDelay: `${ICONS_START_DELAY + i * ICON_STEP_MS}ms` }}
-              >
-                {ICONS[social.name]}
-              </a>
-            ))}
+            {SOCIALS.map((social, i) => {
+              const icon = reveal(
+                "hero-reveal--up flex items-center justify-center w-11 h-11 rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-white/50 transition",
+                ICONS_START_DELAY + i * ICON_STEP_MS,
+                800
+              );
+              return (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  className={icon.className}
+                  style={icon.style}
+                >
+                  {ICONS[social.name]}
+                </a>
+              );
+            })}
           </div>
         </div>
 
-        <div
-          className="hero-reveal hero-reveal--scale flex justify-center"
-          style={{ animationDelay: `${IMAGE_DELAY}ms` }}
-        >
-          <div className="scale-75 sm:scale-90 md:scale-100 origin-center">
-            <BounceCards
-              images={BOUNCE_IMAGES}
-              transformStyles={BOUNCE_TRANSFORMS}
-              containerWidth={340}
-              containerHeight={340}
-            />
-          </div>
+        <div className={imageReveal.className} style={imageReveal.style}>
+          {startAnimations && (
+            <div className="scale-75 sm:scale-90 md:scale-100 origin-center">
+              <BounceCards
+                images={BOUNCE_IMAGES}
+                transformStyles={BOUNCE_TRANSFORMS}
+                containerWidth={340}
+                containerHeight={340}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -208,11 +215,9 @@ export default function HeroSection() {
         }
         .hero-reveal--up {
           animation-name: fromBottom;
-          animation-duration: 0.8s;
         }
         .hero-reveal--scale {
           animation-name: scaleIn;
-          animation-duration: 0.8s;
         }
         @keyframes fromRight {
           from {
@@ -274,7 +279,11 @@ export default function HeroSection() {
           }
         }
         .shine-button {
-          background: linear-gradient(135deg, #1d4ed8, #ffffff);
+          background: linear-gradient(90deg, #1d4ed8, #38bdf8);
+          box-shadow: 0 0 24px 4px rgba(59, 130, 246, 0.55);
+        }
+        .shine-button:hover {
+          filter: brightness(1.1);
         }
       `}</style>
     </section>

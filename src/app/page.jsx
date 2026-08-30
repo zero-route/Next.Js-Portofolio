@@ -10,7 +10,7 @@ export default function Page() {
   return (
     <>
       {!introDone && <IntroLoader onFinish={() => setIntroDone(true)} />}
-      <HeroSection />
+      <HeroSection startAnimations={introDone} />
     </>
   );
 }

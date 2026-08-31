@@ -22,9 +22,24 @@ export default function AboutSection() {
           <div className="mt-8 flex flex-wrap gap-4">
             <a
               href="/resume.pdf"
-              className="inline-flex items-center gap-2 rounded-full bg-space-blue px-6 py-3 font-semibold text-white hover:brightness-110 transition"
+              className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white transition bg-gradient-to-r from-[#1d4ed8] to-[#38bdf8] shadow-[0_0_24px_4px_rgba(59,130,246,0.55)] hover:brightness-110"
+              download
             >
-              View Resume
+              <span>View Resume</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-4 h-4"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
             </a>
           </div>
           <p className="mt-4 text-white/50 text-xs">

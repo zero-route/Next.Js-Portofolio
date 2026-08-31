@@ -20,7 +20,7 @@ const DEFAULT_CARD_GLB = "/card.glb";
 const DEFAULT_LANYARD_IMAGE = "/images/lanyard.png";
 
 export default function Lanyard({
-  position = [0, 0, 20],
+  position = null,
   gravity = [0, -40, 0],
   fov = 25,
   transparent = true,
@@ -32,6 +32,7 @@ export default function Lanyard({
   cardGLB = DEFAULT_CARD_GLB,
 }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
+  const cameraPosition = position || (isMobile ? [0, 0, 14] : [0, 0, 20]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -42,7 +43,7 @@ export default function Lanyard({
   return (
     <div className="lanyard-wrapper">
       <Canvas
-        camera={{ position: position, fov: fov }}
+        camera={{ position: cameraPosition, fov: fov }}
         dpr={[1, isMobile ? 1.5 : 2]}
         gl={{ alpha: transparent }}
         style={{ touchAction: "none" }}

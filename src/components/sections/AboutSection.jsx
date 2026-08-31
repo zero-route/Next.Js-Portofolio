@@ -19,10 +19,10 @@ export default function AboutSection() {
             yang tidak hanya fungsional, tetapi juga menghadirkan pengalaman digital yang
             menarik dan berdampak.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-6 flex flex-wrap gap-4">
             <a
               href="/resume.pdf"
-              className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white transition bg-gradient-to-r from-[#1d4ed8] to-[#38bdf8] shadow-[0_0_24px_4px_rgba(59,130,246,0.55)] hover:brightness-110"
+              className="inline-flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white transition bg-gradient-to-r from-[#1d4ed8] to-[#38bdf8] shadow-[0_0_24px_4px_rgba(59,130,246,0.55)] hover:brightness-110"
               download
             >
               <span>View Resume</span>
@@ -34,7 +34,7 @@ export default function AboutSection() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="w-4 h-4"
+                className="w-3.5 h-3.5"
               >
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
@@ -42,7 +42,7 @@ export default function AboutSection() {
               </svg>
             </a>
           </div>
-          <p className="mt-4 text-white/50 text-xs">
+          <p className="mt-3 text-white/50 text-xs">
             Tarik kartunya dan lepaskan buat lihat efeknya.
           </p>
         </div>

@@ -17,9 +17,8 @@ export default function AboutSection() {
             Dimas Aksa Oktapian
           </h2>
           <p className="mt-6 text-white/80 text-sm sm:text-base leading-relaxed max-w-md animate-about-slide-3">
-            Sebagai mahasiswa Fakultas Ilmu Komputer, aku berfokus pada pengembangan teknologi
-            yang tidak hanya fungsional, tetapi juga menghadirkan pengalaman digital yang
-            menarik dan berdampak.
+            Memiliki hoby dan ketertarikan di bidang teknologi, terutama terkait kemanan, keandalan, dan efisiensi infrastruktur jaringan.
+            Minta yang tinggi dibidang robotic, network configuration, electrical, dan penetration testing.
           </p>
           <div className="mt-6 flex flex-wrap gap-4 animate-about-slide-4">
             <a

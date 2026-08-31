@@ -32,7 +32,7 @@ export default function AboutSection() {
           </p>
         </div>
 
-        <div className="h-[50vh] md:h-[60vh]">
+        <div className="h-[50vh] md:h-[60vh] rounded-[2.5rem] bg-white/5 border border-white/15 backdrop-blur-sm shadow-[0_0_40px_rgba(255,255,255,0.05)]">
           <ErrorBoundary>
             <Lanyard frontImage="/images/profile.jpg" imageFit="cover" />
           </ErrorBoundary>

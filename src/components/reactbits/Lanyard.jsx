@@ -22,7 +22,7 @@ const DEFAULT_LANYARD_IMAGE = "/images/lanyard.png";
 export default function Lanyard({
   position = [0, 0, 30],
   gravity = [0, -40, 0],
-  fov = 20,
+  fov = 25,
   transparent = true,
   frontImage = null,
   backImage = null,

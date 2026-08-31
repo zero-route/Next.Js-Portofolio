@@ -125,7 +125,7 @@ export default function HeroSection({ startAnimations = false }) {
   const btnContact = reveal("hero-reveal--up inline-flex items-center gap-2 rounded-lg border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10 transition", CONTAINERS_DELAY + 100, 800);
 
   return (
-    <section className="relative w-full min-h-screen flex items-center px-6 sm:px-12 py-24 text-white overflow-hidden">
+    <section className="relative w-full min-h-[80vh] flex items-center px-6 sm:px-12 py-12 text-white overflow-hidden">
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-6xl mx-auto items-center">
         <div>
           <h1 className="font-bold leading-tight text-3xl sm:text-5xl">

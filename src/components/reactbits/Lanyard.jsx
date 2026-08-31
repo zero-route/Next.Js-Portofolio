@@ -33,6 +33,14 @@ export default function Lanyard({
 }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
   const cameraPosition = position || (isMobile ? [0, 0, 14] : [0, 0, 20]);
+  const wrapperRef = useRef(null);
+
+  const lockScroll = () => {
+    if (wrapperRef.current) wrapperRef.current.style.touchAction = "none";
+  };
+  const unlockScroll = () => {
+    if (wrapperRef.current) wrapperRef.current.style.touchAction = "pan-y";
+  };
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -41,12 +49,11 @@ export default function Lanyard({
   }, []);
 
   return (
-    <div className="lanyard-wrapper">
+    <div className="lanyard-wrapper" ref={wrapperRef}>
       <Canvas
         camera={{ position: cameraPosition, fov: fov }}
         dpr={[1, isMobile ? 1.5 : 2]}
         gl={{ alpha: transparent }}
-        style={{ touchAction: "none" }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
@@ -59,6 +66,8 @@ export default function Lanyard({
             lanyardImage={lanyardImage}
             lanyardWidth={lanyardWidth}
             cardGLB={cardGLB}
+            onDragStart={lockScroll}
+            onDragEnd={unlockScroll}
           />
         </Physics>
         <Environment blur={0.75}>
@@ -82,6 +91,8 @@ function Band({
   lanyardImage = null,
   lanyardWidth = 1,
   cardGLB = DEFAULT_CARD_GLB,
+  onDragStart = () => {},
+  onDragEnd = () => {},
 }) {
   const band = useRef(),
     fixed = useRef(),
@@ -212,10 +223,11 @@ function Band({
             position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={(e) => (e.target.releasePointerCapture(e.pointerId), drag(false))}
+            onPointerUp={(e) => (e.target.releasePointerCapture(e.pointerId), drag(false), onDragEnd())}
             onPointerDown={(e) => (
               e.target.setPointerCapture(e.pointerId),
-              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
+              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation()))),
+              onDragStart()
             )}
           >
             {isMobile && (

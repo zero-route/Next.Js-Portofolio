@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 import ErrorBoundary from "@/components/reactbits/ErrorBoundary";
 
 const Lanyard = dynamic(() => import("@/components/reactbits/Lanyard"), { ssr: false });
@@ -9,8 +8,6 @@ const Lanyard = dynamic(() => import("@/components/reactbits/Lanyard"), { ssr: f
 export default function AboutSection() {
   return (
     <section className="relative w-full min-h-screen flex items-center px-6 sm:px-12 py-24 text-white overflow-hidden">
-      <AnimatedBackground className="absolute inset-0" starCount={180} />
-
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl mx-auto items-center">
         <div>
           <p className="text-space-blue font-semibold tracking-wide">Hi, I'm</p>

@@ -1,4 +1,5 @@
 import "./globals.css";
+import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 
 export const metadata = {
   title: "Portofolio Website",
@@ -8,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
-      <body className="bg-black text-white antialiased">{children}</body>
+      <body className="bg-black text-white antialiased">
+        <AnimatedBackground className="fixed inset-0 -z-10" starCount={180} />
+        {children}
+      </body>
     </html>
   );
 }

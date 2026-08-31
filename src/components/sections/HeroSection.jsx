@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AnimatedBackground from "@/components/reactbits/AnimatedBackground";
 import BounceCards from "@/components/reactbits/BounceCards";
 
 const PROJECT_URL = "/portfolio";
@@ -127,8 +126,6 @@ export default function HeroSection({ startAnimations = false }) {
 
   return (
     <section className="relative w-full min-h-screen flex items-center px-6 sm:px-12 py-24 text-white overflow-hidden">
-      <AnimatedBackground className="absolute inset-0" starCount={180} />
-
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-6xl mx-auto items-center">
         <div>
           <h1 className="font-bold leading-tight text-3xl sm:text-5xl">

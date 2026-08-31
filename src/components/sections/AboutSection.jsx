@@ -7,7 +7,7 @@ const Lanyard = dynamic(() => import("@/components/reactbits/Lanyard"), { ssr: f
 
 export default function AboutSection() {
   return (
-    <section className="relative w-full min-h-[80vh] flex items-center px-6 sm:px-12 py-12 text-white">
+    <section className="relative w-full min-h-[55vh] flex items-center px-6 sm:px-12 py-8 text-white">
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl mx-auto items-center">
         <div>
           <p className="text-space-blue font-semibold tracking-wide">Hi, I'm</p>
@@ -32,7 +32,7 @@ export default function AboutSection() {
           </p>
         </div>
 
-        <div className="h-[70vh] md:h-[80vh]">
+        <div className="h-[50vh] md:h-[60vh]">
           <ErrorBoundary>
             <Lanyard frontImage="/images/profile.jpg" imageFit="cover" />
           </ErrorBoundary>

@@ -20,7 +20,7 @@ const DEFAULT_CARD_GLB = "/card.glb";
 const DEFAULT_LANYARD_IMAGE = "/images/lanyard.png";
 
 export default function Lanyard({
-  position = [0, 0, 30],
+  position = [0, 0, 20],
   gravity = [0, -40, 0],
   fov = 25,
   transparent = true,

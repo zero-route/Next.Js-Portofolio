@@ -31,12 +31,12 @@ const BOUNCE_TRANSFORMS = [
 
 const ICONS = {
   GitHub: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
       <path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-1.04-.01-1.89-2.78.62-3.37-1.21-3.37-1.21-.45-1.18-1.11-1.5-1.11-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.95.68 1.92 0 1.39-.01 2.51-.01 2.85 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z" />
     </svg>
   ),
   GitLab: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
       <path d="M12 21.5 15.6 10.4H8.4L12 21.5Z" />
       <path d="M12 21.5 8.4 10.4H3.6L12 21.5Z" />
       <path d="M12 21.5 15.6 10.4H20.4L12 21.5Z" />
@@ -47,26 +47,26 @@ const ICONS = {
     </svg>
   ),
   LinkedIn: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
       <path d="M6.94 8.5H3.56V20.5H6.94V8.5Z" />
       <path d="M5.25 7c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2Z" />
       <path d="M20.5 20.5v-6.6c0-3.15-1.68-4.62-3.92-4.62-1.81 0-2.62 1-3.07 1.7v-1.46h-3.38c.05 1 0 12 0 12h3.38v-6.7c0-.36.03-.72.13-.98.29-.72.95-1.47 2.06-1.47 1.45 0 2.03 1.1 2.03 2.72v6.43h3.77Z" />
     </svg>
   ),
   Telegram: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
       <path d="M21.5 3.5 2.5 10.9c-.9.36-.9 1.65.01 1.99l4.6 1.62 1.78 5.7c.24.76 1.2.99 1.76.42l2.47-2.55 4.6 3.4c.75.55 1.83.15 2.03-.76l3.28-15.4c.22-1.03-.79-1.85-1.53-1.82Zm-4.1 3.9-8.9 8.1-.3 3.35-1.4-4.5 10.6-6.95Z" />
     </svg>
   ),
   Instagram: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-4 h-4">
       <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
       <circle cx="12" cy="12" r="3.7" />
       <circle cx="16.9" cy="7.1" r="0.9" fill="currentColor" stroke="none" />
     </svg>
   ),
   TikTok: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
       <path d="M14.5 2h2.9c.18 1.62 1.02 3.05 2.33 3.97a5.7 5.7 0 0 0 2.77 1.02v2.94a8.5 8.5 0 0 1-4.9-1.56v7.4a6.6 6.6 0 1 1-6.6-6.6c.24 0 .48.01.71.04v3.02a3.6 3.6 0 1 0 2.79 3.5V2Z" />
     </svg>
   ),
@@ -121,8 +121,8 @@ export default function HeroSection({ startAnimations = false }) {
   const line1 = reveal("hero-reveal--from-right block", LINE1_DELAY, LINE1_DURATION);
   const line2 = reveal("hero-reveal--from-left block mt-1", LINE2_DELAY, LINE2_DURATION);
   const imageReveal = reveal("hero-reveal--scale flex justify-center", IMAGE_DELAY, 800);
-  const btnProject = reveal("hero-reveal--up shine-button inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white transition", CONTAINERS_DELAY, 800);
-  const btnContact = reveal("hero-reveal--up inline-flex items-center gap-2 rounded-lg border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10 transition", CONTAINERS_DELAY + 100, 800);
+  const btnProject = reveal("hero-reveal--up shine-button inline-flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white transition", CONTAINERS_DELAY, 800);
+  const btnContact = reveal("hero-reveal--up inline-flex items-center gap-1.5 rounded-md border border-white/30 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white hover:bg-white/10 transition", CONTAINERS_DELAY + 100, 800);
 
   return (
     <section className="relative w-full min-h-[80vh] flex items-center px-6 sm:px-12 py-12 text-white overflow-hidden">
@@ -151,7 +151,7 @@ export default function HeroSection({ startAnimations = false }) {
             {!typingDone && <span className="typing-cursor" />}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-6 flex flex-row items-center gap-3">
             <a href={PROJECT_URL} className={btnProject.className} style={btnProject.style}>
               <span>View Projects</span>
               <svg
@@ -162,7 +162,7 @@ export default function HeroSection({ startAnimations = false }) {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="w-4 h-4"
+                className="w-3.5 h-3.5"
               >
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />
@@ -179,7 +179,7 @@ export default function HeroSection({ startAnimations = false }) {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="w-4 h-4"
+                className="w-3.5 h-3.5"
               >
                 <rect width="20" height="16" x="2" y="4" rx="2" />
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
@@ -187,10 +187,10 @@ export default function HeroSection({ startAnimations = false }) {
             </a>
           </div>
 
-          <div className="mt-8 flex gap-3">
+          <div className="mt-6 flex flex-wrap gap-2 sm:gap-2.5">
             {SOCIALS.map((social, i) => {
               const icon = reveal(
-                "hero-reveal--up flex items-center justify-center w-11 h-11 rounded-xl border border-white/20 text-white/80 hover:text-white hover:border-white/50 transition",
+                "hero-reveal--up flex items-center justify-center w-8 h-8 rounded-lg border border-white/20 text-white/80 hover:text-white hover:border-white/50 transition",
                 ICONS_START_DELAY + i * ICON_STEP_MS,
                 800
               );

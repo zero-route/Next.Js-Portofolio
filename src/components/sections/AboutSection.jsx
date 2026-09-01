@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import dynamic from "next/dynamic";
 import ErrorBoundary from "@/components/reactbits/ErrorBoundary";
@@ -9,18 +9,18 @@ export default function AboutSection() {
   return (
     <section className="relative w-full min-h-[55vh] flex items-center px-6 sm:px-12 py-8 text-white overflow-hidden">
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl mx-auto items-start">
-        <div className="animate-about-fade">
-          <p className="text-space-blue font-semibold tracking-wide animate-about-slide-1">
+        <div>
+          <p className="text-space-blue font-semibold tracking-wide about-reveal about-reveal--from-left">
             Hi, I'm
           </p>
-          <h2 className="mt-2 font-bold text-3xl sm:text-5xl leading-tight animate-about-slide-2">
+          <h2 className="mt-2 font-bold text-3xl sm:text-5xl leading-tight about-reveal about-reveal--from-left about-delay-1">
             Dimas Aksa Oktapian
           </h2>
-          <p className="mt-6 text-white/80 text-sm sm:text-base leading-relaxed max-w-md animate-about-slide-3">
+          <p className="mt-6 text-white/80 text-sm sm:text-base leading-relaxed max-w-md about-reveal about-reveal--fade about-delay-2">
             Memiliki hoby dan ketertarikan di bidang teknologi, terutama terkait kemanan, keandalan, dan efisiensi infrastruktur jaringan.
             Minta yang tinggi dibidang robotic, network configuration, electrical, dan penetration testing.
           </p>
-          <div className="mt-6 flex flex-wrap gap-4 animate-about-slide-4">
+          <div className="mt-6 flex flex-wrap gap-4 about-reveal about-reveal--from-bottom about-delay-3">
             <a
               href="/resume.pdf"
               className="inline-flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white transition-all duration-300 ease-out bg-gradient-to-r from-[#1d4ed8] to-[#38bdf8] shadow-[0_0_24px_4px_rgba(59,130,246,0.55)] hover:shadow-[0_0_32px_6px_rgba(59,130,246,0.8)] hover:scale-105 active:scale-95"
@@ -35,7 +35,7 @@ export default function AboutSection() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-y-0.5"
+                className="w-3.5 h-3.5"
               >
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
@@ -43,12 +43,12 @@ export default function AboutSection() {
               </svg>
             </a>
           </div>
-          <p className="mt-3 text-white/50 text-xs animate-about-slide-4">
+          <p className="mt-3 text-white/50 text-xs about-reveal about-reveal--from-bottom about-delay-4">
             Tarik kartunya dan lepaskan buat lihat efeknya.
           </p>
         </div>
 
-        <div className="relative z-20 h-[40vh] md:h-[50vh] animate-about-scale">
+        <div className="relative z-20 h-[48vh] md:h-[62vh] about-reveal about-reveal--scale about-delay-1">
           <ErrorBoundary>
             <Lanyard frontImage="/images/profile.jpg" imageFit="cover" />
           </ErrorBoundary>
@@ -56,27 +56,48 @@ export default function AboutSection() {
       </div>
 
       <style jsx>{`
-        .animate-about-slide-1 {
-          animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .animate-about-slide-2 {
-          animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+        .about-reveal {
           opacity: 0;
+          animation-duration: 0.8s;
+          animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+          animation-fill-mode: forwards;
         }
-        .animate-about-slide-3 {
-          animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-          opacity: 0;
+        .about-reveal--from-left {
+          animation-name: aboutFromLeft;
         }
-        .animate-about-slide-4 {
-          animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
-          opacity: 0;
+        .about-reveal--from-bottom {
+          animation-name: aboutFromBottom;
         }
-        .animate-about-scale {
-          animation: scaleUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-          opacity: 0;
+        .about-reveal--fade {
+          animation-name: aboutFade;
         }
-
-        @keyframes slideUp {
+        .about-reveal--scale {
+          animation-name: aboutScale;
+          animation-duration: 1s;
+        }
+        .about-delay-1 {
+          animation-delay: 0.15s;
+        }
+        .about-delay-2 {
+          animation-delay: 0.3s;
+        }
+        .about-delay-3 {
+          animation-delay: 0.45s;
+        }
+        .about-delay-4 {
+          animation-delay: 0.6s;
+        }
+        @keyframes aboutFromLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes aboutFromBottom {
           from {
             opacity: 0;
             transform: translateY(30px);
@@ -86,8 +107,15 @@ export default function AboutSection() {
             transform: translateY(0);
           }
         }
-
-        @keyframes scaleUp {
+        @keyframes aboutFade {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes aboutScale {
           from {
             opacity: 0;
             transform: scale(0.9);

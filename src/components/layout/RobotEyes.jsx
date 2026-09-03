@@ -6,16 +6,38 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function RobotEyes() {
   const [mood, setMood] = useState("normal");
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: -4 });
+
   const idleTimerRef = useRef(null);
   const blinkTimerRef = useRef(null);
-  const tempAnimationTimerRef = useRef(null);
+  const tempMoodTimerRef = useRef(null);
+  
+  // Ref untuk mencatat status sleeping secara akurat & synchronous
+  const isSleepingRef = useRef(false);
+
+  // Mengatur status sleep/wake dengan aman
+  const setSleepingState = useCallback((sleeping) => {
+    isSleepingRef.current = sleeping;
+    if (sleeping) {
+      setMood("sleeping");
+      setEyeOffset({ x: 0, y: -2 });
+    } else {
+      if (tempMoodTimerRef.current) clearTimeout(tempMoodTimerRef.current);
+      setMood("normal");
+    }
+  }, []);
+
+  const resetIdleTimer = useCallback(() => {
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => {
+      setSleepingState(true);
+    }, 10000);
+  }, [setSleepingState]);
 
   const handleUserPointer = useCallback((clientX, clientY, isClick = false) => {
-    if (tempAnimationTimerRef.current) {
-      clearTimeout(tempAnimationTimerRef.current);
+    // Jika sedang tidur atau berinteraksi, bangunkan total
+    if (isSleepingRef.current) {
+      setSleepingState(false);
     }
-
-    setMood((prev) => (prev === "sleeping" ? "normal" : isClick ? "happy" : "normal"));
 
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -26,18 +48,15 @@ export default function RobotEyes() {
     setEyeOffset({ x: offsetX, y: offsetY });
 
     if (isClick) {
+      if (tempMoodTimerRef.current) clearTimeout(tempMoodTimerRef.current);
       setMood("happy");
-      tempAnimationTimerRef.current = setTimeout(() => {
-        setMood("normal");
-      }, 500);
+      tempMoodTimerRef.current = setTimeout(() => {
+        if (!isSleepingRef.current) setMood("normal");
+      }, 700);
     }
 
-    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-    idleTimerRef.current = setTimeout(() => {
-      setMood("sleeping");
-      setEyeOffset({ x: 0, y: -2 });
-    }, 10000);
-  }, []);
+    resetIdleTimer();
+  }, [resetIdleTimer, setSleepingState]);
 
   useEffect(() => {
     const onPointerMove = (e) => handleUserPointer(e.clientX, e.clientY, false);
@@ -50,39 +69,40 @@ export default function RobotEyes() {
     window.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("touchmove", onTouchMove);
 
-    idleTimerRef.current = setTimeout(() => {
-      setMood("sleeping");
-    }, 10000);
+    resetIdleTimer();
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("touchmove", onTouchMove);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-      if (tempAnimationTimerRef.current) clearTimeout(tempAnimationTimerRef.current);
+      if (tempMoodTimerRef.current) clearTimeout(tempMoodTimerRef.current);
     };
-  }, [handleUserPointer]);
+  }, [handleUserPointer, resetIdleTimer]);
 
+  // Loop ekspresi acak (Blink, Wink, The Rock, dan Happy/Senyum)
   useEffect(() => {
     const loopAnimations = () => {
       const nextInterval = Math.random() * 2500 + 2000;
 
       blinkTimerRef.current = setTimeout(() => {
-        setMood((currentMood) => {
-          if (currentMood === "sleeping") return "sleeping";
-
+        if (!isSleepingRef.current) {
           const rand = Math.random();
           let nextMood = "blink";
 
           if (rand > 0.75) nextMood = "wink";
-          else if (rand > 0.5) nextMood = "theRock";
+          else if (rand > 0.5) nextMood = "happy"; // Animasi Seneng / Senyum
+          else if (rand > 0.3) nextMood = "theRock";
 
-          tempAnimationTimerRef.current = setTimeout(() => {
-            setMood((m) => (m === "sleeping" ? "sleeping" : "normal"));
+          setMood(nextMood);
+
+          if (tempMoodTimerRef.current) clearTimeout(tempMoodTimerRef.current);
+          tempMoodTimerRef.current = setTimeout(() => {
+            if (!isSleepingRef.current) {
+              setMood("normal");
+            }
           }, 500);
-
-          return nextMood;
-        });
+        }
 
         loopAnimations();
       }, nextInterval);
@@ -103,9 +123,10 @@ export default function RobotEyes() {
       case "wink":
         return { scaleY: 0.1, scaleX: 1, y: 0, borderRadius: "4px" };
       case "happy":
-        return { scaleY: 0.85, scaleX: 1.1, y: 0, borderRadius: "12px 12px 4px 4px" };
+        // Mata melengkung ke atas (senyum gembira)
+        return { scaleY: 0.7, scaleX: 1.15, y: -2, borderRadius: "12px 12px 2px 2px" };
       case "theRock":
-        return { scaleY: 1.2, scaleX: 1.05, y: -4, borderRadius: "9px" };
+        return { scaleY: 1.25, scaleX: 1.05, y: -5, borderRadius: "9px" };
       default:
         return { scaleY: 1, scaleX: 1, y: 0, borderRadius: "9px" };
     }
@@ -119,9 +140,10 @@ export default function RobotEyes() {
       case "wink":
         return { scaleY: 1, scaleX: 1, y: 0, borderRadius: "9px" };
       case "happy":
-        return { scaleY: 0.85, scaleX: 1.1, y: 0, borderRadius: "12px 12px 4px 4px" };
+        // Mata melengkung ke atas (senyum gembira)
+        return { scaleY: 0.7, scaleX: 1.15, y: -2, borderRadius: "12px 12px 2px 2px" };
       case "theRock":
-        return { scaleY: 0.45, scaleX: 1, y: 2, borderRadius: "6px" };
+        return { scaleY: 0.4, scaleX: 1, y: 2, borderRadius: "6px" };
       default:
         return { scaleY: 1, scaleX: 1, y: 0, borderRadius: "9px" };
     }
@@ -132,7 +154,7 @@ export default function RobotEyes() {
       className="relative flex h-10 w-16 items-center justify-center cursor-pointer select-none"
       title="Robot Assistant"
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {mood === "sleeping" && (
           <motion.div
             key="zzz-text"

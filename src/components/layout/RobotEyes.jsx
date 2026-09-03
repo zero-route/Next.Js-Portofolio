@@ -8,16 +8,14 @@ export default function RobotEyes() {
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: -4 });
   const idleTimerRef = useRef(null);
   const blinkTimerRef = useRef(null);
-
-  const wakeUp = useCallback(() => {
-    setMood((prev) => {
-      if (prev === "sleeping") return "normal";
-      return prev;
-    });
-  }, []);
+  const tempAnimationTimerRef = useRef(null);
 
   const handleUserPointer = useCallback((clientX, clientY, isClick = false) => {
-    wakeUp();
+    if (tempAnimationTimerRef.current) {
+      clearTimeout(tempAnimationTimerRef.current);
+    }
+
+    setMood((prev) => (prev === "sleeping" ? "normal" : isClick ? "happy" : "normal"));
 
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -29,8 +27,8 @@ export default function RobotEyes() {
 
     if (isClick) {
       setMood("happy");
-      setTimeout(() => {
-        setMood((m) => (m === "sleeping" ? "sleeping" : "normal"));
+      tempAnimationTimerRef.current = setTimeout(() => {
+        setMood("normal");
       }, 500);
     }
 
@@ -39,7 +37,7 @@ export default function RobotEyes() {
       setMood("sleeping");
       setEyeOffset({ x: 0, y: -2 });
     }, 10000);
-  }, [wakeUp]);
+  }, []);
 
   useEffect(() => {
     const onPointerMove = (e) => handleUserPointer(e.clientX, e.clientY, false);
@@ -61,6 +59,7 @@ export default function RobotEyes() {
       window.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("touchmove", onTouchMove);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      if (tempAnimationTimerRef.current) clearTimeout(tempAnimationTimerRef.current);
     };
   }, [handleUserPointer]);
 
@@ -78,7 +77,7 @@ export default function RobotEyes() {
           if (rand > 0.75) nextMood = "wink";
           else if (rand > 0.5) nextMood = "theRock";
 
-          setTimeout(() => {
+          tempAnimationTimerRef.current = setTimeout(() => {
             setMood((m) => (m === "sleeping" ? "sleeping" : "normal"));
           }, 500);
 
@@ -133,10 +132,10 @@ export default function RobotEyes() {
       className="relative flex h-10 w-16 items-center justify-center cursor-pointer select-none"
       title="Robot Assistant"
     >
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {mood === "sleeping" && (
           <motion.div
-            key="zzz-animation"
+            key="zzz-text"
             initial={{ opacity: 0, y: 2, scale: 0.8 }}
             animate={{ opacity: 1, y: -10, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.8 }}

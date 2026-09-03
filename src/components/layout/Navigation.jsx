@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import {
-  House,
+  Home as HomeIcon,
   User,
   Sparkles,
   FolderGit2,
@@ -116,7 +116,7 @@ export default function Navigation() {
     {
       label: "Home",
       target: "home",
-      icon: <House size={18} strokeWidth={1.7} />,
+      icon: <HomeIcon size={18} strokeWidth={1.7} />,
     },
     {
       label: "About",
@@ -154,34 +154,34 @@ export default function Navigation() {
         sm:pt-5
       "
     >
-<motion.nav
-  onMouseMove={(event) => {
-    mouseX.set(event.clientX);
-  }}
-  onMouseLeave={() => {
-    mouseX.set(Infinity);
-  }}
-  className="
-    mx-auto
-    flex
-    w-fit
-    max-w-[calc(100vw-32px)]
-    items-start
-    justify-center
-    rounded-3xl
-    border
-    border-white/[0.08]
-    bg-[#0a0a0a]/55
-    px-4
-    py-3
-    shadow-[0_8px_40px_rgba(0,0,0,0.35)]
-    backdrop-blur-2xl
-    sm:w-full
-    sm:max-w-6xl
-    sm:justify-between
-    sm:px-5
-  "
->
+      <motion.nav
+        onMouseMove={(event) => {
+          mouseX.set(event.clientX);
+        }}
+        onMouseLeave={() => {
+          mouseX.set(Infinity);
+        }}
+        className="
+          mx-auto
+          flex
+          w-fit
+          max-w-[calc(100vw-32px)]
+          items-start
+          justify-center
+          rounded-3xl
+          border
+          border-white/[0.08]
+          bg-[#0a0a0a]/55
+          px-4
+          py-3
+          shadow-[0_8px_40px_rgba(0,0,0,0.35)]
+          backdrop-blur-2xl
+          sm:w-full
+          sm:max-w-6xl
+          sm:justify-between
+          sm:px-5
+        "
+      >
         <div
           className="
             hidden

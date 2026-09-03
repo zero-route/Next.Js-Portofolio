@@ -40,10 +40,10 @@ export default function RobotEyes() {
       const windowHeight = window.innerHeight;
 
       const offsetX =
-        ((clientX - windowWidth / 2) / (windowWidth / 2)) * 6;
+        ((clientX - windowWidth / 2) / (windowWidth / 2)) * 8;
 
       const offsetY =
-        ((clientY - windowHeight / 2) / (windowHeight / 2)) * 6 - 3;
+        ((clientY - windowHeight / 2) / (windowHeight / 2)) * 8 - 3;
 
       setEyeOffset({
         x: offsetX,
@@ -119,6 +119,7 @@ export default function RobotEyes() {
       blinkTimerRef.current = setTimeout(() => {
         if (!isSleeping) {
           const rand = Math.random();
+
           let nextMood = "blink";
           let duration = 700;
 
@@ -315,8 +316,9 @@ export default function RobotEyes() {
         }}
         transition={{
           type: "spring",
-          stiffness: 500,
-          damping: 25,
+          stiffness: 1200,
+          damping: 35,
+          mass: 0.3,
         }}
         className="flex items-center justify-center gap-[7px]"
       >

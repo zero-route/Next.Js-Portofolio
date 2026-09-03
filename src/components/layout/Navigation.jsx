@@ -25,8 +25,8 @@ function NavigationItem({
   const ref = useRef(null);
 
   const distance = 120;
-  const baseSize = 42;
-  const magnification = 58;
+  const baseSize = 40;
+  const magnification = 52;
 
   const mouseDistance = useTransform(mouseX, (value) => {
     const rect = ref.current?.getBoundingClientRect();
@@ -61,38 +61,41 @@ function NavigationItem({
     <button
       ref={ref}
       onClick={scrollToSection}
-      className="group relative flex flex-col items-center border-0 bg-transparent p-0 outline-none"
+      className="group relative flex h-[62px] w-[50px] items-center justify-start flex-col border-0 bg-transparent p-0 outline-none"
       aria-label={label}
     >
-      <motion.div
-        style={{
-          width: size,
-          height: size,
-        }}
-        className="
-          flex
-          items-center
-          justify-center
-          rounded-2xl
-          border
-          border-white/[0.08]
-          bg-white/[0.03]
-          text-white/70
-          shadow-[0_4px_20px_rgba(0,0,0,0.2)]
-          backdrop-blur-xl
-          transition-colors
-          duration-300
-          group-hover:border-white/20
-          group-hover:bg-white/[0.08]
-          group-hover:text-white
-        "
-      >
-        {icon}
-      </motion.div>
+      <div className="flex h-[52px] w-full items-center justify-center">
+        <motion.div
+          style={{
+            width: size,
+            height: size,
+          }}
+          className="
+            flex
+            items-center
+            justify-center
+            rounded-2xl
+            border
+            border-white/[0.08]
+            bg-white/[0.03]
+            text-white/70
+            shadow-[0_4px_20px_rgba(0,0,0,0.2)]
+            backdrop-blur-xl
+            transition-colors
+            duration-300
+            group-hover:border-white/20
+            group-hover:bg-white/[0.08]
+            group-hover:text-white
+          "
+        >
+          {icon}
+        </motion.div>
+      </div>
 
       <span
         className="
-          mt-2
+          absolute
+          bottom-0
           text-[9px]
           font-medium
           tracking-wide
@@ -164,24 +167,26 @@ export default function Navigation() {
         className="
           mx-auto
           flex
+          h-[76px]
           w-fit
           max-w-[calc(100vw-32px)]
           items-center
           justify-center
+          gap-4
           rounded-3xl
           border
           border-white/[0.08]
           bg-[#0a0a0a]/75
           px-4
-          py-3
+          py-2
           shadow-lg
           backdrop-blur-2xl
-          sm:w-full
-          sm:max-w-6xl
-          sm:justify-between
-          sm:px-6
+          sm:max-w-2xl
+          sm:gap-12
+          sm:px-8
         "
       >
+        {/* Sisi Kiri: Brand */}
         <div
           className="
             hidden
@@ -196,7 +201,8 @@ export default function Navigation() {
           DIMAS
         </div>
 
-        <div className="flex items-start justify-center gap-3 sm:gap-5">
+        {/* Sisi Kanan: Menu Item */}
+        <div className="flex items-center justify-center gap-2 sm:gap-4">
           {navigationItems.map((item) => (
             <NavigationItem
               key={item.target}

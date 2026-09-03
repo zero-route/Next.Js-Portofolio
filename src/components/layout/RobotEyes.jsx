@@ -31,7 +31,7 @@ export default function RobotEyes() {
     idleTimerRef.current = setTimeout(() => {
       setMood("sleeping");
       setEyeOffset({ x: 0, y: -2 });
-    }, 5000);
+    }, 10000);
   }, []);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function RobotEyes() {
 
     idleTimerRef.current = setTimeout(() => {
       setMood("sleeping");
-    }, 5000);
+    }, 10000);
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
@@ -59,7 +59,7 @@ export default function RobotEyes() {
 
   useEffect(() => {
     const loopAnimations = () => {
-      const nextInterval = Math.random() * 2500 + 2000;
+      const nextInterval = Math.random() * 2000 + 1500;
 
       blinkTimerRef.current = setTimeout(() => {
         setMood((currentMood) => {
@@ -67,11 +67,14 @@ export default function RobotEyes() {
 
           const rand = Math.random();
           let nextMood = "blink";
-          if (rand > 0.8) nextMood = "wink";
+
+          if (rand > 0.75) nextMood = "wink";
+          else if (rand > 0.5) nextMood = "happy";
+          else if (rand > 0.35) nextMood = "confused";
 
           setTimeout(() => {
             setMood((m) => (m === "sleeping" ? "sleeping" : "normal"));
-          }, 200);
+          }, 400);
 
           return nextMood;
         });
@@ -96,6 +99,8 @@ export default function RobotEyes() {
         return { scaleY: 0.1, scaleX: 1, borderRadius: "4px" };
       case "happy":
         return { scaleY: 0.85, scaleX: 1.1, borderRadius: "12px 12px 4px 4px" };
+      case "confused":
+        return { scaleY: 0.6, scaleX: 1, borderRadius: "6px" };
       default:
         return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
     }
@@ -110,6 +115,8 @@ export default function RobotEyes() {
         return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
       case "happy":
         return { scaleY: 0.85, scaleX: 1.1, borderRadius: "12px 12px 4px 4px" };
+      case "confused":
+        return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
       default:
         return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
     }

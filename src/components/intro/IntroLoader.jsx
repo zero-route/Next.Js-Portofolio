@@ -224,10 +224,11 @@ export default function IntroLoader({ onComplete }) {
         }}
         className="mt-8 w-[280px] sm:w-[380px]"
       >
-       <div className="mb-2 flex items-center justify-between text-xs tracking-wide text-white/60">
-        <span>Loading.....</span>
-        <span>{progress}%</span>
-         </div>
+<div className="mb-2 flex items-center justify-between text-xs tracking-wide text-white/60">
+  <span>Loading.....</span>
+  <span>{progress}%</span>
+</div>
+        <div
           className="
             h-2 
             w-full 

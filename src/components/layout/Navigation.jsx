@@ -9,6 +9,7 @@ import {
   FolderGit2,
   Mail,
 } from "lucide-react";
+import RobotEyes from "./RobotEyes";
 
 const springConfig = {
   mass: 0.15,
@@ -171,7 +172,7 @@ export default function Navigation() {
           w-fit
           max-w-[calc(100vw-32px)]
           items-center
-          justify-center
+          justify-between
           gap-4
           rounded-3xl
           border
@@ -183,7 +184,6 @@ export default function Navigation() {
           backdrop-blur-2xl
           sm:w-full
           sm:max-w-5xl
-          sm:justify-between
           sm:px-6
         "
       >
@@ -199,9 +199,11 @@ export default function Navigation() {
           >
             DIMAS
           </span>
+          <div className="flex items-center gap-2"></div>
+        </div>
 
-          <div className="flex items-center gap-2">
-          </div>
+        <div className="flex items-center justify-center">
+          <RobotEyes />
         </div>
 
         <div className="flex items-center justify-center gap-2 sm:gap-4">

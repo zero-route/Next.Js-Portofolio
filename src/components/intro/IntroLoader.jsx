@@ -209,7 +209,6 @@ export default function IntroLoader({ onComplete }) {
         </motion.div>
       </div>
 
-      {/* LOADING SECTION */}
       <motion.div
         initial={{
           opacity: 0,
@@ -225,11 +224,10 @@ export default function IntroLoader({ onComplete }) {
         }}
         className="mt-8 w-[280px] sm:w-[380px]"
       >
-        <div className="mb-2 flex items-center justify-between text-xs tracking-wide text-white/60">
-          <span>{progress}%</span>
-          <span>Loading.....</span>
-        </div>
-        <div
+       <div className="mb-2 flex items-center justify-between text-xs tracking-wide text-white/60">
+        <span>Loading.....</span>
+        <span>{progress}%</span>
+         </div>
           className="
             h-2 
             w-full 

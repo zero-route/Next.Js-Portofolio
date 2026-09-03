@@ -5,39 +5,31 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function RobotEyes() {
   const [mood, setMood] = useState("normal");
+  const [isSleeping, setIsSleeping] = useState(false);
   const [eyeOffset, setEyeOffset] = useState({ x: 0, y: -4 });
 
   const idleTimerRef = useRef(null);
   const blinkTimerRef = useRef(null);
-  const tempMoodTimerRef = useRef(null);
-  
-  // Ref untuk mencatat status sleeping secara akurat & synchronous
-  const isSleepingRef = useRef(false);
+  const actionTimerRef = useRef(null);
 
-  // Mengatur status sleep/wake dengan aman
-  const setSleepingState = useCallback((sleeping) => {
-    isSleepingRef.current = sleeping;
-    if (sleeping) {
-      setMood("sleeping");
-      setEyeOffset({ x: 0, y: -2 });
-    } else {
-      if (tempMoodTimerRef.current) clearTimeout(tempMoodTimerRef.current);
-      setMood("normal");
-    }
-  }, []);
+  // Bangunkan robot seketika
+  const wakeUp = useCallback(() => {
+    setIsSleeping(false);
+    if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
+    
+    // Jika mood sedang sleeping saat dibangunkan, kembalikan ke normal
+    setMood((prev) => (prev === "sleeping" ? "normal" : prev));
 
-  const resetIdleTimer = useCallback(() => {
     if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     idleTimerRef.current = setTimeout(() => {
-      setSleepingState(true);
+      setIsSleeping(true);
+      setMood("sleeping");
+      setEyeOffset({ x: 0, y: -2 });
     }, 10000);
-  }, [setSleepingState]);
+  }, []);
 
   const handleUserPointer = useCallback((clientX, clientY, isClick = false) => {
-    // Jika sedang tidur atau berinteraksi, bangunkan total
-    if (isSleepingRef.current) {
-      setSleepingState(false);
-    }
+    wakeUp();
 
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -48,15 +40,13 @@ export default function RobotEyes() {
     setEyeOffset({ x: offsetX, y: offsetY });
 
     if (isClick) {
-      if (tempMoodTimerRef.current) clearTimeout(tempMoodTimerRef.current);
+      if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
       setMood("happy");
-      tempMoodTimerRef.current = setTimeout(() => {
-        if (!isSleepingRef.current) setMood("normal");
+      actionTimerRef.current = setTimeout(() => {
+        setMood("normal");
       }, 700);
     }
-
-    resetIdleTimer();
-  }, [resetIdleTimer, setSleepingState]);
+  }, [wakeUp]);
 
   useEffect(() => {
     const onPointerMove = (e) => handleUserPointer(e.clientX, e.clientY, false);
@@ -69,38 +59,41 @@ export default function RobotEyes() {
     window.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("touchmove", onTouchMove);
 
-    resetIdleTimer();
+    // Timer idle pertama kali
+    idleTimerRef.current = setTimeout(() => {
+      setIsSleeping(true);
+      setMood("sleeping");
+      setEyeOffset({ x: 0, y: -2 });
+    }, 10000);
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("touchmove", onTouchMove);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-      if (tempMoodTimerRef.current) clearTimeout(tempMoodTimerRef.current);
+      if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
     };
-  }, [handleUserPointer, resetIdleTimer]);
+  }, [handleUserPointer]);
 
-  // Loop ekspresi acak (Blink, Wink, The Rock, dan Happy/Senyum)
+  // Loop ekspresi acak (hanya jalan jika isSleeping === false)
   useEffect(() => {
     const loopAnimations = () => {
       const nextInterval = Math.random() * 2500 + 2000;
 
       blinkTimerRef.current = setTimeout(() => {
-        if (!isSleepingRef.current) {
+        if (!isSleeping) {
           const rand = Math.random();
           let nextMood = "blink";
 
           if (rand > 0.75) nextMood = "wink";
-          else if (rand > 0.5) nextMood = "happy"; // Animasi Seneng / Senyum
+          else if (rand > 0.5) nextMood = "happy";
           else if (rand > 0.3) nextMood = "theRock";
 
           setMood(nextMood);
 
-          if (tempMoodTimerRef.current) clearTimeout(tempMoodTimerRef.current);
-          tempMoodTimerRef.current = setTimeout(() => {
-            if (!isSleepingRef.current) {
-              setMood("normal");
-            }
+          if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
+          actionTimerRef.current = setTimeout(() => {
+            setMood("normal");
           }, 500);
         }
 
@@ -113,17 +106,18 @@ export default function RobotEyes() {
     return () => {
       if (blinkTimerRef.current) clearTimeout(blinkTimerRef.current);
     };
-  }, []);
+  }, [isSleeping]);
+
+  const currentMood = isSleeping ? "sleeping" : mood;
 
   const getLeftEyeVariants = () => {
-    switch (mood) {
+    switch (currentMood) {
       case "sleeping":
       case "blink":
         return { scaleY: 0.1, scaleX: 1, y: 0, borderRadius: "4px" };
       case "wink":
         return { scaleY: 0.1, scaleX: 1, y: 0, borderRadius: "4px" };
       case "happy":
-        // Mata melengkung ke atas (senyum gembira)
         return { scaleY: 0.7, scaleX: 1.15, y: -2, borderRadius: "12px 12px 2px 2px" };
       case "theRock":
         return { scaleY: 1.25, scaleX: 1.05, y: -5, borderRadius: "9px" };
@@ -133,14 +127,13 @@ export default function RobotEyes() {
   };
 
   const getRightEyeVariants = () => {
-    switch (mood) {
+    switch (currentMood) {
       case "sleeping":
       case "blink":
         return { scaleY: 0.1, scaleX: 1, y: 0, borderRadius: "4px" };
       case "wink":
         return { scaleY: 1, scaleX: 1, y: 0, borderRadius: "9px" };
       case "happy":
-        // Mata melengkung ke atas (senyum gembira)
         return { scaleY: 0.7, scaleX: 1.15, y: -2, borderRadius: "12px 12px 2px 2px" };
       case "theRock":
         return { scaleY: 0.4, scaleX: 1, y: 2, borderRadius: "6px" };
@@ -155,7 +148,7 @@ export default function RobotEyes() {
       title="Robot Assistant"
     >
       <AnimatePresence>
-        {mood === "sleeping" && (
+        {isSleeping && (
           <motion.div
             key="zzz-text"
             initial={{ opacity: 0, y: 2, scale: 0.8 }}

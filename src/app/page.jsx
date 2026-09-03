@@ -8,7 +8,7 @@ import Navigation from "@/components/layout/Navigation";
 import HomeSection from "@/components/section/Home";
 import About from "@/components/section/About";
 import Beyond from "@/components/section/Beyond";
-import PortfolioShowcase from "@/components/section/PortofolioShowcase";
+import PortofolioShowcase from "@/components/section/PortofolioShowcase";
 import Contact from "@/components/section/Contact";
 
 export default function Home() {

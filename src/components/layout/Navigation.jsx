@@ -78,7 +78,7 @@ function NavigationItem({
           border-white/[0.08]
           bg-white/[0.03]
           text-white/70
-          shadow-[0_8px_32px_rgba(0,0,0,0.25)]
+          shadow-[0_4px_20px_rgba(0,0,0,0.2)]
           backdrop-blur-xl
           transition-colors
           duration-300
@@ -166,20 +166,20 @@ export default function Navigation() {
           flex
           w-fit
           max-w-[calc(100vw-32px)]
-          items-start
+          items-center
           justify-center
           rounded-3xl
           border
           border-white/[0.08]
-          bg-[#0a0a0a]/55
+          bg-[#0a0a0a]/75
           px-4
           py-3
-          shadow-[0_8px_40px_rgba(0,0,0,0.35)]
+          shadow-lg
           backdrop-blur-2xl
           sm:w-full
           sm:max-w-6xl
           sm:justify-between
-          sm:px-5
+          sm:px-6
         "
       >
         <div

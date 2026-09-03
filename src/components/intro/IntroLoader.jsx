@@ -7,7 +7,7 @@ import { Code2, User, Globe } from "lucide-react";
 const icons = [Code2, User, Globe];
 const lineTwo = ["PORTOFOLIO", "WEBSITE"];
 
-const LOADING_DURATION = 2500;
+const LOADING_DURATION = 4000;
 
 const easeOut = [0.16, 1, 0.3, 1];
 
@@ -15,7 +15,7 @@ const iconContainerVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.35,
     },
   },
 };
@@ -23,13 +23,13 @@ const iconContainerVariants = {
 const iconItemVariants = {
   hidden: {
     opacity: 0,
-    y: 20,
+    y: 40,
   },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.5,
+      duration: 1,
       ease: easeOut,
     },
   },
@@ -38,14 +38,14 @@ const iconItemVariants = {
 const welcomeToVariants = {
   hidden: {
     opacity: 0,
-    x: -30,
+    x: -60,
   },
   show: {
     opacity: 1,
     x: 0,
     transition: {
-      delay: 0.35,
-      duration: 0.4,
+      delay: 1.2,
+      duration: 1,
       ease: easeOut,
     },
   },
@@ -54,14 +54,14 @@ const welcomeToVariants = {
 const myVariants = {
   hidden: {
     opacity: 0,
-    x: 30,
+    x: 60,
   },
   show: {
     opacity: 1,
     x: 0,
     transition: {
-      delay: 0.35,
-      duration: 0.4,
+      delay: 1.2,
+      duration: 1,
       ease: easeOut,
     },
   },
@@ -71,8 +71,8 @@ const lineTwoContainerVariants = {
   hidden: {},
   show: {
     transition: {
-      delayChildren: 0.6,
-      staggerChildren: 0.15,
+      delayChildren: 1.8,
+      staggerChildren: 0.35,
     },
   },
 };
@@ -80,13 +80,13 @@ const lineTwoContainerVariants = {
 const lineTwoItemVariants = {
   hidden: {
     opacity: 0,
-    y: 20,
+    y: 40,
   },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.4,
+      duration: 1,
       ease: easeOut,
     },
   },
@@ -115,7 +115,7 @@ export default function IntroLoader({ onComplete }) {
           if (onComplete) {
             onComplete();
           }
-        }, 100);
+        }, 150);
       }
     }, 16);
 
@@ -128,7 +128,7 @@ export default function IntroLoader({ onComplete }) {
       exit={{
         opacity: 0,
         transition: {
-          duration: 0.4,
+          duration: 0.5,
         },
       }}
     >
@@ -143,10 +143,10 @@ export default function IntroLoader({ onComplete }) {
             key={index}
             variants={iconItemVariants}
             className="
-              flex h-9 w-9 
-              items-center justify-center 
-              rounded-full 
-              border border-white/15 
+              flex h-9 w-9
+              items-center justify-center
+              rounded-full
+              border border-white/15
               text-white/80
             "
           >
@@ -161,12 +161,7 @@ export default function IntroLoader({ onComplete }) {
             variants={welcomeToVariants}
             initial="hidden"
             animate="show"
-            className="
-              text-xl 
-              font-semibold 
-              tracking-wide 
-              sm:text-3xl
-            "
+            className="text-xl font-semibold tracking-wide sm:text-3xl"
           >
             WELCOME TO
           </motion.span>
@@ -175,12 +170,7 @@ export default function IntroLoader({ onComplete }) {
             variants={myVariants}
             initial="hidden"
             animate="show"
-            className="
-              text-xl 
-              font-semibold 
-              tracking-wide 
-              sm:text-3xl
-            "
+            className="text-xl font-semibold tracking-wide sm:text-3xl"
           >
             MY
           </motion.span>
@@ -196,12 +186,7 @@ export default function IntroLoader({ onComplete }) {
             <motion.span
               key={word + index}
               variants={lineTwoItemVariants}
-              className="
-                text-xl 
-                font-semibold 
-                tracking-wide 
-                sm:text-3xl
-              "
+              className="text-xl font-semibold tracking-wide sm:text-3xl"
             >
               {word}
             </motion.span>
@@ -212,38 +197,27 @@ export default function IntroLoader({ onComplete }) {
       <motion.div
         initial={{
           opacity: 0,
-          y: 15,
+          y: 20,
         }}
         animate={{
           opacity: 1,
           y: 0,
         }}
         transition={{
-          delay: 1,
-          duration: 0.5,
+          delay: 2.2,
+          duration: 0.8,
+          ease: easeOut,
         }}
         className="mt-8 w-[280px] sm:w-[380px]"
       >
-<div className="mb-2 flex items-center justify-between text-xs tracking-wide text-white/60">
-  <span>Loading.....</span>
-  <span>{progress}%</span>
-</div>
-        <div
-          className="
-            h-2 
-            w-full 
-            overflow-hidden 
-            rounded-full 
-            border border-white/10 
-            bg-white/10
-          "
-        >
+        <div className="mb-2 flex items-center justify-between text-xs tracking-wide text-white/60">
+          <span>Loading.....</span>
+          <span>{progress}%</span>
+        </div>
+
+        <div className="h-2 w-full overflow-hidden rounded-full border border-white/10 bg-white/10">
           <motion.div
-            className="
-              h-full 
-              rounded-full 
-              bg-white
-            "
+            className="h-full rounded-full bg-white"
             initial={{
               width: "0%",
             }}

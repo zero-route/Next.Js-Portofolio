@@ -9,8 +9,15 @@ export default function RobotEyes() {
   const idleTimerRef = useRef(null);
   const blinkTimerRef = useRef(null);
 
+  const wakeUp = useCallback(() => {
+    setMood((prev) => {
+      if (prev === "sleeping") return "normal";
+      return prev;
+    });
+  }, []);
+
   const handleUserPointer = useCallback((clientX, clientY, isClick = false) => {
-    setMood((prev) => (prev === "sleeping" ? "normal" : prev));
+    wakeUp();
 
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -32,7 +39,7 @@ export default function RobotEyes() {
       setMood("sleeping");
       setEyeOffset({ x: 0, y: -2 });
     }, 10000);
-  }, []);
+  }, [wakeUp]);
 
   useEffect(() => {
     const onPointerMove = (e) => handleUserPointer(e.clientX, e.clientY, false);
@@ -59,7 +66,7 @@ export default function RobotEyes() {
 
   useEffect(() => {
     const loopAnimations = () => {
-      const nextInterval = Math.random() * 2000 + 1500;
+      const nextInterval = Math.random() * 2500 + 2000;
 
       blinkTimerRef.current = setTimeout(() => {
         setMood((currentMood) => {
@@ -69,12 +76,11 @@ export default function RobotEyes() {
           let nextMood = "blink";
 
           if (rand > 0.75) nextMood = "wink";
-          else if (rand > 0.5) nextMood = "happy";
-          else if (rand > 0.35) nextMood = "confused";
+          else if (rand > 0.5) nextMood = "theRock";
 
           setTimeout(() => {
             setMood((m) => (m === "sleeping" ? "sleeping" : "normal"));
-          }, 400);
+          }, 500);
 
           return nextMood;
         });
@@ -94,15 +100,15 @@ export default function RobotEyes() {
     switch (mood) {
       case "sleeping":
       case "blink":
-        return { scaleY: 0.1, scaleX: 1, borderRadius: "4px" };
+        return { scaleY: 0.1, scaleX: 1, y: 0, borderRadius: "4px" };
       case "wink":
-        return { scaleY: 0.1, scaleX: 1, borderRadius: "4px" };
+        return { scaleY: 0.1, scaleX: 1, y: 0, borderRadius: "4px" };
       case "happy":
-        return { scaleY: 0.85, scaleX: 1.1, borderRadius: "12px 12px 4px 4px" };
-      case "confused":
-        return { scaleY: 0.6, scaleX: 1, borderRadius: "6px" };
+        return { scaleY: 0.85, scaleX: 1.1, y: 0, borderRadius: "12px 12px 4px 4px" };
+      case "theRock":
+        return { scaleY: 1.2, scaleX: 1.05, y: -4, borderRadius: "9px" };
       default:
-        return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
+        return { scaleY: 1, scaleX: 1, y: 0, borderRadius: "9px" };
     }
   };
 
@@ -110,15 +116,15 @@ export default function RobotEyes() {
     switch (mood) {
       case "sleeping":
       case "blink":
-        return { scaleY: 0.1, scaleX: 1, borderRadius: "4px" };
+        return { scaleY: 0.1, scaleX: 1, y: 0, borderRadius: "4px" };
       case "wink":
-        return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
+        return { scaleY: 1, scaleX: 1, y: 0, borderRadius: "9px" };
       case "happy":
-        return { scaleY: 0.85, scaleX: 1.1, borderRadius: "12px 12px 4px 4px" };
-      case "confused":
-        return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
+        return { scaleY: 0.85, scaleX: 1.1, y: 0, borderRadius: "12px 12px 4px 4px" };
+      case "theRock":
+        return { scaleY: 0.45, scaleX: 1, y: 2, borderRadius: "6px" };
       default:
-        return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
+        return { scaleY: 1, scaleX: 1, y: 0, borderRadius: "9px" };
     }
   };
 
@@ -130,6 +136,7 @@ export default function RobotEyes() {
       <AnimatePresence>
         {mood === "sleeping" && (
           <motion.div
+            key="zzz-animation"
             initial={{ opacity: 0, y: 2, scale: 0.8 }}
             animate={{ opacity: 1, y: -10, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.8 }}

@@ -10,35 +10,55 @@ import Beyond from "@/components/section/Beyond";
 import PortofolioShowcase from "@/components/section/PortofolioShowcase";
 import Contact from "@/components/section/Contact";
 
+const renderComponent = (Component, name) => {
+  if (!Component || typeof Component !== "function") {
+    return (
+      <div style={{ padding: "20px", color: "red", border: "1px dashed red" }}>
+        Error: Export di file <b>{name}</b> belum benar / undefined.
+      </div>
+    );
+  }
+  return <Component />;
+};
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
 
   return (
     <main>
       {loading ? (
-        <IntroLoader onComplete={() => setLoading(false)} />
+        IntroLoader && typeof IntroLoader === "function" ? (
+          <IntroLoader onComplete={() => setLoading(false)} />
+        ) : (
+          <div style={{ padding: "20px", color: "red" }}>
+            Error: Export di IntroLoader belum benar.
+            <button onClick={() => setLoading(false)} style={{ marginLeft: "10px" }}>
+              Buka Website
+            </button>
+          </div>
+        )
       ) : (
         <>
-          <Navigation />
+          {renderComponent(Navigation, "Navigation")}
 
           <section id="home">
-            <HomeSection />
+            {renderComponent(HomeSection, "Home")}
           </section>
 
           <section id="about">
-            <About />
+            {renderComponent(About, "About")}
           </section>
 
           <section id="beyond">
-            <Beyond />
+            {renderComponent(Beyond, "Beyond")}
           </section>
 
           <section id="projects">
-            <PortofolioShowcase />
+            {renderComponent(PortofolioShowcase, "PortofolioShowcase")}
           </section>
 
           <section id="contact">
-            <Contact />
+            {renderComponent(Contact, "Contact")}
           </section>
         </>
       )}

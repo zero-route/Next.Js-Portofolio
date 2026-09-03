@@ -1,135 +1,182 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function RobotEyes() {
+  // Moods: 'normal' | 'blink' | 'wink' | 'happy' | 'sleeping'
   const [mood, setMood] = useState("normal");
-  const [eyeOffset, setEyeOffset] = useState({ x: 0, y: -5 });
+  const [eyeOffset, setEyeOffset] = useState({ x: 0, y: -4 }); // Default melirik sedikit ke atas
   const idleTimerRef = useRef(null);
-  const actionTimerRef = useRef(null);
+  const blinkTimerRef = useRef(null);
 
+  // 1. Reset Idle Timer & Handle Mouse/Touch Move
   useEffect(() => {
-    const handleMove = (clientX, clientY) => {
-      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-      if (mood === "sleeping") setMood("normal");
+    const handleUserActivity = (clientX, clientY) => {
+      // Jika sedang tidur lalu ada gerakan, bangunkan robot secara mulus
+      setMood((prev) => (prev === "sleeping" ? "normal" : prev));
 
+      // Hitung posisi lirikan mata relatif terhadap tengah layar
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
 
-      const offsetX = ((clientX - windowWidth / 2) / (windowWidth / 2)) * 6;
-      const offsetY = ((clientY - windowHeight / 2) / (windowHeight / 2)) * 6;
+      const offsetX = ((clientX - windowWidth / 2) / (windowWidth / 2)) * 5;
+      const offsetY = ((clientY - windowHeight / 2) / (windowHeight / 2)) * 5 - 3; // Tambahkan offset ke atas (-3)
 
       setEyeOffset({ x: offsetX, y: offsetY });
 
+      // Reset timer idle 5 detik
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
       idleTimerRef.current = setTimeout(() => {
         setMood("sleeping");
-        setEyeOffset({ x: 0, y: 0 });
+        setEyeOffset({ x: 0, y: -2 }); // Mata tetap diam rata saat tidur
       }, 5000);
     };
 
-    const onMouseMove = (e) => handleMove(e.clientX, e.clientY);
+    const onMouseMove = (e) => handleUserActivity(e.clientX, e.clientY);
     const onTouchMove = (e) => {
-      if (e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      if (e.touches[0]) handleUserActivity(e.touches[0].clientX, e.touches[0].clientY);
     };
 
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("scroll", () => handleUserActivity(window.innerWidth / 2, window.innerHeight / 2));
+
+    // Inisialisasi idle timer pertama kali
+    idleTimerRef.current = setTimeout(() => {
+      setMood("sleeping");
+    }, 5000);
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("touchmove", onTouchMove);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
-  }, [mood]);
+  }, []);
 
+  // 2. Random Blink & Expression Loop (Saat Tidak Tidur)
   useEffect(() => {
-    const moodsList = ["blink", "wink", "confused", "happy", "lookAround"];
+    const loopAnimations = () => {
+      const nextInterval = Math.random() * 3000 + 2500;
 
-    const triggerRandomAction = () => {
-      const randomInterval = Math.random() * 3000 + 2000;
+      blinkTimerRef.current = setTimeout(() => {
+        setMood((currentMood) => {
+          if (currentMood === "sleeping") return "sleeping";
 
-      actionTimerRef.current = setTimeout(() => {
-        if (mood !== "sleeping") {
-          const selectedMood = moodsList[Math.floor(Math.random() * moodsList.length)];
-          setMood(selectedMood);
+          // Acak animasi: kedip biasa, kedip genit (wink), atau senang
+          const rand = Math.random();
+          let nextMood = "blink";
+          if (rand > 0.75) nextMood = "wink";
+          else if (rand > 0.6) nextMood = "happy";
 
-          if (selectedMood === "lookAround") {
-            setEyeOffset({ x: Math.random() > 0.5 ? 5 : -5, y: -3 });
-          }
-
+          // Kembalikan ke normal secara otomatis dalam 300ms
           setTimeout(() => {
-            setMood("normal");
-            setEyeOffset({ x: 0, y: -5 });
-            triggerRandomAction();
-          }, 1200);
-        } else {
-          triggerRandomAction();
-        }
-      }, randomInterval);
+            setMood((m) => (m === "sleeping" ? "sleeping" : "normal"));
+          }, 300);
+
+          return nextMood;
+        });
+
+        loopAnimations();
+      }, nextInterval);
     };
 
-    triggerRandomAction();
+    loopAnimations();
 
     return () => {
-      if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
+      if (blinkTimerRef.current) clearTimeout(blinkTimerRef.current);
     };
-  }, [mood]);
+  }, []);
+
+  // Konfigurasi varian animasi untuk mata kiri & kanan
+  const getLeftEyeVariants = () => {
+    switch (mood) {
+      case "sleeping":
+      case "blink":
+        return { scaleY: 0.1, scaleX: 1, borderRadius: "4px" };
+      case "wink":
+        return { scaleY: 0.1, scaleX: 1, borderRadius: "4px" };
+      case "happy":
+        return { scaleY: 0.8, scaleX: 1.1, borderRadius: "12px 12px 4px 4px" };
+      default:
+        return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
+    }
+  };
+
+  const getRightEyeVariants = () => {
+    switch (mood) {
+      case "sleeping":
+      case "blink":
+        return { scaleY: 0.1, scaleX: 1, borderRadius: "4px" };
+      case "wink":
+        return { scaleY: 1, scaleX: 1, borderRadius: "9px" }; // Tetap terbuka saat wink
+      case "happy":
+        return { scaleY: 0.8, scaleX: 1.1, borderRadius: "12px 12px 4px 4px" };
+      default:
+        return { scaleY: 1, scaleX: 1, borderRadius: "9px" };
+    }
+  };
 
   return (
     <div
       onClick={() => {
         setMood("happy");
-        setTimeout(() => {
-          setMood("normal");
-          setEyeOffset({ x: 0, y: -5 });
-        }, 1500);
+        setTimeout(() => setMood("normal"), 800);
       }}
-      className="relative flex h-10 items-center justify-center cursor-pointer select-none px-2"
-      title="Cute AI Robot"
+      className="relative flex h-10 w-16 items-center justify-center cursor-pointer select-none"
+      title="Robot Assistant"
     >
-      {mood === "sleeping" && (
-        <div className="absolute -left-3 -top-2 flex items-center gap-[2px] animate-pulse">
-          <span className="h-1.5 w-1.5 rounded-full bg-white/60 text-[8px] font-bold text-white flex items-center justify-center">z</span>
-          <span className="h-2 w-2 rounded-full bg-white/80 text-[9px] font-bold text-white flex items-center justify-center">Z</span>
-          <span className="h-2.5 w-2.5 rounded-full bg-white text-[10px] font-bold text-white flex items-center justify-center">Z</span>
-        </div>
-      )}
+      {/* Animasi Zzz saat tidur */}
+      <AnimatePresence>
+        {mood === "sleeping" && (
+          <motion.div
+            initial={{ opacity: 0, y: 2, scale: 0.8 }}
+            animate={{ opacity: 1, y: -10, scale: 1 }}
+            exit={{ opacity: 0, y: -4, scale: 0.8 }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="absolute -top-1 left-1 flex items-center gap-[2px] pointer-events-none"
+          >
+            <span className="text-[10px] font-extrabold text-white/90">z</span>
+            <span className="text-[12px] font-extrabold text-white">Z</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="relative flex items-center justify-between gap-3">
-        <div
-          style={{
-            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+      {/* Kontainer Utama Mata Robot */}
+      <motion.div
+        animate={{
+          x: eyeOffset.x,
+          y: eyeOffset.y,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 220,
+          damping: 20,
+        }}
+        className="flex items-center justify-center gap-[7px]"
+      >
+        {/* Mata Kiri */}
+        <motion.div
+          animate={getLeftEyeVariants()}
+          transition={{
+            type: "tween",
+            duration: 0.18,
+            ease: "easeInOut",
           }}
-          className="transition-all duration-150 ease-out flex items-center justify-center"
-        >
-          {mood === "blink" || mood === "sleeping" ? (
-            <div className="h-[3px] w-5 rounded-full bg-white" />
-          ) : mood === "happy" ? (
-            <div className="h-3 w-5 rounded-t-full border-t-2 border-x-2 border-white" />
-          ) : mood === "confused" ? (
-            <div className="h-2 w-5 rounded-[6px] bg-white" />
-          ) : (
-            <div className="h-5 w-5 rounded-[10px] bg-white" />
-          )}
-        </div>
+          className="w-[18px] h-[22px] bg-white shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+        />
 
-        <div
-          style={{
-            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+        {/* Mata Kanan */}
+        <motion.div
+          animate={getRightEyeVariants()}
+          transition={{
+            type: "tween",
+            duration: 0.18,
+            ease: "easeInOut",
           }}
-          className="transition-all duration-150 ease-out flex items-center justify-center"
-        >
-          {mood === "blink" || mood === "wink" || mood === "sleeping" ? (
-            <div className="h-[3px] w-5 rounded-full bg-white" />
-          ) : mood === "happy" ? (
-            <div className="h-3 w-5 rounded-t-full border-t-2 border-x-2 border-white" />
-          ) : mood === "confused" ? (
-            <div className="h-5 w-5 rounded-[10px] bg-white" />
-          ) : (
-            <div className="h-5 w-5 rounded-[10px] bg-white" />
-          )}
-        </div>
-      </div>
+          className="w-[18px] h-[22px] bg-white shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+        />
+      </motion.div>
     </div>
   );
 }

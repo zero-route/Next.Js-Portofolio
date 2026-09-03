@@ -7,7 +7,7 @@ import { Code2, User, Globe } from "lucide-react";
 const icons = [Code2, User, Globe];
 const lineTwo = ["PORTOFOLIO", "WEBSITE"];
 
-const LOADING_DURATION = 1500; // 1.5 detik
+const LOADING_DURATION = 2500;
 
 const easeOut = [0.16, 1, 0.3, 1];
 
@@ -15,7 +15,7 @@ const iconContainerVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.15,
     },
   },
 };
@@ -29,7 +29,7 @@ const iconItemVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.35,
+      duration: 0.5,
       ease: easeOut,
     },
   },
@@ -111,7 +111,6 @@ export default function IntroLoader({ onComplete }) {
       if (percentage >= 100) {
         clearInterval(interval);
 
-        // Sedikit delay agar angka 100% sempat terlihat
         setTimeout(() => {
           if (onComplete) {
             onComplete();
@@ -133,7 +132,6 @@ export default function IntroLoader({ onComplete }) {
         },
       }}
     >
-      {/* ICON */}
       <motion.div
         variants={iconContainerVariants}
         initial="hidden"
@@ -157,7 +155,6 @@ export default function IntroLoader({ onComplete }) {
         ))}
       </motion.div>
 
-      {/* TEXT */}
       <div className="flex flex-col items-center gap-2 text-center">
         <div className="flex flex-wrap items-center justify-center gap-2">
           <motion.span
@@ -223,19 +220,15 @@ export default function IntroLoader({ onComplete }) {
           y: 0,
         }}
         transition={{
-          delay: 0.8,
-          duration: 0.4,
+          delay: 1,
+          duration: 0.5,
         }}
         className="mt-8 w-[280px] sm:w-[380px]"
       >
-        {/* INFO LOADING */}
         <div className="mb-2 flex items-center justify-between text-xs tracking-wide text-white/60">
           <span>{progress}%</span>
-
           <span>Loading.....</span>
         </div>
-
-        {/* PROGRESS BAR */}
         <div
           className="
             h-2 

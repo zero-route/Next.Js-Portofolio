@@ -1,15 +1,12 @@
 "use client";
 
-import { useState } from "react";
-
-import IntroLoader from "@/components/intro/IntroLoader";
-import Navigation from "@/components/layout/Navigation";
-
-import HomeSection from "@/components/section/Home";
-import About from "@/components/section/About";
-import Beyond from "@/components/section/Beyond";
-import PortofolioShowcase from "@/components/section/PortofolioShowcase";
-import Contact from "@/components/section/Contact";
+import IntroLoader from "@/app/components/intro/IntroLoader";
+import Navigation from "@/app/components/layout/Navigation";
+import HomeSection from "@/app/components/section/Home";
+import About from "@/app/components/section/About";
+import Beyond from "@/app/components/section/Beyond";
+import PortofolioShowcase from "@/app/components/section/PortofolioShowcase";
+import Contact from "@/app/components/section/Contact";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);

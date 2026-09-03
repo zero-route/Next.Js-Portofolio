@@ -166,14 +166,14 @@ export default function Navigation() {
           mouseX.set(Infinity);
         }}
         className="
+          relative
           mx-auto
           flex
           h-[76px]
           w-fit
           max-w-[calc(100vw-32px)]
           items-center
-          justify-between
-          gap-4
+          justify-center
           rounded-3xl
           border
           border-white/[0.08]
@@ -187,7 +187,7 @@ export default function Navigation() {
           sm:px-6
         "
       >
-        <div className="hidden items-center gap-4 sm:flex">
+        <div className="hidden items-center gap-4 sm:absolute sm:left-6 sm:flex">
           <span
             className="
               select-none
@@ -206,7 +206,7 @@ export default function Navigation() {
           <RobotEyes />
         </div>
 
-        <div className="flex items-center justify-center gap-2 sm:gap-4">
+        <div className="flex items-center justify-center gap-2 sm:absolute sm:right-6 sm:gap-4">
           {navigationItems.map((item) => (
             <NavigationItem
               key={item.target}

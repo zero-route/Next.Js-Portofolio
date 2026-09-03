@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 
 export default function RobotEyes() {
   const [mood, setMood] = useState("normal");
-  const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 });
+  const [eyeOffset, setEyeOffset] = useState({ x: 0, y: -5 });
   const idleTimerRef = useRef(null);
-  const blinkTimerRef = useRef(null);
+  const actionTimerRef = useRef(null);
 
   useEffect(() => {
     const handleMove = (clientX, clientY) => {
@@ -23,7 +23,8 @@ export default function RobotEyes() {
 
       idleTimerRef.current = setTimeout(() => {
         setMood("sleeping");
-      }, 6000);
+        setEyeOffset({ x: 0, y: 0 });
+      }, 5000);
     };
 
     const onMouseMove = (e) => handleMove(e.clientX, e.clientY);
@@ -42,26 +43,35 @@ export default function RobotEyes() {
   }, [mood]);
 
   useEffect(() => {
-    const scheduleBlink = () => {
-      const randomInterval = Math.random() * 4000 + 2000;
+    const moodsList = ["blink", "wink", "confused", "happy", "lookAround"];
 
-      blinkTimerRef.current = setTimeout(() => {
-        if (mood === "normal") {
-          setMood("blinking");
+    const triggerRandomAction = () => {
+      const randomInterval = Math.random() * 3000 + 2000;
+
+      actionTimerRef.current = setTimeout(() => {
+        if (mood !== "sleeping") {
+          const selectedMood = moodsList[Math.floor(Math.random() * moodsList.length)];
+          setMood(selectedMood);
+
+          if (selectedMood === "lookAround") {
+            setEyeOffset({ x: Math.random() > 0.5 ? 5 : -5, y: -3 });
+          }
+
           setTimeout(() => {
             setMood("normal");
-            scheduleBlink();
-          }, 150);
+            setEyeOffset({ x: 0, y: -5 });
+            triggerRandomAction();
+          }, 1200);
         } else {
-          scheduleBlink();
+          triggerRandomAction();
         }
       }, randomInterval);
     };
 
-    scheduleBlink();
+    triggerRandomAction();
 
     return () => {
-      if (blinkTimerRef.current) clearTimeout(blinkTimerRef.current);
+      if (actionTimerRef.current) clearTimeout(actionTimerRef.current);
     };
   }, [mood]);
 
@@ -69,32 +79,37 @@ export default function RobotEyes() {
     <div
       onClick={() => {
         setMood("happy");
-        setTimeout(() => setMood("normal"), 1500);
+        setTimeout(() => {
+          setMood("normal");
+          setEyeOffset({ x: 0, y: -5 });
+        }, 1500);
       }}
-      className="relative flex h-10 w-20 cursor-pointer items-center justify-center rounded-2xl border border-cyan-500/30 bg-black/80 px-2 shadow-[0_0_12px_rgba(6,182,212,0.15)] transition-all duration-300 hover:border-cyan-400 hover:shadow-[0_0_18px_rgba(6,182,212,0.3)]"
+      className="relative flex h-10 items-center justify-center cursor-pointer select-none px-2"
       title="Cute AI Robot"
     >
       {mood === "sleeping" && (
-        <div className="absolute -left-2 -top-3 flex items-center gap-[2px] animate-pulse">
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400/60 text-[8px] font-bold text-cyan-300 flex items-center justify-center">z</span>
-          <span className="h-2 w-2 rounded-full bg-cyan-400/80 text-[9px] font-bold text-cyan-300 flex items-center justify-center">Z</span>
-          <span className="h-2.5 w-2.5 rounded-full bg-cyan-400 text-[10px] font-bold text-cyan-200 flex items-center justify-center">Z</span>
+        <div className="absolute -left-3 -top-2 flex items-center gap-[2px] animate-pulse">
+          <span className="h-1.5 w-1.5 rounded-full bg-white/60 text-[8px] font-bold text-white flex items-center justify-center">z</span>
+          <span className="h-2 w-2 rounded-full bg-white/80 text-[9px] font-bold text-white flex items-center justify-center">Z</span>
+          <span className="h-2.5 w-2.5 rounded-full bg-white text-[10px] font-bold text-white flex items-center justify-center">Z</span>
         </div>
       )}
 
-      <div className="relative flex items-center justify-between gap-2.5">
+      <div className="relative flex items-center justify-between gap-3">
         <div
           style={{
             transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
           }}
-          className="transition-transform duration-75 ease-out"
+          className="transition-all duration-150 ease-out flex items-center justify-center"
         >
-          {mood === "blinking" || mood === "sleeping" ? (
-            <div className="h-[2px] w-3.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+          {mood === "blink" || mood === "sleeping" ? (
+            <div className="h-[3px] w-5 rounded-full bg-white" />
           ) : mood === "happy" ? (
-            <div className="h-3.5 w-3.5 rounded-t-full border-t-2 border-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+            <div className="h-3 w-5 rounded-t-full border-t-2 border-x-2 border-white" />
+          ) : mood === "confused" ? (
+            <div className="h-2 w-5 rounded-[6px] bg-white" />
           ) : (
-            <div className="h-4 w-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]" />
+            <div className="h-5 w-5 rounded-[10px] bg-white" />
           )}
         </div>
 
@@ -102,14 +117,16 @@ export default function RobotEyes() {
           style={{
             transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
           }}
-          className="transition-transform duration-75 ease-out"
+          className="transition-all duration-150 ease-out flex items-center justify-center"
         >
-          {mood === "blinking" || mood === "sleeping" ? (
-            <div className="h-[2px] w-3.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+          {mood === "blink" || mood === "wink" || mood === "sleeping" ? (
+            <div className="h-[3px] w-5 rounded-full bg-white" />
           ) : mood === "happy" ? (
-            <div className="h-3.5 w-3.5 rounded-t-full border-t-2 border-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+            <div className="h-3 w-5 rounded-t-full border-t-2 border-x-2 border-white" />
+          ) : mood === "confused" ? (
+            <div className="h-5 w-5 rounded-[10px] bg-white" />
           ) : (
-            <div className="h-4 w-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]" />
+            <div className="h-5 w-5 rounded-[10px] bg-white" />
           )}
         </div>
       </div>

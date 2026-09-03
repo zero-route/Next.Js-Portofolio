@@ -181,27 +181,29 @@ export default function Navigation() {
           py-2
           shadow-lg
           backdrop-blur-2xl
-          sm:max-w-2xl
-          sm:gap-12
-          sm:px-8
+          sm:w-full
+          sm:max-w-5xl
+          sm:justify-between
+          sm:px-6
         "
       >
-        {/* Sisi Kiri: Brand */}
-        <div
-          className="
-            hidden
-            select-none
-            text-sm
-            font-semibold
-            tracking-[0.25em]
-            text-white/85
-            sm:block
-          "
-        >
-          DIMAS
+        <div className="hidden items-center gap-4 sm:flex">
+          <span
+            className="
+              select-none
+              text-sm
+              font-semibold
+              tracking-[0.25em]
+              text-white/85
+            "
+          >
+            DIMAS
+          </span>
+
+          <div className="flex items-center gap-2">
+          </div>
         </div>
 
-        {/* Sisi Kanan: Menu Item */}
         <div className="flex items-center justify-center gap-2 sm:gap-4">
           {navigationItems.map((item) => (
             <NavigationItem

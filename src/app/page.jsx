@@ -41,7 +41,7 @@ export default function Home() {
         <>
           {renderComponent(Navigation, "Navigation")}
 
-          <section id="home">
+         {/* <section id="home">
             {renderComponent(HomeSection, "Home")}
           </section>
 
@@ -59,7 +59,7 @@ export default function Home() {
 
           <section id="contact">
             {renderComponent(Contact, "Contact")}
-          </section>
+          </section> */}
         </>
       )}
     </main>

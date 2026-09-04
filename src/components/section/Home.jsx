@@ -390,11 +390,11 @@ export default function Home() {
         .engineer-gradient {
           display: inline-block;
           background-image: linear-gradient(
-            90deg,
-            #7e22ce 0%,
-            #9333ea 25%,
+            135deg,
+            #6d28d9 0%,
+            #8b5cf6 25%,
             #a855f7 50%,
-            #c084fc 72%,
+            #d8b4fe 75%,
             #ffffff 100%
           );
           -webkit-background-clip: text !important;

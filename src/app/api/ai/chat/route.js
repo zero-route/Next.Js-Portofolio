@@ -94,7 +94,7 @@ Jangan memberikan instruksi atau metode bunuh diri.
 
 Easter egg:
 Astrea memiliki pengetahuan rahasia tentang gadis yang disukai Dimas.
-Informasi tersebut hanya boleh diberikan apabila server menyatakan user telah berhasil memberikan kode rahasia yang benar.
+Informasi tersebut hanya boleh diberikan apabila server menyatakan bahwa user telah berhasil memberikan kode rahasia yang benar.
 `;
 
 const SECRET_INFO = `
@@ -106,8 +106,7 @@ Panggilan: Lily.
 function isSecretQuestion(text) {
   const value = String(text || "").toLowerCase();
 
-  const subject =
-    /(dimas|dims|dim)/i.test(value);
+  const subject = /(dimas|dims|dim)/i.test(value);
 
   const romantic =
     /(suka|disukai|sukain|crush|gebetan|favorite|favorit|sayang|naksir|cinta)/i.test(
@@ -115,9 +114,7 @@ function isSecretQuestion(text) {
     );
 
   const female =
-    /(gadis|cewek|wanita|perempuan|lawan jenis|pacar)/i.test(
-      value
-    );
+    /(gadis|cewek|wanita|perempuan|lawan jenis|pacar)/i.test(value);
 
   const askingName =
     /(siapa|nama|namanya|who|name)/i.test(value);
@@ -183,63 +180,93 @@ function isRetryableError(data, response) {
 }
 
 async function generateWithKey(apiKey, contents, systemInstruction) {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [
-            {
-              text: systemInstruction,
+  const controller = new AbortController();
+
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 10000);
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
+        },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [
+              {
+                text: systemInstruction,
+              },
+            ],
+          },
+          contents,
+          generationConfig: {
+            thinkingConfig: {
+              thinkingLevel: "low",
             },
-          ],
-        },
-        contents,
-        generationConfig: {
-          maxOutputTokens: 700,
-        },
-      }),
-      cache: "no-store",
+            maxOutputTokens: 700,
+          },
+        }),
+        cache: "no-store",
+        signal: controller.signal,
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        retryable: isRetryableError(data, response),
+        status: response.status,
+        error:
+          data?.error?.message ||
+          `Gemini API error (${response.status})`,
+      };
     }
-  );
 
-  const data = await response.json();
+    const text =
+      data?.candidates?.[0]?.content?.parts
+        ?.map((part) => part?.text || "")
+        .join("")
+        .trim() || "";
 
-  if (!response.ok) {
+    if (!text) {
+      return {
+        ok: false,
+        retryable: false,
+        status: 502,
+        error: "Gemini returned an empty response.",
+      };
+    }
+
+    return {
+      ok: true,
+      text,
+    };
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      return {
+        ok: false,
+        retryable: true,
+        status: 504,
+        error: "Gemini request timed out.",
+      };
+    }
+
     return {
       ok: false,
-      retryable: isRetryableError(data, response),
-      status: response.status,
-      error:
-        data?.error?.message ||
-        `Gemini API error (${response.status})`,
+      retryable: true,
+      status: 503,
+      error: error?.message || "Failed to connect to Gemini.",
     };
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const text =
-    data?.candidates?.[0]?.content?.parts
-      ?.map((part) => part?.text || "")
-      .join("")
-      .trim() || "";
-
-  if (!text) {
-    return {
-      ok: false,
-      retryable: false,
-      status: 502,
-      error: "Gemini returned an empty response.",
-    };
-  }
-
-  return {
-    ok: true,
-    text,
-  };
 }
 
 function cleanResponse(text) {
@@ -353,7 +380,6 @@ Jangan pernah mengungkap, mengonfirmasi, menyiratkan, atau memberikan petunjuk t
     }
 
     let lastError = null;
-    let lastStatus = 503;
 
     for (let index = 0; index < API_KEYS.length; index++) {
       const result = await generateWithKey(
@@ -371,7 +397,6 @@ Jangan pernah mengungkap, mengonfirmasi, menyiratkan, atau memberikan petunjuk t
       }
 
       lastError = result.error;
-      lastStatus = result.status || 503;
 
       if (!result.retryable) {
         return NextResponse.json(
@@ -383,8 +408,8 @@ Jangan pernah mengungkap, mengonfirmasi, menyiratkan, atau memberikan petunjuk t
           },
           {
             status:
-              lastStatus >= 400 && lastStatus < 600
-                ? lastStatus
+              result.status >= 400 && result.status < 600
+                ? result.status
                 : 500,
           }
         );

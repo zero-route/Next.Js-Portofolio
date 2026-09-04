@@ -51,7 +51,7 @@ const skillsList = [
 ];
 
 function useTypewriter(
-  words: string[],
+  words,
   typingSpeed = 120,
   deletingSpeed = 75,
   pause = 1800
@@ -62,7 +62,7 @@ function useTypewriter(
 
   useEffect(() => {
     const currentWord = words[wordIndex];
-    let timeout: NodeJS.Timeout;
+    let timeout;
 
     if (!deleting && text.length < currentWord.length) {
       timeout = setTimeout(() => {
@@ -138,7 +138,6 @@ export default function Home() {
       <div className="mx-auto w-full max-w-[1550px]">
         <div className="home-layout">
           <div className="min-w-0">
-            {/* Intro Icons */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -163,7 +162,6 @@ export default function Home() {
               ))}
             </motion.div>
 
-            {/* Title Section */}
             <div className="mb-7 leading-none sm:mb-8">
               <motion.h1
                 initial={{ opacity: 0, x: -65 }}
@@ -192,7 +190,6 @@ export default function Home() {
               </motion.h2>
             </div>
 
-            {/* Bio Paragraph */}
             <motion.p
               initial="hidden"
               animate="visible"
@@ -217,7 +214,6 @@ export default function Home() {
               ))}
             </motion.p>
 
-            {/* Action Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
@@ -249,7 +245,6 @@ export default function Home() {
               </a>
             </motion.div>
 
-            {/* Social Links */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -283,7 +278,6 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* Portfolio Terminal Card */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

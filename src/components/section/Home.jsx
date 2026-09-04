@@ -8,7 +8,7 @@ import {
   ArrowUpRight,
   Mail,
   Github,
-  GitBranch,
+  Gitlab,
   Linkedin,
   Send,
   Instagram,
@@ -110,7 +110,7 @@ export default function Home() {
       label: "GitHub",
     },
     {
-      icon: GitBranch,
+      icon: Gitlab,
       href: "https://gitlab.com/",
       label: "GitLab",
     },
@@ -446,10 +446,11 @@ export default function Home() {
           color: transparent;
           background-image: linear-gradient(
             90deg,
-            #ffffff 0%,
-            #f4f0ff 30%,
-            #dfd1ff 62%,
-            #a56dff 100%
+            #6d28d9 0%,
+            #a855f7 25%,
+            #c4b5fd 50%,
+            #f4f0ff 75%,
+            #ffffff 100%
           );
           background-size: 100% 100%;
           background-clip: text;

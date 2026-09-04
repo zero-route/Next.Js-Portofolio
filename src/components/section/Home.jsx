@@ -447,9 +447,9 @@ export default function Home() {
           background-image: linear-gradient(
             90deg,
             #6d28d9 0%,
-            #a855f7 25%,
-            #c4b5fd 50%,
-            #f4f0ff 75%,
+            #8b5cf6 35%,
+            #a78bfa 60%,
+            #e9d8fd 85%,
             #ffffff 100%
           );
           background-size: 100% 100%;
@@ -474,8 +474,12 @@ export default function Home() {
           0%,
           100% {
             filter: brightness(1);
-            text-shadow: 0 0 0 rgba(180, 130, 255, 0);
           }
+
+          50% {
+            filter: brightness(1.04);
+          }
+        }
 
           50% {
             filter: brightness(1.12);

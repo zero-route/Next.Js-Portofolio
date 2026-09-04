@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   Home as HomeIcon,
   User,
@@ -17,12 +17,7 @@ const springConfig = {
   damping: 14,
 };
 
-function NavigationItem({
-  icon,
-  label,
-  target,
-  mouseX,
-}) {
+function NavigationItem({ icon, label, target, mouseX, index, contentVariants }) {
   const ref = useRef(null);
 
   const distance = 120;
@@ -59,9 +54,11 @@ function NavigationItem({
   };
 
   return (
-    <button
+    <motion.button
       ref={ref}
       onClick={scrollToSection}
+      variants={contentVariants}
+      custom={index}
       className="group relative flex h-[62px] w-[50px] items-center justify-start flex-col border-0 bg-transparent p-0 outline-none"
       aria-label={label}
     >
@@ -109,12 +106,25 @@ function NavigationItem({
       >
         {label}
       </span>
-    </button>
+    </motion.button>
   );
 }
 
-export default function Navigation() {
+export default function Navigation({ play = true, entranceDelay = 300 }) {
   const mouseX = useMotionValue(Infinity);
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!play) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setExpanded(true);
+    }, entranceDelay);
+
+    return () => clearTimeout(timer);
+  }, [play, entranceDelay]);
 
   const navigationItems = [
     {
@@ -144,6 +154,39 @@ export default function Navigation() {
     },
   ];
 
+  const shapeVariants = {
+    collapsed: {
+      clipPath: "circle(26px at 50% 50%)",
+      scale: 0.94,
+    },
+    expanded: {
+      clipPath: "circle(150% at 50% 50%)",
+      scale: 1,
+      transition: {
+        clipPath: { duration: 1.1, ease: [0.19, 1, 0.22, 1] },
+        scale: { duration: 0.9, ease: [0.19, 1, 0.22, 1] },
+      },
+    },
+  };
+
+  const contentVariants = {
+    collapsed: {
+      opacity: 0,
+      y: 6,
+      filter: "blur(4px)",
+    },
+    expanded: (index = 0) => ({
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        delay: 0.55 + index * 0.05,
+        duration: 0.45,
+        ease: "easeOut",
+      },
+    }),
+  };
+
   return (
     <header
       className="
@@ -165,6 +208,9 @@ export default function Navigation() {
         onMouseLeave={() => {
           mouseX.set(Infinity);
         }}
+        initial="collapsed"
+        animate={expanded ? "expanded" : "collapsed"}
+        variants={shapeVariants}
         className="
           relative
           mx-auto
@@ -187,7 +233,11 @@ export default function Navigation() {
           sm:px-6
         "
       >
-        <div className="hidden items-center gap-4 sm:absolute sm:left-6 sm:flex">
+        <motion.div
+          variants={contentVariants}
+          custom={0}
+          className="hidden items-center gap-4 sm:absolute sm:left-6 sm:flex"
+        >
           <span
             className="
               select-none
@@ -200,18 +250,20 @@ export default function Navigation() {
             DIMAS
           </span>
           <div className="flex items-center gap-2"></div>
-        </div>
+        </motion.div>
 
         <div className="flex items-center justify-center">
           <RobotEyes />
         </div>
 
         <div className="flex items-center justify-center gap-2 sm:absolute sm:right-6 sm:gap-4">
-          {navigationItems.map((item) => (
+          {navigationItems.map((item, index) => (
             <NavigationItem
               key={item.target}
               {...item}
               mouseX={mouseX}
+              index={index + 1}
+              contentVariants={contentVariants}
             />
           ))}
         </div>

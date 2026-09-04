@@ -157,7 +157,11 @@ export default function Home() {
                   }}
                   className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.025] sm:h-11 sm:w-11"
                 >
-                  <Icon size={18} strokeWidth={1.8} className="text-white" />
+                  <Icon
+                    size={18}
+                    strokeWidth={1.8}
+                    className="text-white"
+                  />
                 </motion.div>
               ))}
             </motion.div>
@@ -184,9 +188,9 @@ export default function Home() {
                   delay: 0.6,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="engineer-shine mt-1 font-mono text-[3rem] font-black tracking-[-0.08em] sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
+                className="mt-1 font-mono text-[3rem] font-black tracking-[-0.08em] sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
               >
-                ENGINEER
+                <span className="engineer-gradient">ENGINEER</span>
               </motion.h2>
             </div>
 
@@ -230,6 +234,7 @@ export default function Home() {
               >
                 <span className="button-shine absolute inset-0" />
                 <span className="relative">View Projects</span>
+
                 <ArrowUpRight
                   size={16}
                   className="relative transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
@@ -303,7 +308,9 @@ export default function Home() {
 
               <div className="min-h-[195px] p-5 font-mono text-[11px] leading-[1.8] sm:p-6 sm:text-[12px]">
                 <div>
-                  <span className="font-semibold text-[#c084fc]">const</span>{" "}
+                  <span className="font-semibold text-[#c084fc]">
+                    const
+                  </span>{" "}
                   <span className="font-semibold text-[#60a5fa]">
                     developer
                   </span>{" "}
@@ -380,19 +387,20 @@ export default function Home() {
           width: 100%;
         }
 
-        .engineer-shine {
+        .engineer-gradient {
           display: inline-block;
-          background: linear-gradient(
+          background-image: linear-gradient(
             90deg,
             #7e22ce 0%,
-            #a855f7 35%,
-            #c084fc 60%,
+            #9333ea 25%,
+            #a855f7 50%,
+            #c084fc 72%,
             #ffffff 100%
           );
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          color: transparent;
+          -webkit-background-clip: text !important;
+          background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+          color: transparent !important;
         }
 
         .button-shine {

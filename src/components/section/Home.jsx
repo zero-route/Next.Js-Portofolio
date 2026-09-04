@@ -93,20 +93,11 @@ export default function Home() {
   const role = useTypewriter(roleList, 120, 75, 1900);
   const skill = useTypewriter(skillsList, 110, 70, 1700);
 
-  // =========================
-  // MUSIC PLAYER STATE
-  // =========================
-
   const [musicSearchOpen, setMusicSearchOpen] = useState(false);
   const [vinylOpen, setVinylOpen] = useState(false);
-
   const [currentSong, setCurrentSong] = useState(null);
   const [musicQueue, setMusicQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
-
-  // =========================
-  // MUSIC HANDLERS
-  // =========================
 
   const handleSelectSong = (song, queue = []) => {
     if (!song) return;
@@ -120,7 +111,6 @@ export default function Home() {
     setMusicQueue(selectedQueue);
     setCurrentIndex(index >= 0 ? index : 0);
     setCurrentSong(song);
-
     setMusicSearchOpen(false);
     setVinylOpen(true);
   };
@@ -143,10 +133,6 @@ export default function Home() {
 
     setCurrentIndex(previousIndex);
     setCurrentSong(musicQueue[previousIndex]);
-  };
-
-  const handleCloseVinyl = () => {
-    setVinylOpen(false);
   };
 
   const introIcons = [Bot, Music2];
@@ -194,10 +180,6 @@ export default function Home() {
       <div className="mx-auto w-full max-w-[1550px]">
         <div className="home-layout">
           <div className="min-w-0">
-            {/* =========================
-                INTRO ICONS
-                ========================= */}
-
             <motion.div
               initial="hidden"
               animate="visible"
@@ -247,10 +229,6 @@ export default function Home() {
               })}
             </motion.div>
 
-            {/* =========================
-                TITLE
-                ========================= */}
-
             <div className="mb-7 leading-none sm:mb-8">
               <motion.h1
                 initial={{ opacity: 0, x: -65 }}
@@ -279,10 +257,6 @@ export default function Home() {
               </motion.h2>
             </div>
 
-            {/* =========================
-                DESCRIPTION
-                ========================= */}
-
             <motion.p
               initial="hidden"
               animate="visible"
@@ -307,10 +281,6 @@ export default function Home() {
               ))}
             </motion.p>
 
-            {/* =========================
-                BUTTONS
-                ========================= */}
-
             <motion.div
               initial={{ opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
@@ -326,9 +296,7 @@ export default function Home() {
                 className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-[#a78bfa]/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[12px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,0.18)] transition-all duration-300 hover:scale-[1.025] hover:shadow-[0_0_35px_rgba(139,92,246,0.3)]"
               >
                 <span className="button-shine absolute inset-0" />
-
                 <span className="relative">View Projects</span>
-
                 <ArrowUpRight
                   size={16}
                   className="relative transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
@@ -343,10 +311,6 @@ export default function Home() {
                 <Mail size={15} />
               </a>
             </motion.div>
-
-            {/* =========================
-                SOCIAL LINKS
-                ========================= */}
 
             <motion.div
               initial="hidden"
@@ -381,10 +345,6 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* =========================
-              PORTFOLIO CARD
-              ========================= */}
-
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -410,9 +370,7 @@ export default function Home() {
 
               <div className="min-h-[195px] p-5 font-mono text-[11px] leading-[1.8] sm:p-6 sm:text-[12px]">
                 <div>
-                  <span className="font-semibold text-[#c084fc]">
-                    const
-                  </span>{" "}
+                  <span className="font-semibold text-[#c084fc]">const</span>{" "}
                   <span className="font-semibold text-[#60a5fa]">
                     developer
                   </span>{" "}
@@ -471,31 +429,19 @@ export default function Home() {
         </div>
       </div>
 
-      {/* =========================
-          MUSIC SEARCH MODAL
-          ========================= */}
-
       <MusicSearchModal
         open={musicSearchOpen}
         onClose={() => setMusicSearchOpen(false)}
         onSelect={handleSelectSong}
       />
 
-      {/* =========================
-          VINYL PLAYER MODAL
-          ========================= */}
-
       <VinylPlayerModal
         open={vinylOpen}
         song={currentSong}
-        onClose={handleCloseVinyl}
+        onClose={() => setVinylOpen(false)}
         onPrevious={handlePreviousSong}
         onNext={handleNextSong}
       />
-
-      {/* =========================
-          HOME CSS
-          ========================= */}
 
       <style jsx>{`
         .home-layout {

@@ -13,6 +13,8 @@ import {
   Instagram,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import MusicSearchModal from "@/components/intro/MusicSearchModal";
+import VinylPlayerModal from "@/components/intro/VinylPlayerModal";
 
 const roleList = [
   "Website Developer",
@@ -90,6 +92,63 @@ function useTypewriter(
 export default function Home() {
   const role = useTypewriter(roleList, 120, 75, 1900);
   const skill = useTypewriter(skillsList, 110, 70, 1700);
+
+  // =========================
+  // MUSIC PLAYER STATE
+  // =========================
+
+  const [musicSearchOpen, setMusicSearchOpen] = useState(false);
+  const [vinylOpen, setVinylOpen] = useState(false);
+
+  const [currentSong, setCurrentSong] = useState(null);
+  const [musicQueue, setMusicQueue] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
+
+  // =========================
+  // MUSIC HANDLERS
+  // =========================
+
+  const handleSelectSong = (song, queue = []) => {
+    if (!song) return;
+
+    const selectedQueue = queue.length ? queue : [song];
+
+    const index = selectedQueue.findIndex(
+      (item) => item.videoId === song.videoId
+    );
+
+    setMusicQueue(selectedQueue);
+    setCurrentIndex(index >= 0 ? index : 0);
+    setCurrentSong(song);
+
+    setMusicSearchOpen(false);
+    setVinylOpen(true);
+  };
+
+  const handleNextSong = () => {
+    if (!musicQueue.length) return;
+
+    const nextIndex =
+      currentIndex >= musicQueue.length - 1 ? 0 : currentIndex + 1;
+
+    setCurrentIndex(nextIndex);
+    setCurrentSong(musicQueue[nextIndex]);
+  };
+
+  const handlePreviousSong = () => {
+    if (!musicQueue.length) return;
+
+    const previousIndex =
+      currentIndex <= 0 ? musicQueue.length - 1 : currentIndex - 1;
+
+    setCurrentIndex(previousIndex);
+    setCurrentSong(musicQueue[previousIndex]);
+  };
+
+  const handleCloseVinyl = () => {
+    setVinylOpen(false);
+  };
+
   const introIcons = [Bot, Music2];
 
   const socialLinks = [
@@ -135,33 +194,62 @@ export default function Home() {
       <div className="mx-auto w-full max-w-[1550px]">
         <div className="home-layout">
           <div className="min-w-0">
+            {/* =========================
+                INTRO ICONS
+                ========================= */}
+
             <motion.div
               initial="hidden"
               animate="visible"
               className="mb-5 flex gap-3 sm:mb-6"
             >
-              {introIcons.map((Icon, index) => (
-                <motion.div
-                  key={index}
-                  variants={{
-                    hidden: { opacity: 0, y: 28 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                  transition={{
-                    duration: 0.8,
-                    delay: index * 0.3,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.025] sm:h-11 sm:w-11"
-                >
-                  <Icon
-                    size={18}
-                    strokeWidth={1.8}
-                    className="text-white"
-                  />
-                </motion.div>
-              ))}
+              {introIcons.map((Icon, index) => {
+                const isMusicIcon = index === 1;
+
+                return (
+                  <motion.button
+                    key={index}
+                    type="button"
+                    onClick={() => {
+                      if (isMusicIcon) {
+                        setMusicSearchOpen(true);
+                      }
+                    }}
+                    variants={{
+                      hidden: { opacity: 0, y: 28 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                    transition={{
+                      duration: 0.8,
+                      delay: index * 0.3,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    aria-label={
+                      isMusicIcon ? "Open music player" : "Robot icon"
+                    }
+                    className={`flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.025] transition-all duration-300 sm:h-11 sm:w-11 ${
+                      isMusicIcon
+                        ? "cursor-pointer hover:-translate-y-1 hover:border-purple-400/30 hover:bg-purple-500/[0.08] hover:shadow-[0_8px_25px_rgba(139,92,246,0.15)]"
+                        : "cursor-default"
+                    }`}
+                  >
+                    <Icon
+                      size={18}
+                      strokeWidth={1.8}
+                      className={`transition-colors duration-300 ${
+                        isMusicIcon
+                          ? "text-white hover:text-purple-200"
+                          : "text-white"
+                      }`}
+                    />
+                  </motion.button>
+                );
+              })}
             </motion.div>
+
+            {/* =========================
+                TITLE
+                ========================= */}
 
             <div className="mb-7 leading-none sm:mb-8">
               <motion.h1
@@ -191,6 +279,10 @@ export default function Home() {
               </motion.h2>
             </div>
 
+            {/* =========================
+                DESCRIPTION
+                ========================= */}
+
             <motion.p
               initial="hidden"
               animate="visible"
@@ -215,6 +307,10 @@ export default function Home() {
               ))}
             </motion.p>
 
+            {/* =========================
+                BUTTONS
+                ========================= */}
+
             <motion.div
               initial={{ opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
@@ -230,6 +326,7 @@ export default function Home() {
                 className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-[#a78bfa]/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[12px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,0.18)] transition-all duration-300 hover:scale-[1.025] hover:shadow-[0_0_35px_rgba(139,92,246,0.3)]"
               >
                 <span className="button-shine absolute inset-0" />
+
                 <span className="relative">View Projects</span>
 
                 <ArrowUpRight
@@ -246,6 +343,10 @@ export default function Home() {
                 <Mail size={15} />
               </a>
             </motion.div>
+
+            {/* =========================
+                SOCIAL LINKS
+                ========================= */}
 
             <motion.div
               initial="hidden"
@@ -279,6 +380,10 @@ export default function Home() {
               })}
             </motion.div>
           </div>
+
+          {/* =========================
+              PORTFOLIO CARD
+              ========================= */}
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -365,6 +470,32 @@ export default function Home() {
           </motion.div>
         </div>
       </div>
+
+      {/* =========================
+          MUSIC SEARCH MODAL
+          ========================= */}
+
+      <MusicSearchModal
+        open={musicSearchOpen}
+        onClose={() => setMusicSearchOpen(false)}
+        onSelect={handleSelectSong}
+      />
+
+      {/* =========================
+          VINYL PLAYER MODAL
+          ========================= */}
+
+      <VinylPlayerModal
+        open={vinylOpen}
+        song={currentSong}
+        onClose={handleCloseVinyl}
+        onPrevious={handlePreviousSong}
+        onNext={handleNextSong}
+      />
+
+      {/* =========================
+          HOME CSS
+          ========================= */}
 
       <style jsx>{`
         .home-layout {

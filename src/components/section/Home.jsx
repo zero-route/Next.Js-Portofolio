@@ -51,10 +51,10 @@ const skillsList = [
 ];
 
 function useTypewriter(
-  words,
+  words: string[],
   typingSpeed = 120,
   deletingSpeed = 75,
-  pause = 1800,
+  pause = 1800
 ) {
   const [wordIndex, setWordIndex] = useState(0);
   const [text, setText] = useState("");
@@ -62,7 +62,7 @@ function useTypewriter(
 
   useEffect(() => {
     const currentWord = words[wordIndex];
-    let timeout;
+    let timeout: NodeJS.Timeout;
 
     if (!deleting && text.length < currentWord.length) {
       timeout = setTimeout(() => {
@@ -84,15 +84,7 @@ function useTypewriter(
     }
 
     return () => clearTimeout(timeout);
-  }, [
-    text,
-    deleting,
-    wordIndex,
-    words,
-    typingSpeed,
-    deletingSpeed,
-    pause,
-  ]);
+  }, [text, deleting, wordIndex, words, typingSpeed, deletingSpeed, pause]);
 
   return text;
 }
@@ -146,6 +138,7 @@ export default function Home() {
       <div className="mx-auto w-full max-w-[1550px]">
         <div className="home-layout">
           <div className="min-w-0">
+            {/* Intro Icons */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -155,14 +148,8 @@ export default function Home() {
                 <motion.div
                   key={index}
                   variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 28,
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                    },
+                    hidden: { opacity: 0, y: 28 },
+                    visible: { opacity: 1, y: 0 },
                   }}
                   transition={{
                     duration: 0.8,
@@ -171,25 +158,16 @@ export default function Home() {
                   }}
                   className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.025] sm:h-11 sm:w-11"
                 >
-                  <Icon
-                    size={18}
-                    strokeWidth={1.8}
-                    className="text-white"
-                  />
+                  <Icon size={18} strokeWidth={1.8} className="text-white" />
                 </motion.div>
               ))}
             </motion.div>
 
+            {/* Title Section */}
             <div className="mb-7 leading-none sm:mb-8">
               <motion.h1
-                initial={{
-                  opacity: 0,
-                  x: -65,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
+                initial={{ opacity: 0, x: -65 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{
                   duration: 1.15,
                   delay: 0.4,
@@ -201,14 +179,8 @@ export default function Home() {
               </motion.h1>
 
               <motion.h2
-                initial={{
-                  opacity: 0,
-                  x: 65,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
+                initial={{ opacity: 0, x: 65 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{
                   duration: 1.15,
                   delay: 0.6,
@@ -220,6 +192,7 @@ export default function Home() {
               </motion.h2>
             </div>
 
+            {/* Bio Paragraph */}
             <motion.p
               initial="hidden"
               animate="visible"
@@ -229,14 +202,8 @@ export default function Home() {
                 <motion.span
                   key={`${word}-${index}`}
                   variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 15,
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                    },
+                    hidden: { opacity: 0, y: 15 },
+                    visible: { opacity: 1, y: 0 },
                   }}
                   transition={{
                     duration: 0.55,
@@ -250,15 +217,10 @@ export default function Home() {
               ))}
             </motion.p>
 
+            {/* Action Buttons */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 35,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.9,
                 delay: 1.7,
@@ -271,9 +233,7 @@ export default function Home() {
                 className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-[#a78bfa]/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[12px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,0.18)] transition-all duration-300 hover:scale-[1.025] hover:shadow-[0_0_35px_rgba(139,92,246,0.3)]"
               >
                 <span className="button-shine absolute inset-0" />
-
                 <span className="relative">View Projects</span>
-
                 <ArrowUpRight
                   size={16}
                   className="relative transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
@@ -289,6 +249,7 @@ export default function Home() {
               </a>
             </motion.div>
 
+            {/* Social Links */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -305,14 +266,8 @@ export default function Home() {
                     rel="noopener noreferrer"
                     aria-label={item.label}
                     variants={{
-                      hidden: {
-                        opacity: 0,
-                        y: 28,
-                      },
-                      visible: {
-                        opacity: 1,
-                        y: 0,
-                      },
+                      hidden: { opacity: 0, y: 28 },
+                      visible: { opacity: 1, y: 0 },
                     }}
                     transition={{
                       duration: 0.8,
@@ -328,13 +283,10 @@ export default function Home() {
             </motion.div>
           </div>
 
+          {/* Portfolio Terminal Card */}
           <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{
               duration: 1.4,
               delay: 2.3,
@@ -357,9 +309,7 @@ export default function Home() {
 
               <div className="min-h-[195px] p-5 font-mono text-[11px] leading-[1.8] sm:p-6 sm:text-[12px]">
                 <div>
-                  <span className="font-semibold text-[#c084fc]">
-                    const
-                  </span>{" "}
+                  <span className="font-semibold text-[#c084fc]">const</span>{" "}
                   <span className="font-semibold text-[#60a5fa]">
                     developer
                   </span>{" "}
@@ -368,8 +318,7 @@ export default function Home() {
 
                 <div className="pl-4 text-white/60">
                   <div>
-                    Nama{" "}
-                    <span className="text-white/40">:</span>{" "}
+                    Nama <span className="text-white/40">:</span>{" "}
                     <span className="text-[#86efac]">
                       &quot;Dimas Aksa Oktapian&quot;
                     </span>
@@ -377,8 +326,7 @@ export default function Home() {
                   </div>
 
                   <div>
-                    Role{" "}
-                    <span className="text-white/40">:</span>{" "}
+                    Role <span className="text-white/40">:</span>{" "}
                     <span className="text-[#86efac]">
                       &quot;{role}
                       <span className="ml-[1px] inline-block h-[12px] w-[1px] animate-pulse bg-[#d8b4fe] align-middle" />
@@ -388,8 +336,7 @@ export default function Home() {
                   </div>
 
                   <div>
-                    Skills{" "}
-                    <span className="text-white/40">:</span>{" "}
+                    Skills <span className="text-white/40">:</span>{" "}
                     <span className="text-[#86efac]">
                       &quot;{skill}
                       <span className="ml-[1px] inline-block h-[12px] w-[1px] animate-pulse bg-[#d8b4fe] align-middle" />
@@ -399,8 +346,7 @@ export default function Home() {
                   </div>
 
                   <div>
-                    Passion{" "}
-                    <span className="text-white/40">:</span>{" "}
+                    Passion <span className="text-white/40">:</span>{" "}
                     <span className="text-[#86efac]">
                       &quot;DevSecOps Engineer&quot;
                     </span>
@@ -408,8 +354,7 @@ export default function Home() {
                   </div>
 
                   <div>
-                    Status{" "}
-                    <span className="text-white/40">:</span>{" "}
+                    Status <span className="text-white/40">:</span>{" "}
                     <span className="text-[#86efac]">
                       &quot;Building........&quot;
                     </span>
@@ -443,14 +388,16 @@ export default function Home() {
 
         .engineer-shine {
           display: inline-block;
-          background-image: linear-gradient(
-            to right,
-            #9333ea 0%,
-            #c084fc 40%,
+          background: linear-gradient(
+            90deg,
+            #7e22ce 0%,
+            #a855f7 35%,
+            #c084fc 60%,
             #ffffff 100%
           );
           -webkit-background-clip: text;
           background-clip: text;
+          -webkit-text-fill-color: transparent;
           color: transparent;
         }
 

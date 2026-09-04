@@ -17,7 +17,7 @@ const springConfig = {
   damping: 14,
 };
 
-function NavigationItem({ icon, label, target, mouseX, index, contentVariants }) {
+function NavigationItem({ icon, label, target, mouseX, index, contentVariants, contentVisible }) {
   const ref = useRef(null);
 
   const distance = 120;
@@ -59,6 +59,8 @@ function NavigationItem({ icon, label, target, mouseX, index, contentVariants })
       onClick={scrollToSection}
       variants={contentVariants}
       custom={index}
+      initial="hidden"
+      animate={contentVisible ? "visible" : "hidden"}
       className="group relative flex h-[62px] w-[50px] items-center justify-start flex-col border-0 bg-transparent p-0 outline-none"
       aria-label={label}
     >
@@ -166,7 +168,7 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
       borderRadius: ["9999px", "9999px", "24px"],
       filter: ["blur(0px)", "blur(18px)", "blur(0px)"],
       transition: {
-        duration: 1.2,
+        duration: 2.1,
         ease: [0.19, 1, 0.22, 1],
         times: [0, 0.45, 1],
       },
@@ -182,8 +184,8 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
       opacity: 1,
       filter: "blur(0px)",
       transition: {
-        delay: index * 0.06,
-        duration: 0.5,
+        delay: 0.3 + index * 0.11,
+        duration: 0.8,
         ease: "easeOut",
       },
     }),
@@ -279,6 +281,7 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
               mouseX={mouseX}
               index={index + 2}
               contentVariants={contentVariants}
+              contentVisible={contentVisible}
             />
           ))}
         </div>

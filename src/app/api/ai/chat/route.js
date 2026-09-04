@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-3.8-flash";
 
 const API_KEYS = [
   process.env.GEMINI_API_KEY_1,

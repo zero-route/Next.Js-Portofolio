@@ -13,6 +13,7 @@ import {
   Instagram,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import AstreaChatModal from "@/components/intro/AstreaChatModal";
 import MusicSearchModal from "@/components/intro/MusicSearchModal";
 import VinylPlayerModal from "@/components/intro/VinylPlayerModal";
 
@@ -100,6 +101,8 @@ function useTypewriter(
 export default function Home() {
   const role = useTypewriter(roleList, 120, 75, 1900);
   const skill = useTypewriter(skillsList, 110, 70, 1700);
+
+  const [astreaOpen, setAstreaOpen] = useState(false);
 
   const [musicSearchOpen, setMusicSearchOpen] = useState(false);
   const [vinylOpen, setVinylOpen] = useState(false);
@@ -209,12 +212,17 @@ export default function Home() {
             >
               {introIcons.map((Icon, index) => {
                 const isMusicIcon = index === 1;
+                const isBotIcon = index === 0;
 
                 return (
                   <motion.button
                     key={index}
                     type="button"
                     onClick={() => {
+                      if (isBotIcon) {
+                        setAstreaOpen(true);
+                      }
+
                       if (isMusicIcon) {
                         openVinylPlayer();
                       }
@@ -229,22 +237,16 @@ export default function Home() {
                       ease: [0.22, 1, 0.36, 1],
                     }}
                     aria-label={
-                      isMusicIcon ? "Open music player" : "Robot icon"
+                      isBotIcon
+                        ? "Open Astrea AI"
+                        : "Open music player"
                     }
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.025] transition-all duration-300 sm:h-11 sm:w-11 ${
-                      isMusicIcon
-                        ? "cursor-pointer hover:-translate-y-1 hover:border-purple-400/30 hover:bg-purple-500/[0.08] hover:shadow-[0_8px_25px_rgba(139,92,246,0.15)]"
-                        : "cursor-default"
-                    }`}
+                    className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.025] transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/30 hover:bg-purple-500/[0.08] hover:shadow-[0_8px_25px_rgba(139,92,246,0.15)] sm:h-11 sm:w-11"
                   >
                     <Icon
                       size={18}
                       strokeWidth={1.8}
-                      className={`transition-colors duration-300 ${
-                        isMusicIcon
-                          ? "text-white hover:text-purple-200"
-                          : "text-white"
-                      }`}
+                      className="text-white transition-colors duration-300 hover:text-purple-200"
                     />
                   </motion.button>
                 );
@@ -451,6 +453,11 @@ export default function Home() {
         </div>
       </div>
 
+      <AstreaChatModal
+        open={astreaOpen}
+        onClose={() => setAstreaOpen(false)}
+      />
+
       <MusicSearchModal
         open={musicSearchOpen}
         onClose={() => setMusicSearchOpen(false)}
@@ -526,7 +533,7 @@ export default function Home() {
                 type="button"
                 onClick={openVinylPlayer}
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition hover:scale-105"
-                aria-label={musicPlaying ? "Open player" : "Open player"}
+                aria-label="Open player"
               >
                 {musicPlaying ? (
                   <span className="flex gap-[3px]">

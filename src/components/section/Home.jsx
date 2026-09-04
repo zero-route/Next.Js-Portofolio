@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import {
-  Code2,
-  Network,
-  BrainCircuit,
+  Bot,
+  Music2,
   ArrowUpRight,
   Mail,
   Github,
@@ -12,7 +11,6 @@ import {
   Linkedin,
   Send,
   Instagram,
-  Music2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -92,8 +90,7 @@ function useTypewriter(
 export default function Home() {
   const role = useTypewriter(roleList, 120, 75, 1900);
   const skill = useTypewriter(skillsList, 110, 70, 1700);
-
-  const introIcons = [Code2, Network, BrainCircuit];
+  const introIcons = [Bot, Music2];
 
   const socialLinks = [
     {

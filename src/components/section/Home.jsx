@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import {
   Code2,
   Network,
-  Brain,
+  BrainCircuit,
   ArrowUpRight,
   Mail,
   Github,
@@ -13,7 +13,7 @@ import {
   Linkedin,
   Send,
   Instagram,
-  Music2,
+  Music2
 } from "lucide-react";
 
 const roleList = [
@@ -23,7 +23,7 @@ const roleList = [
   "Full-Stack Developer",
   "Automation Engineer",
   "Robotic Engineer",
-  "Electrical Engineer",
+  "Electrical Engineer"
 ];
 
 const skillsList = [
@@ -47,54 +47,14 @@ const skillsList = [
   "C++",
   "C",
   "Java",
-  "VS-Code",
+  "VS-Code"
 ];
 
-const topIcons = [
-  { icon: Code2 },
-  { icon: Network },
-  { icon: Brain },
-];
+/* =========================================
+   TYPING TEXT
+========================================= */
 
-const socialLinks = [
-  {
-    icon: Github,
-    href: "https://github.com/zero-route",
-    label: "GitHub",
-  },
-  {
-    icon: GitBranch,
-    href: "#",
-    label: "GitLab",
-  },
-  {
-    icon: Linkedin,
-    href: "#",
-    label: "LinkedIn",
-  },
-  {
-    icon: Send,
-    href: "#",
-    label: "Telegram",
-  },
-  {
-    icon: Instagram,
-    href: "#",
-    label: "Instagram",
-  },
-  {
-    icon: Music2,
-    href: "#",
-    label: "TikTok",
-  },
-];
-
-function useTypewriter(
-  words,
-  typingSpeed = 80,
-  deletingSpeed = 45,
-  pauseDuration = 1400
-) {
+function useTyping(words, typingSpeed = 80, deletingSpeed = 40, pauseTime = 1500) {
   const [wordIndex, setWordIndex] = useState(0);
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -112,7 +72,7 @@ function useTypewriter(
       } else {
         timeout = setTimeout(() => {
           setIsDeleting(true);
-        }, pauseDuration);
+        }, pauseTime);
       }
     } else {
       if (text.length > 0) {
@@ -120,10 +80,11 @@ function useTypewriter(
           setText(currentWord.slice(0, text.length - 1));
         }, deletingSpeed);
       } else {
+        setIsDeleting(false);
+
         timeout = setTimeout(() => {
           setWordIndex((prev) => (prev + 1) % words.length);
-          setIsDeleting(false);
-        }, 450);
+        }, 350);
       }
     }
 
@@ -135,323 +96,677 @@ function useTypewriter(
     words,
     typingSpeed,
     deletingSpeed,
-    pauseDuration,
+    pauseTime
   ]);
 
   return text;
 }
 
-const topIconContainerVariants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.16,
-    },
-  },
-};
+/* =========================================
+   ANIMATION VARIANTS
+========================================= */
 
-const topIconVariants = {
-  hidden: {
-    opacity: 0,
-    y: 25,
-  },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.55,
-      ease: [0.16, 1, 0.3, 1],
-    },
-  },
-};
-
-const socialContainerVariants = {
+const socialContainer = {
   hidden: {},
-  show: {
+  visible: {
     transition: {
-      delayChildren: 1.7,
       staggerChildren: 0.13,
-    },
-  },
+      delayChildren: 0.2
+    }
+  }
 };
 
-const socialVariants = {
+const socialItem = {
   hidden: {
     opacity: 0,
-    y: 22,
+    y: 18
   },
-  show: {
+
+  visible: {
     opacity: 1,
     y: 0,
+
     transition: {
       duration: 0.45,
-      ease: [0.16, 1, 0.3, 1],
-    },
-  },
+      ease: [0.22, 1, 0.36, 1]
+    }
+  }
 };
 
-const paragraphText =
-  "A passionate individual in various fields of Information Technology. Combining expertise across multiple IT disciplines, including Network Engineering, Full-Stack Development, Penetration Testing, Automation, Robotics, and Electrical Engineering.";
+const buttonContainer = {
+  hidden: {
+    opacity: 0,
+    y: 20
+  },
 
-export default function HomeSection() {
-  const role = useTypewriter(roleList, 75, 45, 1600);
-  const skill = useTypewriter(skillsList, 75, 45, 1600);
+  visible: {
+    opacity: 1,
+    y: 0,
 
-  const paragraphWords = paragraphText.split(" ");
+    transition: {
+      duration: 0.6,
+      delay: 0.5,
+      ease: [0.22, 1, 0.36, 1]
+    }
+  }
+};
+
+/* =========================================
+   COMPONENT
+========================================= */
+
+export default function Home() {
+  const role = useTyping(
+    roleList,
+    85,
+    42,
+    1600
+  );
+
+  const skill = useTyping(
+    skillsList,
+    85,
+    42,
+    1500
+  );
+
+  const descriptionWords = [
+    "A",
+    "passionate",
+    "individual",
+    "in",
+    "various",
+    "fields",
+    "of",
+    "Information",
+    "Technology.",
+    "Combining",
+    "expertise",
+    "across",
+    "multiple",
+    "IT",
+    "disciplines,",
+    "including",
+    "Network",
+    "Engineering,",
+    "Full-Stack",
+    "Development,",
+    "Penetration",
+    "Testing,",
+    "Automation,",
+    "Robotics,",
+    "and",
+    "Electrical",
+    "Engineering."
+  ];
+
+  const socialLinks = [
+    {
+      name: "GitHub",
+      icon: Github,
+      href: "https://github.com/zero-route"
+    },
+
+    {
+      name: "GitLab",
+      icon: GitBranch,
+      href: "#"
+    },
+
+    {
+      name: "LinkedIn",
+      icon: Linkedin,
+      href: "#"
+    },
+
+    {
+      name: "Telegram",
+      icon: Send,
+      href: "#"
+    },
+
+    {
+      name: "Instagram",
+      icon: Instagram,
+      href: "#"
+    },
+
+    {
+      name: "TikTok",
+      icon: Music2,
+      href: "#"
+    }
+  ];
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#030303] px-5 pb-24 pt-28 text-white sm:px-8 lg:px-12 lg:pt-32">
-      <div className="pointer-events-none absolute left-0 top-0 h-[500px] w-[500px] rounded-full bg-purple-700/5 blur-[150px]" />
+    <section
+      className="
+        relative
+        min-h-screen
+        w-full
+        overflow-hidden
+        bg-[#050505]
+        px-5
+        pb-20
+        pt-28
+        text-white
+        sm:px-8
+        lg:px-10
+        xl:px-16
+      "
+    >
+      {/* BACKGROUND GLOW */}
 
-      <div className="relative mx-auto max-w-7xl">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)] lg:gap-16">
-          <div className="max-w-2xl">
-            <motion.div
-              variants={topIconContainerVariants}
-              initial="hidden"
-              animate="show"
-              className="mb-10 flex items-center gap-3"
-            >
-              {topIcons.map(({ icon: Icon }, index) => (
+      <div
+        className="
+          pointer-events-none
+          absolute
+          left-[15%]
+          top-[20%]
+          h-[400px]
+          w-[400px]
+          rounded-full
+          bg-purple-700/[0.04]
+          blur-[140px]
+        "
+      />
+
+      {/* MAIN CONTAINER */}
+
+      <div
+        className="
+          relative
+          mx-auto
+          flex
+          w-full
+          max-w-[1400px]
+          flex-col
+          gap-8
+          lg:flex-row
+          lg:items-center
+          lg:gap-10
+        "
+      >
+        {/* =====================================
+            LEFT CONTENT
+        ====================================== */}
+
+        <div
+          className="
+            w-full
+            lg:w-[52%]
+            xl:w-[54%]
+          "
+        >
+          {/* TOP ICONS */}
+
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.14
+                }
+              }
+            }}
+            className="mb-7 flex gap-3"
+          >
+            {[
+              {
+                icon: Code2
+              },
+              {
+                icon: Network
+              },
+              {
+                icon: BrainCircuit
+              }
+            ].map((item, index) => {
+              const Icon = item.icon;
+
+              return (
                 <motion.div
                   key={index}
-                  variants={topIconVariants}
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.025] text-white shadow-[0_8px_30px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: 18
+                    },
+
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+
+                      transition: {
+                        duration: 0.5,
+                        ease: [0.22, 1, 0.36, 1]
+                      }
+                    }
+                  }}
+                  className="
+                    flex
+                    h-11
+                    w-11
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-white/10
+                    bg-white/[0.025]
+                    shadow-[0_8px_30px_rgba(0,0,0,0.2)]
+                    backdrop-blur-md
+                  "
                 >
-                  <Icon size={24} strokeWidth={1.7} />
+                  <Icon
+                    size={20}
+                    strokeWidth={1.7}
+                    className="text-white"
+                  />
                 </motion.div>
-              ))}
-            </motion.div>
+              );
+            })}
+          </motion.div>
 
-            <div className="mb-8 overflow-hidden">
-              <motion.h1
-                initial={{
-                  opacity: 0,
-                  x: -70,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                transition={{
-                  delay: 0.45,
-                  duration: 0.8,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="text-5xl font-black leading-[0.9] tracking-[-0.06em] sm:text-7xl lg:text-8xl"
-              >
-                SYSTEM
-              </motion.h1>
+          {/* TITLE */}
 
-              <motion.h1
-                initial={{
-                  opacity: 0,
-                  x: 70,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                transition={{
-                  delay: 0.62,
-                  duration: 0.8,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="mt-3 bg-gradient-to-r from-white via-purple-200 to-purple-500 bg-clip-text text-5xl font-black leading-[0.9] tracking-[-0.06em] text-transparent sm:text-7xl lg:text-8xl"
-              >
-                ENGINEER
-              </motion.h1>
-            </div>
-
-            <motion.p
-              initial="hidden"
-              animate="show"
-              className="max-w-2xl text-base leading-8 text-white/55 sm:text-lg"
-            >
-              {paragraphWords.map((word, index) => (
-                <motion.span
-                  key={`${word}-${index}`}
-                  initial={{
-                    opacity: 0,
-                    y: 18,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  transition={{
-                    delay: 0.9 + index * 0.025,
-                    duration: 0.4,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="mr-[0.32em] inline-block"
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </motion.p>
-
-            <motion.div
+          <div className="mb-7">
+            <motion.h1
               initial={{
                 opacity: 0,
-                y: 30,
+                x: -50
               }}
               animate={{
                 opacity: 1,
-                y: 0,
+                x: 0
               }}
               transition={{
-                delay: 1.25,
-                duration: 0.65,
-                ease: [0.16, 1, 0.3, 1],
+                duration: 0.75,
+                ease: [0.22, 1, 0.36, 1]
               }}
-              className="mt-10 flex flex-wrap items-center gap-4"
+              className="
+                text-[3.3rem]
+                font-black
+                leading-[0.88]
+                tracking-[-0.06em]
+                sm:text-[4.5rem]
+                lg:text-[4.7rem]
+                xl:text-[5.4rem]
+              "
             >
-              <a
-                href="#projects"
-                className="group flex items-center gap-3 rounded-xl bg-gradient-to-r from-purple-700 via-purple-500 to-purple-300 px-6 py-4 text-sm font-semibold text-white shadow-[0_8px_30px_rgba(124,58,237,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(124,58,237,0.4)]"
-              >
-                View Projects
+              SYSTEM
+            </motion.h1>
 
-                <ArrowUpRight
-                  size={18}
-                  className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
-                />
-              </a>
-
-              <a
-                href="#contact"
-                className="flex items-center gap-3 rounded-xl border border-white/15 bg-white/[0.035] px-6 py-4 text-sm font-semibold text-white/80 backdrop-blur-xl transition-all duration-300 hover:border-white/25 hover:bg-white/[0.08] hover:text-white"
-              >
-                Let's Talk
-
-                <Mail size={18} />
-              </a>
-            </motion.div>
-
-            <motion.div
-              variants={socialContainerVariants}
-              initial="hidden"
-              animate="show"
-              className="mt-8 flex flex-wrap items-center gap-3"
+            <motion.h1
+              initial={{
+                opacity: 0,
+                x: 50
+              }}
+              animate={{
+                opacity: 1,
+                x: 0
+              }}
+              transition={{
+                duration: 0.75,
+                delay: 0.1,
+                ease: [0.22, 1, 0.36, 1]
+              }}
+              className="
+                mt-2
+                text-[3.3rem]
+                font-black
+                leading-[0.88]
+                tracking-[-0.06em]
+                sm:text-[4.5rem]
+                lg:text-[4.7rem]
+                xl:text-[5.4rem]
+                bg-gradient-to-r
+                from-white
+                via-[#d9c6ff]
+                to-[#9c6bff]
+                bg-clip-text
+                text-transparent
+              "
             >
-              {socialLinks.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <motion.a
-                    key={item.label}
-                    variants={socialVariants}
-                    href={item.href}
-                    target={
-                      item.href.startsWith("http")
-                        ? "_blank"
-                        : undefined
-                    }
-                    rel={
-                      item.href.startsWith("http")
-                        ? "noreferrer"
-                        : undefined
-                    }
-                    aria-label={item.label}
-                    className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] text-white/55 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/50 hover:bg-purple-500/10 hover:text-purple-300"
-                  >
-                    <Icon size={19} strokeWidth={1.8} />
-                  </motion.a>
-                );
-              })}
-            </motion.div>
+              ENGINEER
+            </motion.h1>
           </div>
 
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            transition={{
-              delay: 1.15,
-              duration: 0.9,
-              ease: "easeOut",
-            }}
-            className="w-full"
-          >
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#08080c]/90 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-              <div className="flex items-center justify-between border-b border-white/5 px-5 py-4">
-                <div className="flex items-center gap-2">
-                  <span className="h-3 w-3 rounded-full bg-red-400/90" />
-                  <span className="h-3 w-3 rounded-full bg-yellow-300/90" />
-                  <span className="h-3 w-3 rounded-full bg-emerald-400/90" />
-                </div>
+          {/* DESCRIPTION */}
 
-                <span className="font-mono text-xs text-white/25">
-                  portfolio.js
+          <div
+            className="
+              mb-8
+              max-w-[690px]
+              text-[14px]
+              leading-7
+              text-white/60
+              sm:text-[15px]
+              lg:text-[15px]
+              xl:text-[16px]
+            "
+          >
+            {descriptionWords.map((word, index) => (
+              <motion.span
+                key={`${word}-${index}`}
+                initial={{
+                  opacity: 0,
+                  y: 12
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0
+                }}
+                transition={{
+                  duration: 0.3,
+                  delay: 0.55 + index * 0.025
+                }}
+                className="mr-[0.28em] inline-block"
+              >
+                {word}
+              </motion.span>
+            ))}
+          </div>
+
+          {/* BUTTONS */}
+
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={buttonContainer}
+            className="
+              mb-7
+              flex
+              flex-wrap
+              items-center
+              gap-3
+            "
+          >
+            <a
+              href="#projects"
+              className="
+                group
+                flex
+                items-center
+                gap-2
+                rounded-xl
+                bg-gradient-to-r
+                from-[#6d28d9]
+                via-[#8b5cf6]
+                to-[#c4b5fd]
+                px-5
+                py-3
+                text-[13px]
+                font-semibold
+                text-white
+                shadow-[0_10px_30px_rgba(124,58,237,0.2)]
+                transition-all
+                duration-300
+                hover:scale-[1.03]
+                hover:shadow-[0_15px_40px_rgba(124,58,237,0.3)]
+              "
+            >
+              View Projects
+
+              <ArrowUpRight
+                size={16}
+                className="
+                  transition-transform
+                  duration-300
+                  group-hover:translate-x-0.5
+                  group-hover:-translate-y-0.5
+                "
+              />
+            </a>
+
+            <a
+              href="#contact"
+              className="
+                flex
+                items-center
+                gap-2
+                rounded-xl
+                border
+                border-white/10
+                bg-white/[0.035]
+                px-5
+                py-3
+                text-[13px]
+                font-medium
+                text-white/80
+                backdrop-blur-md
+                transition-all
+                duration-300
+                hover:border-white/20
+                hover:bg-white/[0.07]
+                hover:text-white
+              "
+            >
+              Let's Talk
+
+              <Mail size={15} />
+            </a>
+          </motion.div>
+
+          {/* SOCIAL MEDIA */}
+
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={socialContainer}
+            className="
+              flex
+              flex-wrap
+              gap-2.5
+            "
+          >
+            {socialLinks.map((social) => {
+              const Icon = social.icon;
+
+              return (
+                <motion.a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  variants={socialItem}
+                  whileHover={{
+                    y: -3,
+                    scale: 1.05
+                  }}
+                  whileTap={{
+                    scale: 0.95
+                  }}
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-white/10
+                    bg-white/[0.025]
+                    text-white/55
+                    backdrop-blur-md
+                    transition-colors
+                    duration-300
+                    hover:border-purple-400/30
+                    hover:bg-purple-500/[0.08]
+                    hover:text-white
+                  "
+                >
+                  <Icon
+                    size={17}
+                    strokeWidth={1.7}
+                  />
+                </motion.a>
+              );
+            })}
+          </motion.div>
+        </div>
+
+        {/* =====================================
+            RIGHT PORTFOLIO.JS
+        ====================================== */}
+
+        <motion.div
+          initial={{
+            opacity: 0
+          }}
+          animate={{
+            opacity: 1
+          }}
+          transition={{
+            duration: 0.9,
+            delay: 0.5
+          }}
+          className="
+            w-full
+            lg:w-[48%]
+            xl:w-[46%]
+          "
+        >
+          <div
+            className="
+              mx-auto
+              w-full
+              max-w-[620px]
+              overflow-hidden
+              rounded-2xl
+              border
+              border-white/10
+              bg-[#09090f]
+              shadow-[0_25px_70px_rgba(0,0,0,0.3)]
+              lg:max-w-none
+            "
+          >
+            {/* WINDOW HEADER */}
+
+            <div
+              className="
+                flex
+                h-11
+                items-center
+                justify-between
+                border-b
+                border-white/[0.07]
+                px-5
+              "
+            >
+              <div className="flex gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ff6b6b]" />
+
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ffd166]" />
+
+                <span className="h-2.5 w-2.5 rounded-full bg-[#4ecb9a]" />
+              </div>
+
+              <span
+                className="
+                  font-mono
+                  text-[10px]
+                  tracking-wide
+                  text-white/30
+                "
+              >
+                portfolio.js
+              </span>
+            </div>
+
+            {/* CODE */}
+
+            <div
+              className="
+                min-h-[205px]
+                px-6
+                py-6
+                font-mono
+                text-[12px]
+                leading-6
+                sm:text-[13px]
+                lg:min-h-[230px]
+                xl:text-[14px]
+              "
+            >
+              <div className="text-purple-300">
+                const{" "}
+
+                <span className="text-blue-300">
+                  developer
+                </span>
+
+                <span className="text-white/60">
+                  {" "}={" "}
+                  {"{"}
                 </span>
               </div>
 
-              <div className="overflow-x-auto p-6 font-mono text-sm leading-7 sm:p-8 sm:text-base">
-                <div className="whitespace-nowrap text-purple-300">
-                  const{" "}
-                  <span className="text-blue-200">developer</span>{" "}
-                  <span className="text-white/60">= {"{"}</span>
-                </div>
+              <div className="pl-4 text-white/45">
+                Nama
+                <span className="text-white/30"> : </span>
 
-                <div className="pl-4 text-white/60">
-                  Nama
-                  <span className="text-white/25"> : </span>
-                  <span className="text-emerald-300">
-                    "Dimas Aksa Oktapian"
-                  </span>
-                  <span className="text-white/30">,</span>
-                </div>
+                <span className="text-emerald-300">
+                  "Dimas Aksa Oktapian"
+                </span>
+                ,
+              </div>
 
-                <div className="pl-4 text-white/60">
-                  Role
-                  <span className="text-white/25"> : </span>
-                  <span className="text-emerald-300">
-                    "
-                    {role}
-                    <span className="ml-[1px] inline-block h-4 w-[2px] animate-pulse bg-purple-300 align-middle" />
-                    "
-                  </span>
-                  <span className="text-white/30">,</span>
-                </div>
+              <div className="pl-4 text-white/45">
+                Role
+                <span className="text-white/30"> : </span>
 
-                <div className="pl-4 text-white/60">
-                  Skills
-                  <span className="text-white/25"> : </span>
-                  <span className="text-emerald-300">
-                    "
-                    {skill}
-                    <span className="ml-[1px] inline-block h-4 w-[2px] animate-pulse bg-purple-300 align-middle" />
-                    "
-                  </span>
-                  <span className="text-white/30">,</span>
-                </div>
+                <span className="text-emerald-300">
+                  "{role}"
+                </span>
 
-                <div className="pl-4 text-white/60">
-                  Passion
-                  <span className="text-white/25"> : </span>
-                  <span className="text-emerald-300">
-                    "DevSecOps Engineer"
-                  </span>
-                  <span className="text-white/30">,</span>
-                </div>
+                <span className="ml-0.5 inline-block animate-pulse text-purple-300">
+                  |
+                </span>
+                ,
+              </div>
 
-                <div className="pl-4 text-white/60">
-                  Status
-                  <span className="text-white/25"> : </span>
-                  <span className="text-emerald-300">
-                    "Building........"
-                  </span>
-                </div>
+              <div className="pl-4 text-white/45">
+                Skills
+                <span className="text-white/30"> : </span>
 
-                <div className="text-white/60">{"}"};</div>
+                <span className="text-emerald-300">
+                  "{skill}"
+                </span>
+
+                <span className="ml-0.5 inline-block animate-pulse text-purple-300">
+                  |
+                </span>
+                ,
+              </div>
+
+              <div className="pl-4 text-white/45">
+                Passion
+                <span className="text-white/30"> : </span>
+
+                <span className="text-emerald-300">
+                  "DevSecOps Engineer"
+                </span>
+                ,
+              </div>
+
+              <div className="pl-4 text-white/45">
+                Status
+                <span className="text-white/30"> : </span>
+
+                <span className="text-emerald-300">
+                  "Building........"
+                </span>
+              </div>
+
+              <div className="mt-1 text-white/60">
+                {"}"};
               </div>
             </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

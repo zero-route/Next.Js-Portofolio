@@ -8,16 +8,13 @@ import {
   Brain,
   ArrowUpRight,
   Mail,
+  Github,
+  GitBranch,
+  Linkedin,
+  Send,
+  Instagram,
+  Music2,
 } from "lucide-react";
-
-import {
-  SiGithub,
-  SiGitlab,
-  SiLinkedin,
-  SiTelegram,
-  SiInstagram,
-  SiTiktok,
-} from "react-icons/si";
 
 const roleList = [
   "Website Developer",
@@ -53,108 +50,98 @@ const skillsList = [
   "VS-Code",
 ];
 
-function useTypewriter(words, typingSpeed = 80, deletingSpeed = 45) {
+const topIcons = [
+  { icon: Code2 },
+  { icon: Network },
+  { icon: Brain },
+];
+
+const socialLinks = [
+  {
+    icon: Github,
+    href: "https://github.com/zero-route",
+    label: "GitHub",
+  },
+  {
+    icon: GitBranch,
+    href: "#",
+    label: "GitLab",
+  },
+  {
+    icon: Linkedin,
+    href: "#",
+    label: "LinkedIn",
+  },
+  {
+    icon: Send,
+    href: "#",
+    label: "Telegram",
+  },
+  {
+    icon: Instagram,
+    href: "#",
+    label: "Instagram",
+  },
+  {
+    icon: Music2,
+    href: "#",
+    label: "TikTok",
+  },
+];
+
+function useTypewriter(
+  words,
+  typingSpeed = 80,
+  deletingSpeed = 45,
+  pauseDuration = 1400
+) {
   const [wordIndex, setWordIndex] = useState(0);
   const [text, setText] = useState("");
-  const [mode, setMode] = useState("typing");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const currentWord = words[wordIndex];
 
     let timeout;
 
-    if (mode === "typing") {
+    if (!isDeleting) {
       if (text.length < currentWord.length) {
         timeout = setTimeout(() => {
           setText(currentWord.slice(0, text.length + 1));
         }, typingSpeed);
       } else {
         timeout = setTimeout(() => {
-          setMode("waiting");
-        }, 1400);
+          setIsDeleting(true);
+        }, pauseDuration);
       }
-    }
-
-    if (mode === "waiting") {
-      timeout = setTimeout(() => {
-        setMode("deleting");
-      }, 400);
-    }
-
-    if (mode === "deleting") {
+    } else {
       if (text.length > 0) {
         timeout = setTimeout(() => {
           setText(currentWord.slice(0, text.length - 1));
         }, deletingSpeed);
       } else {
-        setMode("changing");
-
         timeout = setTimeout(() => {
           setWordIndex((prev) => (prev + 1) % words.length);
-          setMode("typing");
-        }, 500);
+          setIsDeleting(false);
+        }, 450);
       }
     }
 
     return () => clearTimeout(timeout);
   }, [
     text,
-    mode,
+    isDeleting,
     wordIndex,
     words,
     typingSpeed,
     deletingSpeed,
+    pauseDuration,
   ]);
 
   return text;
 }
 
-const icons = [
-  {
-    icon: Code2,
-  },
-  {
-    icon: Network,
-  },
-  {
-    icon: Brain,
-  },
-];
-
-const socialLinks = [
-  {
-    icon: SiGithub,
-    href: "https://github.com/zero-route",
-    label: "GitHub",
-  },
-  {
-    icon: SiGitlab,
-    href: "#",
-    label: "GitLab",
-  },
-  {
-    icon: SiLinkedin,
-    href: "#",
-    label: "LinkedIn",
-  },
-  {
-    icon: SiTelegram,
-    href: "#",
-    label: "Telegram",
-  },
-  {
-    icon: SiInstagram,
-    href: "#",
-    label: "Instagram",
-  },
-  {
-    icon: SiTiktok,
-    href: "#",
-    label: "TikTok",
-  },
-];
-
-const iconContainerVariants = {
+const topIconContainerVariants = {
   hidden: {},
   show: {
     transition: {
@@ -207,8 +194,8 @@ const paragraphText =
   "A passionate individual in various fields of Information Technology. Combining expertise across multiple IT disciplines, including Network Engineering, Full-Stack Development, Penetration Testing, Automation, Robotics, and Electrical Engineering.";
 
 export default function HomeSection() {
-  const role = useTypewriter(roleList, 75, 40);
-  const skill = useTypewriter(skillsList, 75, 40);
+  const role = useTypewriter(roleList, 75, 45, 1600);
+  const skill = useTypewriter(skillsList, 75, 45, 1600);
 
   const paragraphWords = paragraphText.split(" ");
 
@@ -220,12 +207,12 @@ export default function HomeSection() {
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)] lg:gap-16">
           <div className="max-w-2xl">
             <motion.div
-              variants={iconContainerVariants}
+              variants={topIconContainerVariants}
               initial="hidden"
               animate="show"
               className="mb-10 flex items-center gap-3"
             >
-              {icons.map(({ icon: Icon }, index) => (
+              {topIcons.map(({ icon: Icon }, index) => (
                 <motion.div
                   key={index}
                   variants={topIconVariants}
@@ -369,7 +356,7 @@ export default function HomeSection() {
                     aria-label={item.label}
                     className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] text-white/55 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/50 hover:bg-purple-500/10 hover:text-purple-300"
                   >
-                    <Icon size={19} />
+                    <Icon size={19} strokeWidth={1.8} />
                   </motion.a>
                 );
               })}

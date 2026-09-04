@@ -8,6 +8,7 @@ import {
   ArrowUpRight,
   Mail,
   Github,
+  GitBranch,
   Linkedin,
   Send,
   Instagram,
@@ -49,21 +50,6 @@ const skillsList = [
   "VS-Code",
 ];
 
-function GitLabIcon({ size = 18 }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path d="M22.65 13.39 21.28 9.2a.7.7 0 0 0-1.33.02l-1.7 5.2H5.75l-1.7-5.2a.7.7 0 0 0-1.33-.02L1.35 13.4a1.4 1.4 0 0 0 .5 1.56L12 22.42l10.15-7.46a1.4 1.4 0 0 0 .5-1.57ZM12 20.65 5.04 15.5h13.92L12 20.65ZM4.64 10.56l1.26 3.86H3.38l1.26-3.86Zm15.36 0 1.26 3.86h-2.52L20 10.56Z" />
-    </svg>
-  );
-}
-
 function useTypewriter(
   words,
   typingSpeed = 120,
@@ -92,9 +78,9 @@ function useTypewriter(
       }, deletingSpeed);
     } else if (deleting && text.length === 0) {
       timeout = setTimeout(() => {
-        setWordIndex((prev) => (prev + 1) % words.length);
         setDeleting(false);
-      }, 450);
+        setWordIndex((prev) => (prev + 1) % words.length);
+      }, 500);
     }
 
     return () => clearTimeout(timeout);
@@ -124,7 +110,7 @@ export default function Home() {
       label: "GitHub",
     },
     {
-      icon: GitLabIcon,
+      icon: GitBranch,
       href: "https://gitlab.com/",
       label: "GitLab",
     },
@@ -154,31 +140,6 @@ export default function Home() {
     "A passionate individual in various fields of Information Technology. Combining expertise across multiple IT disciplines, including Network Engineering, Full-Stack Development, Penetration Testing, Automation, Robotics, and Electrical Engineering.";
 
   const paragraphWords = paragraph.split(" ");
-
-  const socialContainerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        delayChildren: 2.25,
-        staggerChildren: 0.25,
-      },
-    },
-  };
-
-  const socialItemVariants = {
-    hidden: {
-      opacity: 0,
-      y: 26,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.75,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#030305] px-5 pb-24 pt-8 text-white sm:px-7 lg:px-10 xl:px-14">
@@ -253,7 +214,7 @@ export default function Home() {
                   delay: 0.6,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="engineer-gradient mt-1 font-mono text-[3rem] font-black tracking-[-0.08em] sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
+                className="engineer-shine mt-1 font-mono text-[3rem] font-black tracking-[-0.08em] sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
               >
                 ENGINEER
               </motion.h2>
@@ -329,12 +290,11 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              variants={socialContainerVariants}
               initial="hidden"
               animate="visible"
               className="mt-6 flex flex-wrap gap-3"
             >
-              {socialLinks.map((item) => {
+              {socialLinks.map((item, index) => {
                 const Icon = item.icon;
 
                 return (
@@ -344,7 +304,21 @@ export default function Home() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={item.label}
-                    variants={socialItemVariants}
+                    variants={{
+                      hidden: {
+                        opacity: 0,
+                        y: 28,
+                      },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                      },
+                    }}
+                    transition={{
+                      duration: 0.8,
+                      delay: 2.1 + index * 0.25,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                     className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.09] bg-white/[0.025] text-white/55 transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/30 hover:bg-purple-500/[0.08] hover:text-white"
                   >
                     <Icon size={16} strokeWidth={1.7} />
@@ -382,9 +356,11 @@ export default function Home() {
               </div>
 
               <div className="min-h-[195px] p-5 font-mono text-[11px] leading-[1.8] sm:p-6 sm:text-[12px]">
-                <div className="text-[#c4b5fd]">
-                  const{" "}
-                  <span className="text-[#93c5fd]">
+                <div>
+                  <span className="font-semibold text-[#c084fc]">
+                    const
+                  </span>{" "}
+                  <span className="font-semibold text-[#60a5fa]">
                     developer
                   </span>{" "}
                   <span className="text-white/60">= {"{"}</span>
@@ -394,7 +370,7 @@ export default function Home() {
                   <div>
                     Nama{" "}
                     <span className="text-white/40">:</span>{" "}
-                    <span className="text-[#a7f3d0]">
+                    <span className="text-[#86efac]">
                       &quot;Dimas Aksa Oktapian&quot;
                     </span>
                     <span className="text-white/40">,</span>
@@ -403,7 +379,7 @@ export default function Home() {
                   <div>
                     Role{" "}
                     <span className="text-white/40">:</span>{" "}
-                    <span className="text-[#a7f3d0]">
+                    <span className="text-[#86efac]">
                       &quot;{role}
                       <span className="ml-[1px] inline-block h-[12px] w-[1px] animate-pulse bg-[#d8b4fe] align-middle" />
                       &quot;
@@ -414,7 +390,7 @@ export default function Home() {
                   <div>
                     Skills{" "}
                     <span className="text-white/40">:</span>{" "}
-                    <span className="text-[#a7f3d0]">
+                    <span className="text-[#86efac]">
                       &quot;{skill}
                       <span className="ml-[1px] inline-block h-[12px] w-[1px] animate-pulse bg-[#d8b4fe] align-middle" />
                       &quot;
@@ -425,7 +401,7 @@ export default function Home() {
                   <div>
                     Passion{" "}
                     <span className="text-white/40">:</span>{" "}
-                    <span className="text-[#a7f3d0]">
+                    <span className="text-[#86efac]">
                       &quot;DevSecOps Engineer&quot;
                     </span>
                     <span className="text-white/40">,</span>
@@ -434,7 +410,7 @@ export default function Home() {
                   <div>
                     Status{" "}
                     <span className="text-white/40">:</span>{" "}
-                    <span className="text-[#a7f3d0]">
+                    <span className="text-[#86efac]">
                       &quot;Building........&quot;
                     </span>
                   </div>
@@ -465,22 +441,21 @@ export default function Home() {
           width: 100%;
         }
 
-        .engineer-gradient {
+        .engineer-shine {
           display: inline-block;
           color: transparent;
-          background: linear-gradient(
+          background-image: linear-gradient(
             90deg,
-            #8b5cf6 0%,
-            #a78bfa 35%,
-            #ddd6fe 68%,
-            #ffffff 100%
+            #ffffff 0%,
+            #f4f0ff 30%,
+            #dfd1ff 62%,
+            #a56dff 100%
           );
           background-size: 100% 100%;
-          background-position: center;
-          background-repeat: no-repeat;
           background-clip: text;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          animation: engineerGlow 3.5s ease-in-out infinite;
         }
 
         .button-shine {
@@ -492,6 +467,19 @@ export default function Home() {
           );
           transform: translateX(-120%);
           animation: buttonShine 4.5s ease-in-out infinite;
+        }
+
+        @keyframes engineerGlow {
+          0%,
+          100% {
+            filter: brightness(1);
+            text-shadow: 0 0 0 rgba(180, 130, 255, 0);
+          }
+
+          50% {
+            filter: brightness(1.12);
+            text-shadow: 0 0 20px rgba(180, 130, 255, 0.18);
+          }
         }
 
         @keyframes buttonShine {

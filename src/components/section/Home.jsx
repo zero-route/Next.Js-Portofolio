@@ -443,20 +443,15 @@ export default function Home() {
 
         .engineer-shine {
           display: inline-block;
-          color: transparent;
           background-image: linear-gradient(
-            90deg,
-            #8b5cf6 0%,
-            #a78bfa 35%,
-            #c4b5fd 60%,
-            #e9d8fd 85%,
+            to right,
+            #9333ea 0%,
+            #c084fc 40%,
             #ffffff 100%
           );
-          background-size: 100% 100%;
-          background-clip: text;
           -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: engineerGlow 3.5s ease-in-out infinite;
+          background-clip: text;
+          color: transparent;
         }
 
         .button-shine {
@@ -468,17 +463,6 @@ export default function Home() {
           );
           transform: translateX(-120%);
           animation: buttonShine 4.5s ease-in-out infinite;
-        }
-
-        @keyframes engineerGlow {
-          0%,
-          100% {
-            filter: brightness(1);
-          }
-
-          50% {
-            filter: brightness(1.04);
-          }
         }
 
         @keyframes buttonShine {

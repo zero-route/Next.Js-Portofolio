@@ -50,17 +50,21 @@ const skillsList = [
   "VS-Code",
 ];
 
-function useTypewriter(words, typingSpeed = 100, deletingSpeed = 55, pause = 1600) {
+function useTypewriter(
+  words,
+  typingSpeed = 120,
+  deletingSpeed = 75,
+  pause = 1800,
+) {
   const [wordIndex, setWordIndex] = useState(0);
   const [text, setText] = useState("");
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const currentWord = words[wordIndex];
-
     let timeout;
 
-    if (!deleting && text !== currentWord) {
+    if (!deleting && text.length < currentWord.length) {
       timeout = setTimeout(() => {
         setText(currentWord.slice(0, text.length + 1));
       }, typingSpeed);
@@ -76,7 +80,7 @@ function useTypewriter(words, typingSpeed = 100, deletingSpeed = 55, pause = 160
       timeout = setTimeout(() => {
         setDeleting(false);
         setWordIndex((prev) => (prev + 1) % words.length);
-      }, 350);
+      }, 500);
     }
 
     return () => clearTimeout(timeout);
@@ -94,8 +98,10 @@ function useTypewriter(words, typingSpeed = 100, deletingSpeed = 55, pause = 160
 }
 
 export default function Home() {
-  const role = useTypewriter(roleList, 110, 60, 1800);
-  const skill = useTypewriter(skillsList, 95, 55, 1500);
+  const role = useTypewriter(roleList, 120, 75, 1900);
+  const skill = useTypewriter(skillsList, 110, 70, 1700);
+
+  const introIcons = [Code2, Network, BrainCircuit];
 
   const socialLinks = [
     {
@@ -130,22 +136,20 @@ export default function Home() {
     },
   ];
 
-  const introIcons = [Code2, Network, BrainCircuit];
-
   const paragraph =
     "A passionate individual in various fields of Information Technology. Combining expertise across multiple IT disciplines, including Network Engineering, Full-Stack Development, Penetration Testing, Automation, Robotics, and Electrical Engineering.";
 
-  const words = paragraph.split(" ");
+  const paragraphWords = paragraph.split(" ");
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#030305] px-5 pb-24 pt-8 text-white sm:px-8 lg:px-12 xl:px-16">
-      <div className="mx-auto w-full max-w-[1500px]">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.85fr)] xl:gap-14">
+    <section className="relative min-h-screen overflow-hidden bg-[#030305] px-5 pb-24 pt-8 text-white sm:px-7 lg:px-10 xl:px-14">
+      <div className="mx-auto w-full max-w-[1550px]">
+        <div className="home-layout">
           <div className="min-w-0">
             <motion.div
               initial="hidden"
               animate="visible"
-              className="mb-6 flex gap-3"
+              className="mb-5 flex gap-3 sm:mb-6"
             >
               {introIcons.map((Icon, index) => (
                 <motion.div
@@ -153,7 +157,7 @@ export default function Home() {
                   variants={{
                     hidden: {
                       opacity: 0,
-                      y: 30,
+                      y: 28,
                     },
                     visible: {
                       opacity: 1,
@@ -161,14 +165,14 @@ export default function Home() {
                     },
                   }}
                   transition={{
-                    duration: 0.7,
-                    delay: index * 0.28,
-                    ease: "easeOut",
+                    duration: 0.8,
+                    delay: index * 0.3,
+                    ease: [0.22, 1, 0.36, 1],
                   }}
-                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] shadow-[0_0_30px_rgba(139,92,246,0.04)] sm:h-12 sm:w-12"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.025] sm:h-11 sm:w-11"
                 >
                   <Icon
-                    size={20}
+                    size={18}
                     strokeWidth={1.8}
                     className="text-white"
                   />
@@ -180,18 +184,18 @@ export default function Home() {
               <motion.h1
                 initial={{
                   opacity: 0,
-                  x: -70,
+                  x: -65,
                 }}
                 animate={{
                   opacity: 1,
                   x: 0,
                 }}
                 transition={{
-                  duration: 1.05,
-                  delay: 0.35,
+                  duration: 1.15,
+                  delay: 0.4,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="font-mono text-[3.2rem] font-black tracking-[-0.08em] text-[#f2f2f4] sm:text-[4.5rem] lg:text-[4.8rem] xl:text-[5.5rem]"
+                className="font-mono text-[3rem] font-black tracking-[-0.08em] text-[#f4f4f5] sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
               >
                 SYSTEM
               </motion.h1>
@@ -199,18 +203,18 @@ export default function Home() {
               <motion.h2
                 initial={{
                   opacity: 0,
-                  x: 70,
+                  x: 65,
                 }}
                 animate={{
                   opacity: 1,
                   x: 0,
                 }}
                 transition={{
-                  duration: 1.05,
-                  delay: 0.55,
+                  duration: 1.15,
+                  delay: 0.6,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="relative mt-1 inline-block bg-gradient-to-r from-white via-[#e8ddff] to-[#9f70ff] bg-[length:200%_100%] bg-clip-text font-mono text-[3.2rem] font-black tracking-[-0.08em] text-transparent animate-[shine_4s_linear_infinite] sm:text-[4.5rem] lg:text-[4.8rem] xl:text-[5.5rem]"
+                className="engineer-shine mt-1 font-mono text-[3rem] font-black tracking-[-0.08em] sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
               >
                 ENGINEER
               </motion.h2>
@@ -219,15 +223,15 @@ export default function Home() {
             <motion.p
               initial="hidden"
               animate="visible"
-              className="max-w-[760px] font-mono text-[13px] leading-7 text-white/55 sm:text-[14px] sm:leading-8 lg:text-[15px]"
+              className="max-w-[680px] font-mono text-[12px] leading-6 text-white/55 sm:text-[13px] sm:leading-7 lg:max-w-[650px] lg:text-[14px]"
             >
-              {words.map((word, index) => (
+              {paragraphWords.map((word, index) => (
                 <motion.span
                   key={`${word}-${index}`}
                   variants={{
                     hidden: {
                       opacity: 0,
-                      y: 16,
+                      y: 15,
                     },
                     visible: {
                       opacity: 1,
@@ -235,9 +239,9 @@ export default function Home() {
                     },
                   }}
                   transition={{
-                    duration: 0.5,
-                    delay: 0.85 + index * 0.045,
-                    ease: "easeOut",
+                    duration: 0.55,
+                    delay: 0.95 + index * 0.045,
+                    ease: [0.22, 1, 0.36, 1],
                   }}
                   className="mr-1.5 inline-block"
                 >
@@ -256,37 +260,39 @@ export default function Home() {
                 y: 0,
               }}
               transition={{
-                duration: 0.85,
-                delay: 1.5,
+                duration: 0.9,
+                delay: 1.7,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="mt-8 flex flex-wrap gap-3 sm:mt-9"
+              className="mt-7 flex flex-wrap gap-3 sm:mt-8"
             >
               <a
                 href="#projects"
-                className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-purple-300/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#e9e2ff] px-5 py-3 font-mono text-sm font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,0.2)] transition-transform duration-300 hover:scale-[1.03] sm:px-6"
+                className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-[#a78bfa]/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[12px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,0.18)] transition-all duration-300 hover:scale-[1.025] hover:shadow-[0_0_35px_rgba(139,92,246,0.3)]"
               >
-                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                <span className="button-shine absolute inset-0" />
+
                 <span className="relative">View Projects</span>
+
                 <ArrowUpRight
-                  size={17}
-                  className="relative transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                  size={16}
+                  className="relative transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
                 />
               </a>
 
               <a
                 href="#contact"
-                className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.035] px-5 py-3 font-mono text-sm font-semibold text-white/80 backdrop-blur-sm transition-all duration-300 hover:border-white/30 hover:bg-white/[0.07] sm:px-6"
+                className="flex items-center gap-2 rounded-xl border border-white/[0.15] bg-white/[0.035] px-5 py-3 font-mono text-[12px] font-semibold text-white/75 transition-all duration-300 hover:border-white/30 hover:bg-white/[0.07] hover:text-white"
               >
                 Let&apos;s Talk
-                <Mail size={16} />
+                <Mail size={15} />
               </a>
             </motion.div>
 
             <motion.div
               initial="hidden"
               animate="visible"
-              className="mt-7 flex flex-wrap gap-3"
+              className="mt-6 flex flex-wrap gap-3"
             >
               {socialLinks.map((item, index) => {
                 const Icon = item.icon;
@@ -301,7 +307,7 @@ export default function Home() {
                     variants={{
                       hidden: {
                         opacity: 0,
-                        y: 24,
+                        y: 28,
                       },
                       visible: {
                         opacity: 1,
@@ -309,13 +315,13 @@ export default function Home() {
                       },
                     }}
                     transition={{
-                      duration: 0.7,
-                      delay: 1.85 + index * 0.22,
+                      duration: 0.8,
+                      delay: 2.1 + index * 0.25,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.09] bg-white/[0.025] text-white/60 transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/30 hover:bg-purple-500/[0.08] hover:text-white sm:h-11 sm:w-11"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.09] bg-white/[0.025] text-white/55 transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/30 hover:bg-purple-500/[0.08] hover:text-white"
                   >
-                    <Icon size={17} strokeWidth={1.7} />
+                    <Icon size={16} strokeWidth={1.7} />
                   </motion.a>
                 );
               })}
@@ -330,28 +336,31 @@ export default function Home() {
               opacity: 1,
             }}
             transition={{
-              duration: 1.2,
-              delay: 2.1,
+              duration: 1.4,
+              delay: 2.3,
               ease: "easeOut",
             }}
-            className="mx-auto w-full max-w-[530px] lg:mx-0"
+            className="portfolio-wrapper"
           >
-            <div className="overflow-hidden rounded-2xl border border-white/[0.09] bg-[#090911] shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
-              <div className="flex h-11 items-center justify-between border-b border-white/[0.07] px-4">
+            <div className="portfolio-card overflow-hidden rounded-2xl border border-white/[0.09] bg-[#090911] shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
+              <div className="flex h-10 items-center justify-between border-b border-white/[0.07] px-4">
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#f87171]" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#facc15]" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#6ee7b7]" />
+                  <span className="h-2 w-2 rounded-full bg-[#f87171]" />
+                  <span className="h-2 w-2 rounded-full bg-[#facc15]" />
+                  <span className="h-2 w-2 rounded-full bg-[#6ee7b7]" />
                 </div>
 
-                <span className="font-mono text-[10px] text-white/30">
+                <span className="font-mono text-[9px] text-white/30">
                   portfolio.js
                 </span>
               </div>
 
-              <div className="min-h-[235px] p-5 font-mono text-[12px] leading-6 sm:p-7 sm:text-[13px]">
+              <div className="min-h-[195px] p-5 font-mono text-[11px] leading-[1.8] sm:p-6 sm:text-[12px]">
                 <div className="text-[#c4b5fd]">
-                  const <span className="text-[#93c5fd]">developer</span>{" "}
+                  const{" "}
+                  <span className="text-[#93c5fd]">
+                    developer
+                  </span>{" "}
                   <span className="text-white/60">= {"{"}</span>
                 </div>
 
@@ -370,7 +379,7 @@ export default function Home() {
                     <span className="text-white/40">:</span>{" "}
                     <span className="text-[#a7f3d0]">
                       &quot;{role}
-                      <span className="ml-[1px] inline-block h-[13px] w-[1px] animate-pulse bg-[#d8b4fe] align-middle" />
+                      <span className="ml-[1px] inline-block h-[12px] w-[1px] animate-pulse bg-[#d8b4fe] align-middle" />
                       &quot;
                     </span>
                     <span className="text-white/40">,</span>
@@ -381,7 +390,7 @@ export default function Home() {
                     <span className="text-white/40">:</span>{" "}
                     <span className="text-[#a7f3d0]">
                       &quot;{skill}
-                      <span className="ml-[1px] inline-block h-[13px] w-[1px] animate-pulse bg-[#d8b4fe] align-middle" />
+                      <span className="ml-[1px] inline-block h-[12px] w-[1px] animate-pulse bg-[#d8b4fe] align-middle" />
                       &quot;
                     </span>
                     <span className="text-white/40">,</span>
@@ -413,12 +422,97 @@ export default function Home() {
       </div>
 
       <style jsx>{`
-        @keyframes shine {
-          0% {
-            background-position: 200% center;
-          }
+        .home-layout {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 42px;
+          align-items: center;
+        }
+
+        .portfolio-wrapper {
+          width: 100%;
+          max-width: 520px;
+          margin: 0 auto;
+        }
+
+        .portfolio-card {
+          width: 100%;
+        }
+
+        .engineer-shine {
+          display: inline-block;
+          color: transparent;
+          background-image: linear-gradient(
+            90deg,
+            #ffffff 0%,
+            #f4f0ff 30%,
+            #dfd1ff 62%,
+            #a56dff 100%
+          );
+          background-size: 100% 100%;
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: engineerGlow 3.5s ease-in-out infinite;
+        }
+
+        .button-shine {
+          background: linear-gradient(
+            110deg,
+            transparent 25%,
+            rgba(255, 255, 255, 0.22) 48%,
+            transparent 70%
+          );
+          transform: translateX(-120%);
+          animation: buttonShine 4.5s ease-in-out infinite;
+        }
+
+        @keyframes engineerGlow {
+          0%,
           100% {
-            background-position: -200% center;
+            filter: brightness(1);
+            text-shadow: 0 0 0 rgba(180, 130, 255, 0);
+          }
+
+          50% {
+            filter: brightness(1.12);
+            text-shadow: 0 0 20px rgba(180, 130, 255, 0.18);
+          }
+        }
+
+        @keyframes buttonShine {
+          0%,
+          65%,
+          100% {
+            transform: translateX(-120%);
+          }
+
+          82% {
+            transform: translateX(120%);
+          }
+        }
+
+        @media (min-width: 900px) {
+          .home-layout {
+            grid-template-columns: minmax(0, 1fr) minmax(400px, 0.78fr);
+            gap: 55px;
+          }
+
+          .portfolio-wrapper {
+            max-width: 540px;
+            margin: 0;
+            align-self: center;
+          }
+        }
+
+        @media (min-width: 1200px) {
+          .home-layout {
+            grid-template-columns: minmax(0, 1fr) minmax(470px, 0.82fr);
+            gap: 80px;
+          }
+
+          .portfolio-wrapper {
+            max-width: 580px;
           }
         }
       `}</style>

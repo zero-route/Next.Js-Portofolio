@@ -188,9 +188,9 @@ export default function Home() {
                   delay: 0.6,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="mt-1 font-mono text-[3rem] font-black tracking-[-0.08em] sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
+                className="mt-3 font-mono text-[3rem] font-black tracking-[-0.08em] text-white sm:mt-4 sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
               >
-                <span className="engineer-gradient">ENGINEER</span>
+                ENGINEER
               </motion.h2>
             </div>
 
@@ -385,22 +385,6 @@ export default function Home() {
 
         .portfolio-card {
           width: 100%;
-        }
-
-        .engineer-gradient {
-          display: inline-block;
-          background-image: linear-gradient(
-            135deg,
-            #6d28d9 0%,
-            #8b5cf6 25%,
-            #a855f7 50%,
-            #d8b4fe 75%,
-            #ffffff 100%
-          );
-          -webkit-background-clip: text !important;
-          background-clip: text !important;
-          -webkit-text-fill-color: transparent !important;
-          color: transparent !important;
         }
 
         .button-shine {

@@ -197,7 +197,7 @@ export default function Home() {
                 }}
                 className="font-mono text-[3rem] font-black tracking-[-0.08em] text-[#f4f4f5] sm:text-[4rem] lg:text-[4.2rem] xl:text-[4.8rem]"
               >
-                SYSTEM
+                DevSecOps
               </motion.h1>
 
               <motion.h2
@@ -446,9 +446,9 @@ export default function Home() {
           color: transparent;
           background-image: linear-gradient(
             90deg,
-            #6d28d9 0%,
-            #8b5cf6 35%,
-            #a78bfa 60%,
+            #8b5cf6 0%,
+            #a78bfa 35%,
+            #c4b5fd 60%,
             #e9d8fd 85%,
             #ffffff 100%
           );

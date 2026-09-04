@@ -481,12 +481,6 @@ export default function Home() {
           }
         }
 
-          50% {
-            filter: brightness(1.12);
-            text-shadow: 0 0 20px rgba(180, 130, 255, 0.18);
-          }
-        }
-
         @keyframes buttonShine {
           0%,
           65%,

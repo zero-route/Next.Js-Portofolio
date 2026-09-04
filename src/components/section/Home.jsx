@@ -142,7 +142,7 @@ export default function Home() {
   const paragraphWords = paragraph.split(" ");
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#030305] px-5 pb-24 pt-8 text-white sm:px-7 lg:px-10 xl:px-14">
+    <section className="relative min-h-screen overflow-hidden bg-[#030305] px-5 pb-24 pt-16 text-white sm:px-7 sm:pt-20 lg:px-10 lg:pt-24 xl:px-14 xl:pt-28">
       <div className="mx-auto w-full max-w-[1550px]">
         <div className="home-layout">
           <div className="min-w-0">

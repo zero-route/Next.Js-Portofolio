@@ -113,6 +113,7 @@ function NavigationItem({ icon, label, target, mouseX, index, contentVariants })
 export default function Navigation({ play = true, entranceDelay = 300 }) {
   const mouseX = useMotionValue(Infinity);
   const [expanded, setExpanded] = useState(false);
+  const [contentVisible, setContentVisible] = useState(false);
 
   useEffect(() => {
     if (!play) {
@@ -156,32 +157,33 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
 
   const shapeVariants = {
     collapsed: {
-      clipPath: "circle(26px at 50% 50%)",
-      scale: 0.94,
+      scaleX: 0.12,
+      borderRadius: "9999px",
+      filter: "blur(0px)",
     },
     expanded: {
-      clipPath: "circle(150% at 50% 50%)",
-      scale: 1,
+      scaleX: 1,
+      borderRadius: ["9999px", "9999px", "24px"],
+      filter: ["blur(0px)", "blur(18px)", "blur(0px)"],
       transition: {
-        clipPath: { duration: 1.1, ease: [0.19, 1, 0.22, 1] },
-        scale: { duration: 0.9, ease: [0.19, 1, 0.22, 1] },
+        duration: 1.2,
+        ease: [0.19, 1, 0.22, 1],
+        times: [0, 0.45, 1],
       },
     },
   };
 
   const contentVariants = {
-    collapsed: {
+    hidden: {
       opacity: 0,
-      y: 6,
-      filter: "blur(4px)",
+      filter: "blur(6px)",
     },
-    expanded: (index = 0) => ({
+    visible: (index = 0) => ({
       opacity: 1,
-      y: 0,
       filter: "blur(0px)",
       transition: {
-        delay: 0.55 + index * 0.05,
-        duration: 0.45,
+        delay: index * 0.06,
+        duration: 0.5,
         ease: "easeOut",
       },
     }),
@@ -211,6 +213,12 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
         initial="collapsed"
         animate={expanded ? "expanded" : "collapsed"}
         variants={shapeVariants}
+        onAnimationComplete={() => {
+          if (expanded) {
+            setContentVisible(true);
+          }
+        }}
+        style={{ transformOrigin: "50% 50%" }}
         className="
           relative
           mx-auto
@@ -220,7 +228,6 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
           max-w-[calc(100vw-32px)]
           items-center
           justify-center
-          rounded-3xl
           border
           border-white/[0.08]
           bg-[#0a0a0a]/75
@@ -236,6 +243,8 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
         <motion.div
           variants={contentVariants}
           custom={0}
+          initial="hidden"
+          animate={contentVisible ? "visible" : "hidden"}
           className="hidden items-center gap-4 sm:absolute sm:left-6 sm:flex"
         >
           <span
@@ -252,9 +261,15 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
           <div className="flex items-center gap-2"></div>
         </motion.div>
 
-        <div className="flex items-center justify-center">
+        <motion.div
+          variants={contentVariants}
+          custom={1}
+          initial="hidden"
+          animate={contentVisible ? "visible" : "hidden"}
+          className="flex items-center justify-center"
+        >
           <RobotEyes />
-        </div>
+        </motion.div>
 
         <div className="flex items-center justify-center gap-2 sm:absolute sm:right-6 sm:gap-4">
           {navigationItems.map((item, index) => (
@@ -262,7 +277,7 @@ export default function Navigation({ play = true, entranceDelay = 300 }) {
               key={item.target}
               {...item}
               mouseX={mouseX}
-              index={index + 1}
+              index={index + 2}
               contentVariants={contentVariants}
             />
           ))}

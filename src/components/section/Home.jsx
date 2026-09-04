@@ -84,7 +84,15 @@ function useTypewriter(
     }
 
     return () => clearTimeout(timeout);
-  }, [text, deleting, wordIndex, words, typingSpeed, deletingSpeed, pause]);
+  }, [
+    text,
+    deleting,
+    wordIndex,
+    words,
+    typingSpeed,
+    deletingSpeed,
+    pause,
+  ]);
 
   return text;
 }
@@ -95,9 +103,14 @@ export default function Home() {
 
   const [musicSearchOpen, setMusicSearchOpen] = useState(false);
   const [vinylOpen, setVinylOpen] = useState(false);
+
   const [currentSong, setCurrentSong] = useState(null);
   const [musicQueue, setMusicQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
+
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const [musicCurrentTime, setMusicCurrentTime] = useState(0);
+  const [musicDuration, setMusicDuration] = useState(0);
 
   const handleSelectSong = (song, queue = []) => {
     if (!song) return;
@@ -133,6 +146,15 @@ export default function Home() {
 
     setCurrentIndex(previousIndex);
     setCurrentSong(musicQueue[previousIndex]);
+  };
+
+  const openVinylPlayer = () => {
+    if (!currentSong) {
+      setMusicSearchOpen(true);
+      return;
+    }
+
+    setVinylOpen(true);
   };
 
   const introIcons = [Bot, Music2];
@@ -194,7 +216,7 @@ export default function Home() {
                     type="button"
                     onClick={() => {
                       if (isMusicIcon) {
-                        setMusicSearchOpen(true);
+                        openVinylPlayer();
                       }
                     }}
                     variants={{
@@ -441,7 +463,133 @@ export default function Home() {
         onClose={() => setVinylOpen(false)}
         onPrevious={handlePreviousSong}
         onNext={handleNextSong}
+        onPlayingChange={setMusicPlaying}
+        onTimeChange={setMusicCurrentTime}
+        onDurationChange={setMusicDuration}
       />
+
+      {currentSong && (
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-3 left-3 right-3 z-[9998] sm:bottom-5 sm:left-5 sm:right-5"
+        >
+          <div className="mx-auto flex max-w-[1280px] items-center gap-3 rounded-2xl border border-purple-400/20 bg-[#07070d]/95 px-3 py-2.5 shadow-[0_20px_70px_rgba(0,0,0,0.65)] backdrop-blur-xl sm:gap-4 sm:px-5 sm:py-3">
+            <button
+              type="button"
+              onClick={openVinylPlayer}
+              className="flex min-w-0 flex-1 items-center gap-3 text-left"
+            >
+              <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-white/10 bg-black shadow-[0_0_20px_rgba(139,92,246,0.12)] sm:h-12 sm:w-12">
+                {currentSong.thumbnail ? (
+                  <img
+                    src={currentSong.thumbnail}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <Music2 size={18} className="text-white/40" />
+                  </div>
+                )}
+              </div>
+
+              <div className="min-w-0">
+                <p className="truncate font-mono text-[11px] font-semibold text-white sm:text-xs">
+                  {currentSong.title}
+                </p>
+
+                <p className="mt-0.5 truncate font-mono text-[9px] text-white/35 sm:text-[10px]">
+                  {currentSong.artist}
+                </p>
+              </div>
+            </button>
+
+            <div className="hidden items-center gap-5 sm:flex">
+              <button
+                type="button"
+                onClick={handlePreviousSong}
+                className="text-white/50 transition hover:scale-110 hover:text-white"
+                aria-label="Previous song"
+              >
+                <svg
+                  width="19"
+                  height="19"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M6 5h2v14H6zM19 5v14l-9-7z" />
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                onClick={openVinylPlayer}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition hover:scale-105"
+                aria-label={musicPlaying ? "Open player" : "Open player"}
+              >
+                {musicPlaying ? (
+                  <span className="flex gap-[3px]">
+                    <span className="h-4 w-[3px] rounded-full bg-black" />
+                    <span className="h-4 w-[3px] rounded-full bg-black" />
+                  </span>
+                ) : (
+                  <span className="ml-0.5 border-y-[7px] border-y-transparent border-l-[10px] border-l-black" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNextSong}
+                className="text-white/50 transition hover:scale-110 hover:text-white"
+                aria-label="Next song"
+              >
+                <svg
+                  width="19"
+                  height="19"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M16 5h2v14h-2zM5 5v14l9-7z" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="hidden w-[180px] shrink-0 lg:block">
+              <div className="flex items-center justify-between font-mono text-[8px] text-white/25">
+                <span>
+                  {Math.floor(musicCurrentTime / 60)}:
+                  {Math.floor(musicCurrentTime % 60)
+                    .toString()
+                    .padStart(2, "0")}
+                </span>
+
+                <span>
+                  {Math.floor(musicDuration / 60)}:
+                  {Math.floor(musicDuration % 60)
+                    .toString()
+                    .padStart(2, "0")}
+                </span>
+              </div>
+
+              <div className="mt-1 h-1 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-white transition-[width] duration-200"
+                  style={{
+                    width:
+                      musicDuration > 0
+                        ? `${Math.min(
+                            100,
+                            (musicCurrentTime / musicDuration) * 100
+                          )}%`
+                        : "0%",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       <style jsx>{`
         .home-layout {

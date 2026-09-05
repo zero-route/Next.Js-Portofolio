@@ -1,163 +1,183 @@
 "use client";
 
-import { Download, Github, Shield, Layers3, Rocket } from "lucide-react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import {
+  Download,
+  Github,
+  Shield,
+  Layers3,
+  Rocket,
+} from "lucide-react";
+
+const Lanyard = dynamic(
+  () => import("@/components/reactbits/lanyard/Lanyard"),
+  {
+    ssr: false,
+  }
+);
 
 const paragraph =
-  "I build secure, scalable, and modern digital systems by combining software engineering, infrastructure, automation, networking, and security into one technical workflow.";
+  "I’m an individual who enjoys building, securing, and exploring technology from different perspectives. My interests span software development, networking, cybersecurity, automation, robotics, and electrical engineering. I enjoy turning ideas into functional systems while continuously learning how things work beneath the surface.";
 
-const focusItems = [
+const cards = [
   {
     title: "Core Focus",
     description:
-      "Security, infrastructure, automation, and reliable software systems.",
+      "Building reliable, secure, and scalable systems with a strong focus on engineering fundamentals.",
     icon: Shield,
-    type: "shield",
+    type: "bloom",
   },
   {
     title: "Tech Stack",
     description:
-      "Modern web technologies, backend systems, databases, networking, and development tools.",
+      "Working across modern web technologies, backend systems, databases, networking, and development tooling.",
     icon: Layers3,
-    type: "stack",
+    type: "pulse",
   },
   {
     title: "Currently Building",
     description:
-      "Projects that connect software, security, automation, robotics, and real-world systems.",
+      "Exploring new ideas around automation, AI, cybersecurity, robotics, and full-stack engineering.",
     icon: Rocket,
-    type: "rocket",
+    type: "float",
   },
 ];
 
-function useTypingText(text, speed = 22) {
-  const [visibleText, setVisibleText] = useState("");
-
-  useEffect(() => {
-    let index = 0;
-
-    const interval = setInterval(() => {
-      index += 1;
-      setVisibleText(text.slice(0, index));
-
-      if (index >= text.length) {
-        clearInterval(interval);
-      }
-    }, speed);
-
-    return () => clearInterval(interval);
-  }, [text, speed]);
-
-  return visibleText;
+function TypingText({ text }) {
+  return (
+    <motion.p
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.35,
+      }}
+      className="about-paragraph"
+    >
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={`${char}-${index}`}
+          variants={{
+            hidden: {
+              opacity: 0,
+            },
+            visible: {
+              opacity: 1,
+            },
+          }}
+          transition={{
+            duration: 0.015,
+            delay: 0.8 + index * 0.012,
+            ease: "linear",
+          }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </motion.p>
+  );
 }
 
 export default function About() {
-  const typedParagraph = useTypingText(paragraph, 18);
-
-  const headingWords = ["Who", "I", "Am"];
-  const nameWords = ["Dimas", "Aksa", "Oktapian"];
-
   return (
     <section
       id="about"
-      className="relative min-h-screen overflow-visible bg-[#030305] px-5 py-28 text-white sm:px-7 sm:py-36 lg:px-10 lg:py-40 xl:px-14"
+      className="relative overflow-hidden bg-[#030305] px-5 py-24 text-white sm:px-7 sm:py-32 lg:px-10 lg:py-40 xl:px-14"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/[0.04]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-purple-600/[0.035] blur-[140px]" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1550px]">
-        <div className="about-layout">
-          <div className="relative z-20 max-w-[720px]">
+        <div className="about-main-grid">
+          <div className="about-content">
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.35 }}
-              className="mb-4 flex flex-wrap gap-x-2"
+              viewport={{
+                once: true,
+                amount: 0.35,
+              }}
+              className="overflow-hidden"
             >
-              {headingWords.map((word, index) => (
-                <motion.span
-                  key={word}
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 28,
-                      filter: "blur(8px)",
+              <motion.h2
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: 45,
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.8,
+                      ease: [0.22, 1, 0.36, 1],
                     },
-                    visible: {
+                  },
+                }}
+                className="font-mono text-sm font-medium uppercase tracking-[0.28em] text-purple-300/75 sm:text-base"
+              >
+                {["Who", "I", "Am"].map((word, index) => (
+                  <motion.span
+                    key={word}
+                    initial={{
+                      opacity: 0,
+                      y: 30,
+                    }}
+                    whileInView={{
                       opacity: 1,
                       y: 0,
-                      filter: "blur(0px)",
-                      transition: {
-                        delay: index * 0.14,
-                        duration: 0.7,
-                        ease: [0.22, 1, 0.36, 1],
-                      },
-                    },
-                  }}
-                  className="font-mono text-sm font-medium tracking-[0.12em] text-purple-300/70 sm:text-base"
-                >
-                  {word}
-                </motion.span>
-              ))}
+                    }}
+                    viewport={{
+                      once: true,
+                    }}
+                    transition={{
+                      duration: 0.7,
+                      delay: index * 0.12,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="mr-2 inline-block"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </motion.h2>
             </motion.div>
 
-            <motion.div
+            <motion.h3
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.35 }}
-              className="mb-7 flex flex-wrap gap-x-4 gap-y-1"
+              viewport={{
+                once: true,
+                amount: 0.35,
+              }}
+              className="about-name"
             >
-              {nameWords.map((word, index) => (
+              {["Dimas", "Aksa", "Oktapian"].map((word, index) => (
                 <motion.span
                   key={word}
                   variants={{
                     hidden: {
                       opacity: 0,
                       x: -45,
-                      filter: "blur(8px)",
                     },
                     visible: {
                       opacity: 1,
                       x: 0,
-                      filter: "blur(0px)",
                       transition: {
-                        delay: index * 0.22,
                         duration: 0.85,
+                        delay: 0.25 + index * 0.2,
                         ease: [0.22, 1, 0.36, 1],
                       },
                     },
                   }}
-                  className="font-mono text-[2.35rem] font-black tracking-[-0.07em] text-white sm:text-[3.5rem] lg:text-[4.15rem] xl:text-[4.65rem]"
+                  className="mr-3 inline-block"
                 >
                   {word}
                 </motion.span>
               ))}
-            </motion.div>
+            </motion.h3>
 
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 25,
-                filter: "blur(7px)",
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.65,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="max-w-[680px]"
-            >
-              <p className="font-mono text-[12px] leading-6 text-white/50 sm:text-[13px] sm:leading-7 lg:text-[14px]">
-                {typedParagraph}
-                <span className="ml-1 inline-block h-[14px] w-px animate-pulse bg-purple-300/80 align-middle" />
-              </p>
-            </motion.div>
+            <TypingText text={paragraph} />
 
             <motion.div
               initial={{
@@ -168,10 +188,13 @@ export default function About() {
                 opacity: 1,
                 y: 0,
               }}
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{
+                once: true,
+                amount: 0.35,
+              }}
               transition={{
-                duration: 0.8,
-                delay: 1.1,
+                duration: 0.85,
+                delay: 2.1,
                 ease: [0.22, 1, 0.36, 1],
               }}
               className="mt-8 flex flex-wrap gap-3"
@@ -179,75 +202,67 @@ export default function About() {
               <a
                 href="/cv.pdf"
                 download
-                className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-purple-300/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[11px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_35px_rgba(139,92,246,0.3)]"
+                className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-purple-300/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[12px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,0.18)] transition-all duration-300 hover:scale-[1.025] hover:shadow-[0_0_35px_rgba(139,92,246,0.3)]"
               >
                 <span className="about-button-shine absolute inset-0" />
+
                 <Download
-                  size={15}
+                  size={16}
                   strokeWidth={1.8}
-                  className="relative transition-transform duration-300 group-hover:translate-y-0.5"
+                  className="relative"
                 />
-                <span className="relative">Download CV</span>
+
+                <span className="relative">
+                  Download CV
+                </span>
               </a>
 
               <a
                 href="https://github.com/zero-route"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-2 rounded-xl border border-white/[0.12] bg-white/[0.035] px-5 py-3 font-mono text-[11px] font-semibold text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-purple-300/30 hover:bg-purple-500/[0.06] hover:text-white"
+                className="group flex items-center gap-2 rounded-xl border border-white/[0.13] bg-white/[0.035] px-5 py-3 font-mono text-[12px] font-semibold text-white/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.07] hover:text-white hover:shadow-[0_0_25px_rgba(139,92,246,0.08)]"
               >
                 <Github
-                  size={15}
-                  strokeWidth={1.8}
-                  className="transition-transform duration-300 group-hover:rotate-6"
+                  size={16}
+                  strokeWidth={1.7}
+                  className="transition-transform duration-300 group-hover:rotate-[-6deg]"
                 />
-                GitHub Project
+
+                <span>GitHub Project</span>
               </a>
             </motion.div>
           </div>
 
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: -45,
-              scale: 0.96,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-              scale: 1,
-            }}
-            viewport={{
-              once: true,
-              amount: 0.15,
-            }}
-            transition={{
-              duration: 1.1,
-              delay: 0.25,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="lanyard-layer"
-          >
-            <div className="h-full w-full" />
-          </motion.div>
+          <div className="about-lanyard">
+            <Lanyard
+              position={[0, 0, 30]}
+              gravity={[0, -40, 0]}
+              fov={20}
+              transparent
+              frontImage={null}
+              backImage={null}
+              imageFit="cover"
+              lanyardImage="/images/lanyard.png"
+              lanyardWidth={1}
+            />
+          </div>
         </div>
 
-        <div className="mt-20 grid grid-cols-1 gap-4 md:grid-cols-3 lg:mt-28">
-          {focusItems.map((item, index) => {
-            const Icon = item.icon;
+        <div className="about-cards">
+          {cards.map((card, index) => {
+            const Icon = card.icon;
 
             return (
               <motion.div
-                key={item.title}
+                key={card.title}
                 initial={{
                   opacity: 0,
-                  y: 35,
-                  filter: "blur(7px)",
+                  y: 45,
                 }}
                 whileInView={{
                   opacity: 1,
                   y: 0,
-                  filter: "blur(0px)",
                 }}
                 viewport={{
                   once: true,
@@ -255,26 +270,78 @@ export default function About() {
                 }}
                 transition={{
                   duration: 0.8,
-                  delay: 0.15 + index * 0.2,
+                  delay: index * 0.18,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="about-card group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.025] p-6 backdrop-blur-xl"
+                className="about-card group"
               >
-                <div
-                  className={`about-icon about-icon-${item.type} mb-6 flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.09] bg-white/[0.025] text-white/60`}
+                <motion.div
+                  initial={
+                    card.type === "bloom"
+                      ? {
+                          opacity: 0,
+                          scale: 0.6,
+                          filter: "blur(8px)",
+                        }
+                      : card.type === "pulse"
+                        ? {
+                            opacity: 0,
+                            scale: 0.6,
+                          }
+                        : {
+                            opacity: 0,
+                            y: 12,
+                          }
+                  }
+                  whileInView={
+                    card.type === "bloom"
+                      ? {
+                          opacity: [0, 1, 1, 0.8, 1],
+                          scale: [0.6, 1.08, 1, 1.04, 1],
+                          filter: [
+                            "blur(8px)",
+                            "blur(0px)",
+                            "blur(0px)",
+                            "blur(0px)",
+                            "blur(0px)",
+                          ],
+                        }
+                      : card.type === "pulse"
+                        ? {
+                            opacity: 1,
+                            scale: [0.6, 1.15, 1, 1.04, 1],
+                          }
+                        : {
+                            opacity: 1,
+                            y: [12, -5, 0],
+                          }
+                  }
+                  viewport={{
+                    once: true,
+                    amount: 0.35,
+                  }}
+                  transition={{
+                    duration: 1.05,
+                    delay: 0.25 + index * 0.18,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className={`about-card-icon about-icon-${card.type}`}
                 >
-                  <Icon size={20} strokeWidth={1.6} />
+                  <Icon
+                    size={24}
+                    strokeWidth={1.35}
+                  />
+                </motion.div>
+
+                <div className="relative z-10">
+                  <h4 className="font-mono text-sm font-semibold text-white/90">
+                    {card.title}
+                  </h4>
+
+                  <p className="mt-3 font-mono text-[11px] leading-6 text-white/45 sm:text-xs sm:leading-6">
+                    {card.description}
+                  </p>
                 </div>
-
-                <h3 className="font-mono text-sm font-semibold text-white/90">
-                  {item.title}
-                </h3>
-
-                <p className="mt-3 max-w-[340px] font-mono text-[11px] leading-6 text-white/35">
-                  {item.description}
-                </p>
-
-                <div className="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full bg-purple-500/[0.05] blur-3xl transition-all duration-500 group-hover:bg-purple-500/[0.1]" />
               </motion.div>
             );
           })}
@@ -282,20 +349,154 @@ export default function About() {
       </div>
 
       <style jsx>{`
-        .about-layout {
-          position: relative;
+        .about-main-grid {
           display: grid;
           grid-template-columns: minmax(0, 1fr);
-          min-height: 650px;
           align-items: center;
+          gap: 10px;
         }
 
-        .lanyard-layer {
+        .about-content {
           position: relative;
-          width: 100%;
-          height: 620px;
-          margin-top: 20px;
+          z-index: 10;
+          max-width: 720px;
+        }
+
+        .about-name {
+          margin-top: 18px;
+          font-family: monospace;
+          font-size: clamp(2.6rem, 6vw, 5rem);
+          font-weight: 900;
+          line-height: 0.98;
+          letter-spacing: -0.075em;
+          color: #f4f4f5;
+        }
+
+        .about-paragraph {
+          max-width: 690px;
+          margin-top: 30px;
+          font-family: monospace;
+          font-size: 12px;
+          line-height: 2;
+          color: rgba(255, 255, 255, 0.48);
+        }
+
+        .about-paragraph span {
+          white-space: pre-wrap;
+        }
+
+        .about-lanyard {
+          position: relative;
           z-index: 20;
+          min-width: 0;
+          pointer-events: auto;
+        }
+
+        .about-cards {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 18px;
+          margin-top: 30px;
+        }
+
+        .about-card {
+          position: relative;
+          min-height: 205px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.075);
+          border-radius: 18px;
+          padding: 26px;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255, 255, 255, 0.045),
+              rgba(255, 255, 255, 0.018)
+            ),
+            rgba(8, 8, 13, 0.72);
+          box-shadow:
+            0 20px 55px rgba(0, 0, 0, 0.24),
+            inset 0 1px 0 rgba(255, 255, 255, 0.025);
+          backdrop-filter: blur(18px);
+          transition:
+            transform 350ms ease,
+            border-color 350ms ease,
+            box-shadow 350ms ease,
+            background 350ms ease;
+        }
+
+        .about-card::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 1px;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(167, 139, 250, 0.32),
+            transparent
+          );
+          opacity: 0;
+          transition: opacity 350ms ease;
+        }
+
+        .about-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(167, 139, 250, 0.25);
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255, 255, 255, 0.055),
+              rgba(139, 92, 246, 0.025)
+            ),
+            rgba(8, 8, 13, 0.82);
+          box-shadow:
+            0 24px 65px rgba(0, 0, 0, 0.3),
+            0 0 35px rgba(139, 92, 246, 0.07);
+        }
+
+        .about-card:hover::before {
+          opacity: 1;
+        }
+
+        .about-card-icon {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          width: 46px;
+          height: 46px;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 25px;
+          border: 1px solid rgba(255, 255, 255, 0.09);
+          border-radius: 13px;
+          color: rgba(255, 255, 255, 0.75);
+          background: rgba(255, 255, 255, 0.025);
+          box-shadow: 0 0 0 rgba(139, 92, 246, 0);
+          transition:
+            transform 350ms ease,
+            border-color 350ms ease,
+            color 350ms ease,
+            box-shadow 350ms ease;
+        }
+
+        .about-card:hover .about-card-icon {
+          border-color: rgba(167, 139, 250, 0.28);
+          color: rgba(255, 255, 255, 0.95);
+          box-shadow: 0 0 25px rgba(139, 92, 246, 0.1);
+        }
+
+        .about-card:hover .about-icon-bloom {
+          transform: scale(1.04);
+        }
+
+        .about-card:hover .about-icon-pulse {
+          transform: scale(1.06);
+        }
+
+        .about-card:hover .about-icon-float {
+          transform: translateY(-3px);
         }
 
         .about-button-shine {
@@ -307,120 +508,6 @@ export default function About() {
           );
           transform: translateX(-120%);
           animation: aboutButtonShine 4.5s ease-in-out infinite;
-        }
-
-        .about-card {
-          transition:
-            transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
-            border-color 400ms ease,
-            box-shadow 400ms ease,
-            background-color 400ms ease;
-        }
-
-        .about-card:hover {
-          transform: translateY(-4px);
-          border-color: rgba(192, 132, 252, 0.22);
-          background-color: rgba(255, 255, 255, 0.035);
-          box-shadow: 0 18px 55px rgba(88, 28, 135, 0.1);
-        }
-
-        .about-icon {
-          transition:
-            transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
-            color 350ms ease,
-            border-color 350ms ease,
-            box-shadow 350ms ease;
-        }
-
-        .about-card:hover .about-icon {
-          color: rgba(255, 255, 255, 0.9);
-          border-color: rgba(192, 132, 252, 0.24);
-          box-shadow: 0 0 25px rgba(139, 92, 246, 0.12);
-        }
-
-        .about-card:hover .about-icon-shield {
-          transform: rotate(3deg);
-        }
-
-        .about-card:hover .about-icon-stack {
-          transform: scale(1.08);
-        }
-
-        .about-card:hover .about-icon-rocket {
-          transform: translateY(-3px);
-        }
-
-        .about-icon-shield {
-          animation: shieldBloom 1s ease-out 1.15s both;
-        }
-
-        .about-icon-stack {
-          animation: stackPulse 900ms ease-out 1.35s both;
-        }
-
-        .about-icon-rocket {
-          animation: rocketFloat 1.1s ease-out 1.55s both;
-        }
-
-        @keyframes shieldBloom {
-          0% {
-            opacity: 0;
-            transform: scale(0.65);
-            filter: blur(6px);
-            box-shadow: 0 0 0 rgba(139, 92, 246, 0);
-          }
-
-          55% {
-            opacity: 1;
-            transform: scale(1.08);
-            filter: blur(0);
-            box-shadow: 0 0 28px rgba(139, 92, 246, 0.2);
-          }
-
-          100% {
-            opacity: 1;
-            transform: scale(1);
-            filter: blur(0);
-            box-shadow: 0 0 0 rgba(139, 92, 246, 0);
-          }
-        }
-
-        @keyframes stackPulse {
-          0% {
-            opacity: 0;
-            transform: scale(0.6);
-          }
-
-          45% {
-            opacity: 1;
-            transform: scale(1.15);
-          }
-
-          70% {
-            transform: scale(0.96);
-          }
-
-          100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes rocketFloat {
-          0% {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-
-          45% {
-            opacity: 1;
-            transform: translateY(-5px);
-          }
-
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
 
         @keyframes aboutButtonShine {
@@ -436,39 +523,51 @@ export default function About() {
         }
 
         @media (min-width: 900px) {
-          .about-layout {
+          .about-main-grid {
             grid-template-columns: minmax(0, 1fr) minmax(420px, 0.82fr);
-            gap: 35px;
+            gap: 40px;
           }
 
-          .lanyard-layer {
-            position: absolute;
-            top: -160px;
-            right: -30px;
-            width: 58%;
-            height: 760px;
-            margin-top: 0;
+          .about-lanyard {
+            margin-top: -40px;
           }
         }
 
         @media (min-width: 1200px) {
-          .about-layout {
+          .about-main-grid {
             grid-template-columns: minmax(0, 1fr) minmax(500px, 0.82fr);
-            gap: 70px;
+            gap: 65px;
           }
 
-          .lanyard-layer {
-            top: -190px;
-            right: -45px;
-            width: 57%;
-            height: 820px;
+          .about-lanyard {
+            margin-top: -70px;
           }
         }
 
         @media (max-width: 899px) {
-          .lanyard-layer {
-            margin-top: -20px;
-            height: 500px;
+          .about-lanyard {
+            order: 2;
+            margin-top: -25px;
+          }
+
+          .about-cards {
+            margin-top: 10px;
+          }
+        }
+
+        @media (max-width: 700px) {
+          .about-cards {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .about-card {
+            min-height: 180px;
+          }
+
+          .about-paragraph {
+            font-size: 11px;
+            line-height: 1.9;
           }
         }
       `}</style>

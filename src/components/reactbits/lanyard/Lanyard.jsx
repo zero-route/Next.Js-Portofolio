@@ -23,7 +23,7 @@ import "./Lanyard.css";
 extend({ MeshLineGeometry, MeshLineMaterial });
 
 const BLANK_PIXEL =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgWJ9awAAAABJRU5ErkJggg==";
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 
 const FRONT_UV_RECT = {
   x: 0,

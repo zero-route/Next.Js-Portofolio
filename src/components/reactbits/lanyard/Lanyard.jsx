@@ -18,7 +18,10 @@ import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import * as THREE from "three";
 import "./Lanyard.css";
 
-extend({ MeshLineGeometry, MeshLineMaterial });
+extend({
+  MeshLineGeometry,
+  MeshLineMaterial,
+});
 
 const FRONT_UV_RECT = {
   x: 0,
@@ -35,18 +38,20 @@ const BACK_UV_RECT = {
 };
 
 export default function Lanyard({
-  position = [0, 0, 24],
+  position = [0, 0, 22],
   gravity = [0, -40, 0],
-  fov = 18,
+  fov = 20,
   transparent = true,
   frontImage = "/images/profile.png",
   backImage = null,
   imageFit = "cover",
   lanyardImage = "/images/lanyard.png",
-  lanyardWidth = 1,
+  lanyardWidth = 0.8,
 }) {
   const [isMobile, setIsMobile] = useState(
-    () => typeof window !== "undefined" && window.innerWidth < 768
+    () =>
+      typeof window !== "undefined" &&
+      window.innerWidth < 768
   );
 
   useEffect(() => {
@@ -82,15 +87,15 @@ export default function Lanyard({
           );
         }}
       >
-        <ambientLight intensity={2.2} />
+        <ambientLight intensity={1.8} />
 
         <directionalLight
-          position={[2, 4, 6]}
-          intensity={2.4}
+          position={[2, 4, 8]}
+          intensity={2.5}
         />
 
         <directionalLight
-          position={[-3, 1, 4]}
+          position={[-3, 1, 5]}
           intensity={1.2}
         />
 
@@ -120,8 +125,8 @@ function Band({
   frontImage = "/images/profile.png",
   backImage = null,
   imageFit = "cover",
-  lanyardImage,
-  lanyardWidth = 1,
+  lanyardImage = "/images/lanyard.png",
+  lanyardWidth = 0.8,
 }) {
   const band = useRef();
   const fixed = useRef();
@@ -130,10 +135,25 @@ function Band({
   const j3 = useRef();
   const card = useRef();
 
-  const vec = useMemo(() => new THREE.Vector3(), []);
-  const ang = useMemo(() => new THREE.Vector3(), []);
-  const rot = useMemo(() => new THREE.Vector3(), []);
-  const dir = useMemo(() => new THREE.Vector3(), []);
+  const vec = useMemo(
+    () => new THREE.Vector3(),
+    []
+  );
+
+  const ang = useMemo(
+    () => new THREE.Vector3(),
+    []
+  );
+
+  const rot = useMemo(
+    () => new THREE.Vector3(),
+    []
+  );
+
+  const dir = useMemo(
+    () => new THREE.Vector3(),
+    []
+  );
 
   const segmentProps = useMemo(
     () => ({
@@ -146,11 +166,19 @@ function Band({
     []
   );
 
-  const { nodes, materials } = useGLTF("/data/card.glb");
+  const { nodes, materials } = useGLTF(
+    "/data/card.glb"
+  );
 
   const texture = useTexture(lanyardImage);
-  const frontTex = useTexture(frontImage || "/images/profile.png");
-  const backTex = useTexture(backImage || "/images/profile.png");
+
+  const frontTex = useTexture(
+    frontImage || "/images/profile.png"
+  );
+
+  const backTex = useTexture(
+    backImage || "/images/profile.png"
+  );
 
   const cardMap = useMemo(() => {
     const baseMap = materials.base.map;
@@ -183,7 +211,13 @@ function Band({
       return baseMap;
     }
 
-    ctx.drawImage(baseImg, 0, 0, width, height);
+    ctx.drawImage(
+      baseImg,
+      0,
+      0,
+      width,
+      height
+    );
 
     const drawFitted = (img, rect) => {
       if (!img) {
@@ -196,7 +230,9 @@ function Band({
       const rh = rect.h * height;
 
       const scaleMode =
-        imageFit === "contain" ? Math.min : Math.max;
+        imageFit === "contain"
+          ? Math.min
+          : Math.max;
 
       const scale = scaleMode(
         rw / img.width,
@@ -206,27 +242,54 @@ function Band({
       const dw = img.width * scale;
       const dh = img.height * scale;
 
-      const dx = rx + (rw - dw) / 2;
-      const dy = ry + (rh - dh) / 2;
+      const dx =
+        rx + (rw - dw) / 2;
+
+      const dy =
+        ry + (rh - dh) / 2;
 
       ctx.save();
       ctx.beginPath();
-      ctx.rect(rx, ry, rw, rh);
+      ctx.rect(
+        rx,
+        ry,
+        rw,
+        rh
+      );
       ctx.clip();
-      ctx.drawImage(img, dx, dy, dw, dh);
+
+      ctx.drawImage(
+        img,
+        dx,
+        dy,
+        dw,
+        dh
+      );
+
       ctx.restore();
     };
 
-    drawFitted(frontTex.image, FRONT_UV_RECT);
+    drawFitted(
+      frontTex.image,
+      FRONT_UV_RECT
+    );
 
     if (backImage && backTex.image) {
-      drawFitted(backTex.image, BACK_UV_RECT);
+      drawFitted(
+        backTex.image,
+        BACK_UV_RECT
+      );
     }
 
-    const composite = new THREE.CanvasTexture(canvas);
+    const composite =
+      new THREE.CanvasTexture(canvas);
 
-    composite.colorSpace = THREE.SRGBColorSpace;
-    composite.flipY = baseMap.flipY;
+    composite.colorSpace =
+      THREE.SRGBColorSpace;
+
+    composite.flipY =
+      baseMap.flipY;
+
     composite.anisotropy = 2;
     composite.needsUpdate = true;
 
@@ -250,8 +313,11 @@ function Band({
       ])
   );
 
-  const [dragged, drag] = useState(false);
-  const [hovered, hover] = useState(false);
+  const [dragged, drag] =
+    useState(false);
+
+  const [hovered, hover] =
+    useState(false);
 
   useRopeJoint(
     fixed,
@@ -305,13 +371,22 @@ function Band({
   }, [hovered, dragged]);
 
   useFrame((state, delta) => {
-    if (!card.current || !j1.current || !j2.current || !j3.current) {
+    if (
+      !card.current ||
+      !j1.current ||
+      !j2.current ||
+      !j3.current
+    ) {
       return;
     }
 
     if (dragged) {
       vec
-        .set(state.pointer.x, state.pointer.y, 0.5)
+        .set(
+          state.pointer.x,
+          state.pointer.y,
+          0.5
+        )
         .unproject(state.camera);
 
       dir
@@ -320,7 +395,9 @@ function Band({
         .normalize();
 
       vec.add(
-        dir.multiplyScalar(state.camera.position.length())
+        dir.multiplyScalar(
+          state.camera.position.length()
+        )
       );
 
       card.current.wakeUp();
@@ -335,7 +412,10 @@ function Band({
       });
     }
 
-    if (!fixed.current || !band.current) {
+    if (
+      !fixed.current ||
+      !band.current
+    ) {
       return;
     }
 
@@ -347,40 +427,62 @@ function Band({
       }
 
       if (!ref.current.lerped) {
-        ref.current.lerped = new THREE.Vector3().copy(
-          ref.current.translation()
-        );
+        ref.current.lerped =
+          new THREE.Vector3().copy(
+            ref.current.translation()
+          );
       }
 
-      const distance = ref.current.lerped.distanceTo(
-        ref.current.translation()
-      );
+      const distance =
+        ref.current.lerped.distanceTo(
+          ref.current.translation()
+        );
 
-      const clampedDistance = Math.max(
-        0.1,
-        Math.min(1, distance)
-      );
+      const clampedDistance =
+        Math.max(
+          0.1,
+          Math.min(1, distance)
+        );
 
       ref.current.lerped.lerp(
         ref.current.translation(),
         delta *
           (minSpeed +
-            clampedDistance * (maxSpeed - minSpeed))
+            clampedDistance *
+              (maxSpeed - minSpeed))
       );
     });
 
-    curve.points[0].copy(j3.current.translation());
-    curve.points[1].copy(j2.current.lerped);
-    curve.points[2].copy(j1.current.lerped);
-    curve.points[3].copy(fixed.current.translation());
+    curve.points[0].copy(
+      j3.current.translation()
+    );
+
+    curve.points[1].copy(
+      j2.current.lerped
+    );
+
+    curve.points[2].copy(
+      j1.current.lerped
+    );
+
+    curve.points[3].copy(
+      fixed.current.translation()
+    );
 
     band.current.geometry.setPoints(
-      curve.getPoints(isMobile ? 10 : 16)
+      curve.getPoints(
+        isMobile ? 10 : 16
+      )
     );
 
     if (!dragged) {
-      ang.copy(card.current.angvel());
-      rot.copy(card.current.rotation());
+      ang.copy(
+        card.current.angvel()
+      );
+
+      rot.copy(
+        card.current.rotation()
+      );
 
       card.current.setAngvel({
         x: ang.x,
@@ -392,7 +494,9 @@ function Band({
 
   curve.curveType = "chordal";
 
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.wrapS =
+    texture.wrapT =
+      THREE.RepeatWrapping;
 
   return (
     <>
@@ -431,19 +535,34 @@ function Band({
           position={[2, 0, 0]}
           ref={card}
           {...segmentProps}
-          type={dragged ? "kinematicPosition" : "dynamic"}
+          type={
+            dragged
+              ? "kinematicPosition"
+              : "dynamic"
+          }
         >
-          <CuboidCollider args={[0.8, 1.125, 0.01]} />
+          <CuboidCollider
+            args={[0.8, 1.125, 0.01]}
+          />
 
           <group
-            scale={3.1}
-            position={[0, -1.25, -0.05]}
-            onPointerOver={() => hover(true)}
-            onPointerOut={() => hover(false)}
+            scale={3.25}
+            position={[
+              0,
+              -1.2,
+              -0.05,
+            ]}
+            onPointerOver={() =>
+              hover(true)
+            }
+            onPointerOut={() =>
+              hover(false)
+            }
             onPointerUp={(event) => {
               event.target.releasePointerCapture(
                 event.pointerId
               );
+
               drag(false);
             }}
             onPointerDown={(event) => {
@@ -457,31 +576,46 @@ function Band({
                 new THREE.Vector3()
                   .copy(event.point)
                   .sub(
-                    vec.copy(card.current.translation())
+                    vec.copy(
+                      card.current.translation()
+                    )
                   )
               );
             }}
           >
-            <mesh geometry={nodes.card.geometry}>
+            <mesh
+              geometry={
+                nodes.card.geometry
+              }
+            >
               <meshPhysicalMaterial
                 map={cardMap}
                 map-anisotropy={2}
                 clearcoat={0}
-                roughness={0.82}
-                metalness={0.45}
-                emissive="#ffffff"
-                emissiveIntensity={0.18}
+                clearcoatRoughness={0.3}
+                roughness={0.9}
+                metalness={0.35}
+                emissive={
+                  new THREE.Color(
+                    0x181818
+                  )
+                }
+                emissiveIntensity={0.25}
               />
             </mesh>
 
             <mesh
-              geometry={nodes.clip.geometry}
+              geometry={
+                nodes.clip.geometry
+              }
               material={materials.metal}
               material-roughness={0.45}
             />
 
             <mesh
-              geometry={nodes.clamp.geometry}
+              geometry={
+                nodes.clamp.geometry
+              }
               material={materials.metal}
             />
           </group>
@@ -495,7 +629,9 @@ function Band({
           color="white"
           depthTest={false}
           resolution={
-            isMobile ? [700, 1400] : [900, 900]
+            isMobile
+              ? [700, 1400]
+              : [900, 900]
           }
           useMap
           map={texture}

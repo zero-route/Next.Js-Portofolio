@@ -64,7 +64,7 @@ function LazyLanyard() {
         }
       },
       {
-        rootMargin: "400px 0px",
+        rootMargin: "300px 0px",
         threshold: 0,
       }
     );
@@ -78,15 +78,15 @@ function LazyLanyard() {
     <div ref={containerRef} className="about-lanyard">
       {visible && (
         <Lanyard
-          position={[0, 0, 24]}
+          position={[0, 0, 22]}
           gravity={[0, -40, 0]}
-          fov={18}
+          fov={20}
           transparent
           frontImage="/images/profile.png"
           backImage={null}
           imageFit="cover"
           lanyardImage="/images/lanyard.png"
-          lanyardWidth={0.9}
+          lanyardWidth={0.8}
         />
       )}
     </div>
@@ -115,8 +115,8 @@ export default function About() {
         }
       },
       {
-        threshold: 0.02,
-        rootMargin: "0px 0px -20px 0px",
+        threshold: 0.05,
+        rootMargin: "0px 0px -40px 0px",
       }
     );
 
@@ -135,9 +135,7 @@ export default function About() {
         <div className="about-main-grid">
           <div className="about-content">
             <div className="about-heading">
-              <span className="about-label">
-                ABOUT
-              </span>
+              <span className="about-label">ABOUT</span>
 
               <h2 className="about-who">
                 Who I Am
@@ -151,7 +149,7 @@ export default function About() {
             <motion.p
               initial={{
                 opacity: 0,
-                y: 28,
+                y: 24,
               }}
               animate={
                 visible
@@ -161,13 +159,13 @@ export default function About() {
                     }
                   : {
                       opacity: 0,
-                      y: 28,
+                      y: 24,
                     }
               }
               transition={{
-                duration: 1.35,
-                delay: 0.7,
-                ease: [0.16, 1, 0.3, 1],
+                duration: 1.25,
+                delay: 0.45,
+                ease: [0.22, 1, 0.36, 1],
               }}
               className="about-paragraph"
             >
@@ -220,7 +218,7 @@ export default function About() {
                 key={card.title}
                 className="about-card"
                 style={{
-                  "--card-delay": `${0.9 + index * 0.16}s`,
+                  "--card-delay": `${0.75 + index * 0.14}s`,
                 }}
               >
                 <div className="about-card-icon">
@@ -231,13 +229,9 @@ export default function About() {
                 </div>
 
                 <div>
-                  <h4>
-                    {card.title}
-                  </h4>
+                  <h4>{card.title}</h4>
 
-                  <p>
-                    {card.description}
-                  </p>
+                  <p>{card.description}</p>
                 </div>
               </div>
             );
@@ -250,7 +244,7 @@ export default function About() {
           position: relative;
           overflow: hidden;
           background: #030305;
-          padding: 108px 20px;
+          padding: 96px 20px;
           color: white;
           contain: layout paint;
         }
@@ -278,10 +272,10 @@ export default function About() {
 
         .about-heading {
           opacity: 0;
-          transform: translate3d(0, 22px, 0);
+          transform: translate3d(0, 20px, 0);
           transition:
-            opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
-            transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity 0.8s ease,
+            transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .about-visible .about-heading {
@@ -291,13 +285,15 @@ export default function About() {
 
         .about-label {
           display: block;
-          margin-bottom: 18px;
+          width: 100%;
+          margin-bottom: 9px;
           font-family: monospace;
-          font-size: 11px;
+          font-size: 14px;
           font-weight: 600;
-          letter-spacing: 0.32em;
+          letter-spacing: 0.38em;
+          text-align: center;
           text-transform: uppercase;
-          color: rgba(167, 139, 250, 0.78);
+          color: rgba(167, 139, 250, 0.82);
         }
 
         .about-who {
@@ -305,24 +301,24 @@ export default function About() {
           font-family: monospace;
           font-size: clamp(2.1rem, 4.2vw, 3.8rem);
           font-weight: 500;
-          line-height: 1.05;
+          line-height: 1;
           letter-spacing: -0.055em;
           color: rgba(255, 255, 255, 0.9);
         }
 
         .about-name {
-          margin: 34px 0 0;
+          margin: 11px 0 0;
           font-family: monospace;
-          font-size: clamp(3.6rem, 7vw, 6.4rem);
+          font-size: clamp(3.2rem, 6.2vw, 5.8rem);
           font-weight: 800;
-          line-height: 0.98;
+          line-height: 0.96;
           letter-spacing: -0.07em;
           color: #f4f4f5;
           opacity: 0;
-          transform: translate3d(-30px, 0, 0);
+          transform: translate3d(-22px, 0, 0);
           transition:
-            opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.16s,
-            transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.16s;
+            opacity 0.9s ease 0.12s,
+            transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
         }
 
         .about-visible .about-name {
@@ -332,23 +328,24 @@ export default function About() {
 
         .about-paragraph {
           max-width: 700px;
-          margin: 38px 0 0;
+          margin: 42px 0 0;
           font-family: monospace;
           font-size: 12px;
           line-height: 1.95;
-          color: rgba(255, 255, 255, 0.5);
+          color: rgba(255, 255, 255, 0.48);
+          will-change: transform, opacity;
         }
 
         .about-buttons {
           display: flex;
           flex-wrap: wrap;
           gap: 12px;
-          margin-top: 34px;
+          margin-top: 30px;
           opacity: 0;
-          transform: translate3d(0, 20px, 0);
+          transform: translate3d(0, 18px, 0);
           transition:
-            opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 1s,
-            transform 1s cubic-bezier(0.16, 1, 0.3, 1) 1s;
+            opacity 0.8s ease 0.7s,
+            transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.7s;
         }
 
         .about-visible .about-buttons {
@@ -371,7 +368,8 @@ export default function About() {
             transform 220ms ease,
             border-color 220ms ease,
             background 220ms ease,
-            color 220ms ease;
+            color 220ms ease,
+            box-shadow 220ms ease;
         }
 
         .about-cv-button {
@@ -383,7 +381,8 @@ export default function About() {
             #a78bfa
           );
           color: white;
-          box-shadow: 0 0 20px rgba(124, 58, 237, 0.14);
+          box-shadow:
+            0 0 20px rgba(124, 58, 237, 0.14);
         }
 
         .about-github-button {
@@ -398,7 +397,8 @@ export default function About() {
         }
 
         .about-cv-button:hover {
-          box-shadow: 0 0 28px rgba(139, 92, 246, 0.22);
+          box-shadow:
+            0 0 28px rgba(139, 92, 246, 0.22);
         }
 
         .about-github-button:hover {
@@ -420,7 +420,7 @@ export default function About() {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 16px;
-          margin-top: 48px;
+          margin-top: 36px;
         }
 
         .about-card {
@@ -433,11 +433,10 @@ export default function About() {
           background: rgba(255, 255, 255, 0.018);
           opacity: 0;
           transform: translate3d(0, 24px, 0);
-          animation: aboutCardReveal 0.9s
-            cubic-bezier(0.16, 1, 0.3, 1)
+          animation: aboutCardReveal 0.8s
+            cubic-bezier(0.22, 1, 0.36, 1)
             var(--card-delay)
             forwards;
-          animation-play-state: paused;
           transition:
             transform 220ms ease,
             border-color 220ms ease,
@@ -513,7 +512,7 @@ export default function About() {
           .about-main-grid {
             grid-template-columns:
               minmax(0, 1fr)
-              minmax(420px, 0.82fr);
+              minmax(460px, 0.9fr);
             gap: 35px;
           }
 
@@ -531,7 +530,7 @@ export default function About() {
           .about-main-grid {
             grid-template-columns:
               minmax(0, 1fr)
-              minmax(500px, 0.82fr);
+              minmax(540px, 0.9fr);
             gap: 60px;
           }
 
@@ -545,21 +544,23 @@ export default function About() {
           .about-lanyard {
             order: 2;
             min-height: 500px;
-            margin-top: 5px;
+            margin-top: 0;
           }
 
           .about-cards {
-            margin-top: 30px;
+            margin-top: 28px;
           }
         }
 
         @media (max-width: 700px) {
           .about-section {
-            padding: 96px 20px;
+            padding: 88px 20px;
           }
 
           .about-label {
-            margin-bottom: 19px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            letter-spacing: 0.38em;
           }
 
           .about-who {
@@ -567,30 +568,36 @@ export default function About() {
           }
 
           .about-name {
-            margin-top: 34px;
-            font-size: clamp(2.9rem, 12vw, 4.4rem);
-            line-height: 1;
+            margin-top: 10px;
+            font-size: clamp(2.55rem, 10.5vw, 4rem);
+            line-height: 0.98;
           }
 
           .about-paragraph {
-            margin-top: 40px;
+            margin-top: 38px;
             font-size: 11px;
-            line-height: 1.9;
+            line-height: 1.85;
           }
 
           .about-buttons {
-            margin-top: 36px;
+            margin-top: 28px;
+          }
+
+          .about-cv-button,
+          .about-github-button {
+            padding: 11px 17px;
+            font-size: 11px;
           }
 
           .about-lanyard {
-            min-height: 520px;
-            margin-top: 15px;
+            min-height: 500px;
+            margin-top: -5px;
           }
 
           .about-cards {
             grid-template-columns: 1fr;
             gap: 12px;
-            margin-top: 30px;
+            margin-top: 24px;
           }
 
           .about-card {

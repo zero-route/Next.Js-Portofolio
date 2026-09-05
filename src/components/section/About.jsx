@@ -88,15 +88,15 @@ function LazyLanyard() {
       {visible && (
         <div className={`about-lanyard-inner ${loaded ? "about-lanyard-loaded" : ""}`}>
           <Lanyard
-            position={[0, 1.2, 13]}
+            position={[0, 0, 17]}
             gravity={[0, -40, 0]}
-            fov={28}
+            fov={22}
             transparent
             frontImage="/images/profile.png"
             backImage={null}
             imageFit="cover"
             lanyardImage="/images/lanyard.png"
-            lanyardWidth={0.9}
+            lanyardWidth={1}
           />
         </div>
       )}

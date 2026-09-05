@@ -35,14 +35,14 @@ const BACK_UV_RECT = {
 };
 
 export default function Lanyard({
-  position = [0, 0, 30],
+  position = [0, 0, 24],
   gravity = [0, -40, 0],
-  fov = 20,
+  fov = 18,
   transparent = true,
   frontImage = "/images/profile.png",
   backImage = null,
   imageFit = "cover",
-  lanyardImage = "/images/lanyard.png", 
+  lanyardImage = "/images/lanyard.png",
   lanyardWidth = 1,
 }) {
   const [isMobile, setIsMobile] = useState(
@@ -82,7 +82,17 @@ export default function Lanyard({
           );
         }}
       >
-        <ambientLight intensity={1.4} />
+        <ambientLight intensity={2.2} />
+
+        <directionalLight
+          position={[2, 4, 6]}
+          intensity={2.4}
+        />
+
+        <directionalLight
+          position={[-3, 1, 4]}
+          intensity={1.2}
+        />
 
         <Physics
           gravity={gravity}
@@ -426,8 +436,8 @@ function Band({
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
 
           <group
-            scale={2.25}
-            position={[0, -1.2, -0.05]}
+            scale={3.1}
+            position={[0, -1.25, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
             onPointerUp={(event) => {
@@ -457,9 +467,10 @@ function Band({
                 map={cardMap}
                 map-anisotropy={2}
                 clearcoat={0}
-                clearcoatRoughness={0.3}
-                roughness={0.95}
-                metalness={0.65}
+                roughness={0.82}
+                metalness={0.45}
+                emissive="#ffffff"
+                emissiveIntensity={0.18}
               />
             </mesh>
 

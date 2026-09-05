@@ -42,7 +42,7 @@ export default function Lanyard({
   frontImage = "public/images/profile.png",
   backImage = null,
   imageFit = "cover",
-  lanyardImage = "/images/lanyard.png",
+  lanyardImage = "public/images/lanyard.png",
   lanyardWidth = 1,
 }) {
   const [isMobile, setIsMobile] = useState(

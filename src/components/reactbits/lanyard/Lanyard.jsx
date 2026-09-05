@@ -24,9 +24,9 @@ const FRONT_UV_RECT = { x: 0, y: 0, w: 0.5, h: 0.755 };
 const BACK_UV_RECT = { x: 0.5, y: 0, w: 0.5, h: 0.757 };
 
 export default function Lanyard({
-  position = [0, 0, 17],
+  position = [0, 0, 12],
   gravity = [0, -40, 0],
-  fov = 22,
+  fov = 30,
   transparent = true,
   frontImage = null,
   backImage = null,
@@ -263,7 +263,7 @@ function Band({
         >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
           <group
-            scale={3.2}
+            scale={5}
             position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}

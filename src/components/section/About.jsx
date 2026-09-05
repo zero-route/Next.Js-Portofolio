@@ -64,7 +64,7 @@ function LazyLanyard() {
         }
       },
       {
-        rootMargin: "500px 0px",
+        rootMargin: "300px 0px",
         threshold: 0,
       }
     );
@@ -86,42 +86,55 @@ function LazyLanyard() {
           backImage={null}
           imageFit="cover"
           lanyardImage="/images/lanyard.png"
-  lanyardWidth={0.8}
-/>
+          lanyardWidth={0.8}
+        />
       )}
     </div>
   );
 }
 
 export default function About() {
+  const sectionRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const element = sectionRef.current;
+
+    if (!element) return;
+
+    if (!("IntersectionObserver" in window)) {
+      setVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.08,
+        rootMargin: "0px 0px -60px 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="about"
-      className="relative overflow-hidden bg-[#030305] px-5 py-24 text-white sm:px-7 sm:py-32 lg:px-10 lg:py-40 xl:px-14"
+      className={`about-section ${visible ? "about-visible" : ""}`}
     >
-      <div className="about-background-glow" />
-
-      <div className="relative z-10 mx-auto w-full max-w-[1550px]">
+      <div className="about-container">
         <div className="about-main-grid">
           <div className="about-content">
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 25,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-                amount: 0.2,
-              }}
-              transition={{
-                duration: 0.65,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
+            <div className="about-heading">
               <span className="about-label">
                 ABOUT
               </span>
@@ -129,47 +142,31 @@ export default function About() {
               <h2 className="about-who">
                 Who I Am
               </h2>
-            </motion.div>
+            </div>
 
-            <motion.h3
-              initial={{
-                opacity: 0,
-                x: -35,
-              }}
-              whileInView={{
-                opacity: 1,
-                x: 0,
-              }}
-              viewport={{
-                once: true,
-                amount: 0.2,
-              }}
-              transition={{
-                duration: 0.75,
-                delay: 0.1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="about-name"
-            >
+            <h3 className="about-name">
               Dimas Aksa Oktapian
-            </motion.h3>
+            </h3>
 
             <motion.p
               initial={{
                 opacity: 0,
-                y: 20,
+                y: 24,
               }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-                amount: 0.2,
-              }}
+              animate={
+                visible
+                  ? {
+                      opacity: 1,
+                      y: 0,
+                    }
+                  : {
+                      opacity: 0,
+                      y: 24,
+                    }
+              }
               transition={{
-                duration: 0.7,
-                delay: 0.2,
+                duration: 1.15,
+                delay: 0.55,
                 ease: [0.22, 1, 0.36, 1],
               }}
               className="about-paragraph"
@@ -177,40 +174,18 @@ export default function About() {
               {paragraph}
             </motion.p>
 
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-                amount: 0.2,
-              }}
-              transition={{
-                duration: 0.65,
-                delay: 0.3,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="mt-8 flex flex-wrap gap-3"
-            >
+            <div className="about-buttons">
               <a
                 href="/cv.pdf"
                 download
-                className="about-cv-button group relative flex items-center gap-2 overflow-hidden rounded-xl border border-purple-300/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[12px] font-semibold text-white shadow-[0_0_20px_rgba(124,58,237,0.14)] transition-transform duration-300 hover:scale-[1.02]"
+                className="about-cv-button"
               >
-                <span className="about-button-shine" />
-
                 <Download
                   size={16}
                   strokeWidth={1.8}
-                  className="relative"
                 />
 
-                <span className="relative">
+                <span>
                   Download CV
                 </span>
               </a>
@@ -219,19 +194,18 @@ export default function About() {
                 href="https://github.com/zero-route"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-2 rounded-xl border border-white/[0.11] bg-white/[0.025] px-5 py-3 font-mono text-[12px] font-semibold text-white/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.045] hover:text-white"
+                className="about-github-button"
               >
                 <Github
                   size={16}
                   strokeWidth={1.7}
-                  className="transition-transform duration-300 group-hover:rotate-[-5deg]"
                 />
 
                 <span>
                   GitHub Project
                 </span>
               </a>
-            </motion.div>
+            </div>
           </div>
 
           <LazyLanyard />
@@ -242,26 +216,12 @@ export default function About() {
             const Icon = card.icon;
 
             return (
-              <motion.div
+              <div
                 key={card.title}
-                initial={{
-                  opacity: 0,
-                  y: 25,
+                className="about-card"
+                style={{
+                  "--card-delay": `${0.8 + index * 0.14}s`,
                 }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                viewport={{
-                  once: true,
-                  amount: 0.15,
-                }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.1,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="about-card group"
               >
                 <div className="about-card-icon">
                   <Icon
@@ -279,24 +239,28 @@ export default function About() {
                     {card.description}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
       </div>
 
       <style jsx>{`
-        .about-background-glow {
-          position: absolute;
-          left: 50%;
-          top: 35%;
-          width: 360px;
-          height: 360px;
-          transform: translate(-50%, -50%);
-          border-radius: 999px;
-          background: rgba(124, 58, 237, 0.025);
-          filter: blur(90px);
-          pointer-events: none;
+        .about-section {
+          position: relative;
+          overflow: hidden;
+          background: #030305;
+          padding: 96px 20px;
+          color: white;
+          contain: layout paint;
+        }
+
+        .about-container {
+          position: relative;
+          z-index: 10;
+          width: 100%;
+          max-width: 1550px;
+          margin: 0 auto;
         }
 
         .about-main-grid {
@@ -309,47 +273,140 @@ export default function About() {
         .about-content {
           position: relative;
           z-index: 10;
-          max-width: 720px;
+          max-width: 760px;
+        }
+
+        .about-heading {
+          opacity: 0;
+          transform: translate3d(0, 24px, 0);
+          transition:
+            opacity 0.8s ease,
+            transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .about-visible .about-heading {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
         }
 
         .about-label {
           display: block;
-          margin-bottom: 12px;
+          margin-bottom: 13px;
           font-family: monospace;
           font-size: 11px;
           font-weight: 600;
-          letter-spacing: 0.3em;
+          letter-spacing: 0.32em;
           text-transform: uppercase;
-          color: rgba(167, 139, 250, 0.72);
+          color: rgba(167, 139, 250, 0.78);
         }
 
         .about-who {
           margin: 0;
           font-family: monospace;
-          font-size: clamp(2rem, 4vw, 3.5rem);
+          font-size: clamp(2.1rem, 4.2vw, 3.8rem);
           font-weight: 500;
           line-height: 1;
-          letter-spacing: -0.05em;
-          color: rgba(255, 255, 255, 0.88);
+          letter-spacing: -0.055em;
+          color: rgba(255, 255, 255, 0.9);
         }
 
         .about-name {
-          margin-top: 20px;
+          margin: 22px 0 0;
           font-family: monospace;
-          font-size: clamp(3.2rem, 6.5vw, 5.8rem);
+          font-size: clamp(3.6rem, 7vw, 6.4rem);
           font-weight: 800;
-          line-height: 0.96;
-          letter-spacing: -0.065em;
+          line-height: 0.94;
+          letter-spacing: -0.07em;
           color: #f4f4f5;
+          opacity: 0;
+          transform: translate3d(-28px, 0, 0);
+          transition:
+            opacity 0.9s ease 0.12s,
+            transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+        }
+
+        .about-visible .about-name {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
         }
 
         .about-paragraph {
-          max-width: 690px;
-          margin-top: 30px;
+          max-width: 700px;
+          margin: 30px 0 0;
           font-family: monospace;
           font-size: 12px;
-          line-height: 1.9;
-          color: rgba(255, 255, 255, 0.46);
+          line-height: 1.95;
+          color: rgba(255, 255, 255, 0.48);
+        }
+
+        .about-buttons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 30px;
+          opacity: 0;
+          transform: translate3d(0, 18px, 0);
+          transition:
+            opacity 0.8s ease 0.8s,
+            transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.8s;
+        }
+
+        .about-visible .about-buttons {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+
+        .about-cv-button,
+        .about-github-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border-radius: 12px;
+          padding: 12px 20px;
+          font-family: monospace;
+          font-size: 12px;
+          font-weight: 600;
+          text-decoration: none;
+          transition:
+            transform 220ms ease,
+            border-color 220ms ease,
+            background 220ms ease,
+            color 220ms ease;
+        }
+
+        .about-cv-button {
+          border: 1px solid rgba(196, 181, 253, 0.3);
+          background: linear-gradient(
+            110deg,
+            #6d28d9,
+            #8b5cf6,
+            #a78bfa
+          );
+          color: white;
+          box-shadow:
+            0 0 20px rgba(124, 58, 237, 0.14);
+        }
+
+        .about-github-button {
+          border: 1px solid rgba(255, 255, 255, 0.11);
+          background: rgba(255, 255, 255, 0.025);
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .about-cv-button:hover,
+        .about-github-button:hover {
+          transform: translate3d(0, -2px, 0);
+        }
+
+        .about-cv-button:hover {
+          box-shadow:
+            0 0 28px rgba(139, 92, 246, 0.22);
+        }
+
+        .about-github-button:hover {
+          border-color: rgba(255, 255, 255, 0.25);
+          background: rgba(255, 255, 255, 0.045);
+          color: white;
         }
 
         .about-lanyard {
@@ -365,43 +422,37 @@ export default function About() {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 16px;
-          margin-top: 40px;
+          margin-top: 36px;
         }
 
         .about-card {
           position: relative;
-          min-height: 195px;
+          min-height: 190px;
           overflow: hidden;
           border: 1px solid rgba(255, 255, 255, 0.07);
           border-radius: 16px;
           padding: 24px;
           background: rgba(255, 255, 255, 0.018);
+          opacity: 0;
+          transform: translate3d(0, 24px, 0);
+          animation: aboutCardReveal 0.8s
+            cubic-bezier(0.22, 1, 0.36, 1)
+            var(--card-delay)
+            forwards;
           transition:
-            transform 280ms ease,
-            border-color 280ms ease,
-            background 280ms ease;
+            transform 220ms ease,
+            border-color 220ms ease,
+            background 220ms ease;
         }
 
-        .about-card::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 1px;
-          background: rgba(167, 139, 250, 0.28);
-          opacity: 0;
-          transition: opacity 280ms ease;
+        .about-visible .about-card {
+          animation-play-state: running;
         }
 
         .about-card:hover {
-          transform: translateY(-3px);
+          transform: translate3d(0, -3px, 0);
           border-color: rgba(167, 139, 250, 0.2);
           background: rgba(255, 255, 255, 0.028);
-        }
-
-        .about-card:hover::before {
-          opacity: 1;
         }
 
         .about-card-icon {
@@ -416,13 +467,13 @@ export default function About() {
           color: rgba(255, 255, 255, 0.7);
           background: rgba(255, 255, 255, 0.02);
           transition:
-            transform 280ms ease,
-            color 280ms ease,
-            border-color 280ms ease;
+            transform 220ms ease,
+            border-color 220ms ease,
+            color 220ms ease;
         }
 
         .about-card:hover .about-card-icon {
-          transform: translateY(-2px);
+          transform: translate3d(0, -2px, 0);
           border-color: rgba(167, 139, 250, 0.22);
           color: rgba(255, 255, 255, 0.92);
         }
@@ -436,46 +487,34 @@ export default function About() {
         }
 
         .about-card p {
-          margin-top: 11px;
+          margin: 11px 0 0;
           font-family: monospace;
           font-size: 11px;
           line-height: 1.8;
           color: rgba(255, 255, 255, 0.4);
         }
 
-        .about-cv-button {
-          isolation: isolate;
-        }
-
-        .about-button-shine {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            110deg,
-            transparent 35%,
-            rgba(255, 255, 255, 0.18) 50%,
-            transparent 65%
-          );
-          transform: translateX(-130%);
-          animation: aboutButtonShine 5s ease-in-out infinite;
-          pointer-events: none;
-        }
-
-        @keyframes aboutButtonShine {
-          0%,
-          70%,
-          100% {
-            transform: translateX(-130%);
+        @keyframes aboutCardReveal {
+          from {
+            opacity: 0;
+            transform: translate3d(0, 24px, 0);
           }
 
-          84% {
-            transform: translateX(130%);
+          to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
           }
         }
 
         @media (min-width: 900px) {
+          .about-section {
+            padding: 128px 40px;
+          }
+
           .about-main-grid {
-            grid-template-columns: minmax(0, 1fr) minmax(420px, 0.82fr);
+            grid-template-columns:
+              minmax(0, 1fr)
+              minmax(420px, 0.82fr);
             gap: 35px;
           }
 
@@ -486,8 +525,14 @@ export default function About() {
         }
 
         @media (min-width: 1200px) {
+          .about-section {
+            padding: 160px 56px;
+          }
+
           .about-main-grid {
-            grid-template-columns: minmax(0, 1fr) minmax(500px, 0.82fr);
+            grid-template-columns:
+              minmax(0, 1fr)
+              minmax(500px, 0.82fr);
             gap: 60px;
           }
 
@@ -505,16 +550,27 @@ export default function About() {
           }
 
           .about-cards {
-            margin-top: 20px;
+            margin-top: 24px;
           }
         }
 
         @media (max-width: 700px) {
+          .about-section {
+            padding: 88px 20px;
+          }
+
+          .about-who {
+            font-size: clamp(2rem, 9vw, 3rem);
+          }
+
           .about-name {
-            font-size: clamp(2.8rem, 11vw, 4rem);
+            margin-top: 18px;
+            font-size: clamp(2.9rem, 12vw, 4.4rem);
+            line-height: 0.98;
           }
 
           .about-paragraph {
+            margin-top: 25px;
             font-size: 11px;
             line-height: 1.85;
           }
@@ -531,14 +587,14 @@ export default function About() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .about-button-shine {
+          .about-heading,
+          .about-name,
+          .about-buttons,
+          .about-card {
             animation: none;
-          }
-
-          .about-card,
-          .about-card-icon,
-          .about-cv-button {
             transition: none;
+            transform: none;
+            opacity: 1;
           }
         }
       `}</style>

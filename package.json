@@ -17,6 +17,8 @@
     "three": "0.160.0",
     "@react-three/fiber": "8.15.19",
     "@react-three/drei": "9.99.0",
+    "@react-three/rapier": "1.5.0",
+    "meshline": "^3.2.0",
     "@supabase/supabase-js": "2.45.4",
     "gsap": "3.12.5"
   },

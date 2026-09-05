@@ -45,6 +45,7 @@ const cards = [
 function LazyLanyard() {
   const containerRef = useRef(null);
   const [visible, setVisible] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const element = containerRef.current;
@@ -64,7 +65,7 @@ function LazyLanyard() {
         }
       },
       {
-        rootMargin: "300px 0px",
+        rootMargin: "800px 0px",
         threshold: 0,
       }
     );
@@ -74,20 +75,30 @@ function LazyLanyard() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!visible) return;
+
+    const timeout = setTimeout(() => setLoaded(true), 60);
+
+    return () => clearTimeout(timeout);
+  }, [visible]);
+
   return (
     <div ref={containerRef} className="about-lanyard">
       {visible && (
-        <Lanyard
-          position={[0, 0, 22]}
-          gravity={[0, -40, 0]}
-          fov={20}
-          transparent
-          frontImage="/images/profile.png"
-          backImage={null}
-          imageFit="cover"
-          lanyardImage="/images/lanyard.png"
-          lanyardWidth={0.8}
-        />
+        <div className={`about-lanyard-inner ${loaded ? "about-lanyard-loaded" : ""}`}>
+          <Lanyard
+            position={[0, 0, 17]}
+            gravity={[0, -40, 0]}
+            fov={18}
+            transparent
+            frontImage="/images/profile.png"
+            backImage={null}
+            imageFit="cover"
+            lanyardImage="/images/lanyard.png"
+            lanyardWidth={0.9}
+          />
+        </div>
       )}
     </div>
   );
@@ -132,11 +143,13 @@ export default function About() {
       className={`about-section ${visible ? "about-visible" : ""}`}
     >
       <div className="about-container">
+        <div className="about-eyebrow">
+          <span className="about-label">ABOUT</span>
+        </div>
+
         <div className="about-main-grid">
           <div className="about-content">
             <div className="about-heading">
-              <span className="about-label">ABOUT</span>
-
               <h2 className="about-who">
                 Who I Am
               </h2>
@@ -257,6 +270,32 @@ export default function About() {
           margin: 0 auto;
         }
 
+        .about-eyebrow {
+          width: 100%;
+          text-align: center;
+          margin-bottom: 28px;
+          opacity: 0;
+          transform: translate3d(0, 14px, 0);
+          transition:
+            opacity 0.8s ease,
+            transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .about-visible .about-eyebrow {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+
+        .about-label {
+          display: inline-block;
+          font-family: monospace;
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 0.38em;
+          text-transform: uppercase;
+          color: rgba(167, 139, 250, 0.82);
+        }
+
         .about-main-grid {
           display: grid;
           grid-template-columns: minmax(0, 1fr);
@@ -283,36 +322,23 @@ export default function About() {
           transform: translate3d(0, 0, 0);
         }
 
-        .about-label {
-          display: block;
-          width: 100%;
-          margin-bottom: 9px;
-          font-family: monospace;
-          font-size: 14px;
-          font-weight: 600;
-          letter-spacing: 0.38em;
-          text-align: center;
-          text-transform: uppercase;
-          color: rgba(167, 139, 250, 0.82);
-        }
-
         .about-who {
           margin: 0;
           font-family: monospace;
-          font-size: clamp(2.1rem, 4.2vw, 3.8rem);
-          font-weight: 500;
-          line-height: 1;
-          letter-spacing: -0.055em;
-          color: rgba(255, 255, 255, 0.9);
+          font-size: clamp(1.9rem, 3.4vw, 3rem);
+          font-weight: 600;
+          line-height: 1.1;
+          letter-spacing: -0.02em;
+          color: rgba(255, 255, 255, 0.88);
         }
 
         .about-name {
-          margin: 11px 0 0;
+          margin: 8px 0 0;
           font-family: monospace;
-          font-size: clamp(3.2rem, 6.2vw, 5.8rem);
-          font-weight: 800;
-          line-height: 0.96;
-          letter-spacing: -0.07em;
+          font-size: clamp(2.8rem, 5.2vw, 4.6rem);
+          font-weight: 700;
+          line-height: 1.05;
+          letter-spacing: -0.025em;
           color: #f4f4f5;
           opacity: 0;
           transform: translate3d(-22px, 0, 0);
@@ -412,8 +438,23 @@ export default function About() {
           z-index: 20;
           width: 100%;
           min-width: 0;
-          min-height: 500px;
+          min-height: 560px;
           pointer-events: auto;
+        }
+
+        .about-lanyard-inner {
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          transform: scale(0.96);
+          transition:
+            opacity 0.7s ease,
+            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .about-lanyard-loaded {
+          opacity: 1;
+          transform: scale(1);
         }
 
         .about-cards {
@@ -512,12 +553,12 @@ export default function About() {
           .about-main-grid {
             grid-template-columns:
               minmax(0, 1fr)
-              minmax(460px, 0.9fr);
+              minmax(500px, 0.95fr);
             gap: 35px;
           }
 
           .about-lanyard {
-            min-height: 560px;
+            min-height: 660px;
             margin-top: -45px;
           }
         }
@@ -530,12 +571,12 @@ export default function About() {
           .about-main-grid {
             grid-template-columns:
               minmax(0, 1fr)
-              minmax(540px, 0.9fr);
+              minmax(580px, 0.95fr);
             gap: 60px;
           }
 
           .about-lanyard {
-            min-height: 620px;
+            min-height: 740px;
             margin-top: -65px;
           }
         }
@@ -543,7 +584,7 @@ export default function About() {
         @media (max-width: 899px) {
           .about-lanyard {
             order: 2;
-            min-height: 500px;
+            min-height: 560px;
             margin-top: 0;
           }
 
@@ -557,20 +598,22 @@ export default function About() {
             padding: 88px 20px;
           }
 
+          .about-eyebrow {
+            margin-bottom: 20px;
+          }
+
           .about-label {
-            margin-bottom: 8px;
-            font-size: 14px;
-            letter-spacing: 0.38em;
+            font-size: 13px;
+            letter-spacing: 0.32em;
           }
 
           .about-who {
-            font-size: clamp(2rem, 9vw, 3rem);
+            font-size: clamp(1.6rem, 6.5vw, 2.1rem);
           }
 
           .about-name {
-            margin-top: 10px;
-            font-size: clamp(2.55rem, 10.5vw, 4rem);
-            line-height: 0.98;
+            margin-top: 8px;
+            font-size: clamp(2.3rem, 8.5vw, 3.2rem);
           }
 
           .about-paragraph {
@@ -590,7 +633,7 @@ export default function About() {
           }
 
           .about-lanyard {
-            min-height: 500px;
+            min-height: 560px;
             margin-top: -5px;
           }
 
@@ -610,7 +653,9 @@ export default function About() {
           .about-heading,
           .about-name,
           .about-buttons,
-          .about-card {
+          .about-card,
+          .about-eyebrow,
+          .about-lanyard-inner {
             animation: none;
             transition: none;
             transform: none;

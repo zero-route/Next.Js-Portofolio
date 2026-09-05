@@ -38,15 +38,15 @@ const BACK_UV_RECT = {
 };
 
 export default function Lanyard({
-  position = [0, 0, 22],
+  position = [0, 0, 17],
   gravity = [0, -40, 0],
-  fov = 20,
+  fov = 18,
   transparent = true,
   frontImage = "/images/profile.png",
   backImage = null,
   imageFit = "cover",
   lanyardImage = "/images/lanyard.png",
-  lanyardWidth = 0.8,
+  lanyardWidth = 0.9,
 }) {
   const [isMobile, setIsMobile] = useState(
     () =>
@@ -101,7 +101,7 @@ export default function Lanyard({
 
         <Physics
           gravity={gravity}
-          timeStep={1 / 30}
+          timeStep={1 / 60}
           interpolate
         >
           <Band
@@ -126,7 +126,7 @@ function Band({
   backImage = null,
   imageFit = "cover",
   lanyardImage = "/images/lanyard.png",
-  lanyardWidth = 0.8,
+  lanyardWidth = 0.9,
 }) {
   const band = useRef();
   const fixed = useRef();
@@ -159,9 +159,9 @@ function Band({
     () => ({
       type: "dynamic",
       canSleep: true,
-      colliders: false,
       angularDamping: 5,
       linearDamping: 5,
+      colliders: false,
     }),
     []
   );
@@ -546,7 +546,7 @@ function Band({
           />
 
           <group
-            scale={3.25}
+            scale={4}
             position={[
               0,
               -1.2,

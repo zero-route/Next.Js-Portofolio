@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Download,
@@ -26,56 +27,69 @@ const cards = [
     description:
       "Building reliable, secure, and scalable systems with a strong focus on engineering fundamentals.",
     icon: Shield,
-    type: "bloom",
   },
   {
     title: "Tech Stack",
     description:
       "Working across modern web technologies, backend systems, databases, networking, and development tooling.",
     icon: Layers3,
-    type: "pulse",
   },
   {
     title: "Currently Building",
     description:
       "Exploring new ideas around automation, AI, cybersecurity, robotics, and full-stack engineering.",
     icon: Rocket,
-    type: "float",
   },
 ];
 
-function TypingText({ text }) {
+function LazyLanyard() {
+  const containerRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const element = containerRef.current;
+
+    if (!element) return;
+
+    if (!("IntersectionObserver" in window)) {
+      setVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: "500px 0px",
+        threshold: 0,
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <motion.p
-      initial="hidden"
-      whileInView="visible"
-      viewport={{
-        once: true,
-        amount: 0.35,
-      }}
-      className="about-paragraph"
-    >
-      {text.split("").map((char, index) => (
-        <motion.span
-          key={`${char}-${index}`}
-          variants={{
-            hidden: {
-              opacity: 0,
-            },
-            visible: {
-              opacity: 1,
-            },
-          }}
-          transition={{
-            duration: 0.015,
-            delay: 0.8 + index * 0.012,
-            ease: "linear",
-          }}
-        >
-          {char}
-        </motion.span>
-      ))}
-    </motion.p>
+    <div ref={containerRef} className="about-lanyard">
+      {visible && (
+        <Lanyard
+          position={[0, 0, 30]}
+          gravity={[0, -40, 0]}
+          fov={20}
+          transparent
+          frontImage="/images/profile.png"
+          backImage={null}
+          imageFit="cover"
+          lanyardImage="/images/lanyard.png"
+  lanyardWidth={0.8}
+/>
+      )}
+    </div>
   );
 }
 
@@ -85,104 +99,15 @@ export default function About() {
       id="about"
       className="relative overflow-hidden bg-[#030305] px-5 py-24 text-white sm:px-7 sm:py-32 lg:px-10 lg:py-40 xl:px-14"
     >
-      <div className="pointer-events-none absolute left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-purple-600/[0.035] blur-[140px]" />
+      <div className="about-background-glow" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1550px]">
         <div className="about-main-grid">
           <div className="about-content">
             <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{
-                once: true,
-                amount: 0.35,
-              }}
-              className="overflow-hidden"
-            >
-              <motion.h2
-                variants={{
-                  hidden: {
-                    opacity: 0,
-                    y: 45,
-                  },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      duration: 0.8,
-                      ease: [0.22, 1, 0.36, 1],
-                    },
-                  },
-                }}
-                className="font-mono text-sm font-medium uppercase tracking-[0.28em] text-purple-300/75 sm:text-base"
-              >
-                {["Who", "I", "Am"].map((word, index) => (
-                  <motion.span
-                    key={word}
-                    initial={{
-                      opacity: 0,
-                      y: 30,
-                    }}
-                    whileInView={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    viewport={{
-                      once: true,
-                    }}
-                    transition={{
-                      duration: 0.7,
-                      delay: index * 0.12,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    className="mr-2 inline-block"
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-              </motion.h2>
-            </motion.div>
-
-            <motion.h3
-              initial="hidden"
-              whileInView="visible"
-              viewport={{
-                once: true,
-                amount: 0.35,
-              }}
-              className="about-name"
-            >
-              {["Dimas", "Aksa", "Oktapian"].map((word, index) => (
-                <motion.span
-                  key={word}
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      x: -45,
-                    },
-                    visible: {
-                      opacity: 1,
-                      x: 0,
-                      transition: {
-                        duration: 0.85,
-                        delay: 0.25 + index * 0.2,
-                        ease: [0.22, 1, 0.36, 1],
-                      },
-                    },
-                  }}
-                  className="mr-3 inline-block"
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </motion.h3>
-
-            <TypingText text={paragraph} />
-
-            <motion.div
               initial={{
                 opacity: 0,
-                y: 35,
+                y: 25,
               }}
               whileInView={{
                 opacity: 1,
@@ -190,11 +115,84 @@ export default function About() {
               }}
               viewport={{
                 once: true,
-                amount: 0.35,
+                amount: 0.2,
               }}
               transition={{
-                duration: 0.85,
-                delay: 2.1,
+                duration: 0.65,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <span className="about-label">
+                ABOUT
+              </span>
+
+              <h2 className="about-who">
+                Who I Am
+              </h2>
+            </motion.div>
+
+            <motion.h3
+              initial={{
+                opacity: 0,
+                x: -35,
+              }}
+              whileInView={{
+                opacity: 1,
+                x: 0,
+              }}
+              viewport={{
+                once: true,
+                amount: 0.2,
+              }}
+              transition={{
+                duration: 0.75,
+                delay: 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="about-name"
+            >
+              Dimas Aksa Oktapian
+            </motion.h3>
+
+            <motion.p
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+                amount: 0.2,
+              }}
+              transition={{
+                duration: 0.7,
+                delay: 0.2,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="about-paragraph"
+            >
+              {paragraph}
+            </motion.p>
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+                amount: 0.2,
+              }}
+              transition={{
+                duration: 0.65,
+                delay: 0.3,
                 ease: [0.22, 1, 0.36, 1],
               }}
               className="mt-8 flex flex-wrap gap-3"
@@ -202,9 +200,9 @@ export default function About() {
               <a
                 href="/cv.pdf"
                 download
-                className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-purple-300/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[12px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,0.18)] transition-all duration-300 hover:scale-[1.025] hover:shadow-[0_0_35px_rgba(139,92,246,0.3)]"
+                className="about-cv-button group relative flex items-center gap-2 overflow-hidden rounded-xl border border-purple-300/30 bg-gradient-to-r from-[#6d28d9] via-[#8b5cf6] to-[#c4b5fd] px-5 py-3 font-mono text-[12px] font-semibold text-white shadow-[0_0_20px_rgba(124,58,237,0.14)] transition-transform duration-300 hover:scale-[1.02]"
               >
-                <span className="about-button-shine absolute inset-0" />
+                <span className="about-button-shine" />
 
                 <Download
                   size={16}
@@ -221,32 +219,22 @@ export default function About() {
                 href="https://github.com/zero-route"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-2 rounded-xl border border-white/[0.13] bg-white/[0.035] px-5 py-3 font-mono text-[12px] font-semibold text-white/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.07] hover:text-white hover:shadow-[0_0_25px_rgba(139,92,246,0.08)]"
+                className="group flex items-center gap-2 rounded-xl border border-white/[0.11] bg-white/[0.025] px-5 py-3 font-mono text-[12px] font-semibold text-white/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.045] hover:text-white"
               >
                 <Github
                   size={16}
                   strokeWidth={1.7}
-                  className="transition-transform duration-300 group-hover:rotate-[-6deg]"
+                  className="transition-transform duration-300 group-hover:rotate-[-5deg]"
                 />
 
-                <span>GitHub Project</span>
+                <span>
+                  GitHub Project
+                </span>
               </a>
             </motion.div>
           </div>
 
-          <div className="about-lanyard">
-            <Lanyard
-              position={[0, 0, 30]}
-              gravity={[0, -40, 0]}
-              fov={20}
-              transparent
-              frontImage={null}
-              backImage={null}
-              imageFit="cover"
-              lanyardImage="/images/lanyard.png"
-              lanyardWidth={1}
-            />
-          </div>
+          <LazyLanyard />
         </div>
 
         <div className="about-cards">
@@ -258,7 +246,7 @@ export default function About() {
                 key={card.title}
                 initial={{
                   opacity: 0,
-                  y: 45,
+                  y: 25,
                 }}
                 whileInView={{
                   opacity: 1,
@@ -266,79 +254,28 @@ export default function About() {
                 }}
                 viewport={{
                   once: true,
-                  amount: 0.25,
+                  amount: 0.15,
                 }}
                 transition={{
-                  duration: 0.8,
-                  delay: index * 0.18,
+                  duration: 0.6,
+                  delay: index * 0.1,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className="about-card group"
               >
-                <motion.div
-                  initial={
-                    card.type === "bloom"
-                      ? {
-                          opacity: 0,
-                          scale: 0.6,
-                          filter: "blur(8px)",
-                        }
-                      : card.type === "pulse"
-                        ? {
-                            opacity: 0,
-                            scale: 0.6,
-                          }
-                        : {
-                            opacity: 0,
-                            y: 12,
-                          }
-                  }
-                  whileInView={
-                    card.type === "bloom"
-                      ? {
-                          opacity: [0, 1, 1, 0.8, 1],
-                          scale: [0.6, 1.08, 1, 1.04, 1],
-                          filter: [
-                            "blur(8px)",
-                            "blur(0px)",
-                            "blur(0px)",
-                            "blur(0px)",
-                            "blur(0px)",
-                          ],
-                        }
-                      : card.type === "pulse"
-                        ? {
-                            opacity: 1,
-                            scale: [0.6, 1.15, 1, 1.04, 1],
-                          }
-                        : {
-                            opacity: 1,
-                            y: [12, -5, 0],
-                          }
-                  }
-                  viewport={{
-                    once: true,
-                    amount: 0.35,
-                  }}
-                  transition={{
-                    duration: 1.05,
-                    delay: 0.25 + index * 0.18,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className={`about-card-icon about-icon-${card.type}`}
-                >
+                <div className="about-card-icon">
                   <Icon
-                    size={24}
+                    size={23}
                     strokeWidth={1.35}
                   />
-                </motion.div>
+                </div>
 
-                <div className="relative z-10">
-                  <h4 className="font-mono text-sm font-semibold text-white/90">
+                <div>
+                  <h4>
                     {card.title}
                   </h4>
 
-                  <p className="mt-3 font-mono text-[11px] leading-6 text-white/45 sm:text-xs sm:leading-6">
+                  <p>
                     {card.description}
                   </p>
                 </div>
@@ -349,11 +286,24 @@ export default function About() {
       </div>
 
       <style jsx>{`
+        .about-background-glow {
+          position: absolute;
+          left: 50%;
+          top: 35%;
+          width: 360px;
+          height: 360px;
+          transform: translate(-50%, -50%);
+          border-radius: 999px;
+          background: rgba(124, 58, 237, 0.025);
+          filter: blur(90px);
+          pointer-events: none;
+        }
+
         .about-main-grid {
           display: grid;
           grid-template-columns: minmax(0, 1fr);
           align-items: center;
-          gap: 10px;
+          gap: 0;
         }
 
         .about-content {
@@ -362,13 +312,34 @@ export default function About() {
           max-width: 720px;
         }
 
-        .about-name {
-          margin-top: 18px;
+        .about-label {
+          display: block;
+          margin-bottom: 12px;
           font-family: monospace;
-          font-size: clamp(2.6rem, 6vw, 5rem);
-          font-weight: 900;
-          line-height: 0.98;
-          letter-spacing: -0.075em;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          color: rgba(167, 139, 250, 0.72);
+        }
+
+        .about-who {
+          margin: 0;
+          font-family: monospace;
+          font-size: clamp(2rem, 4vw, 3.5rem);
+          font-weight: 500;
+          line-height: 1;
+          letter-spacing: -0.05em;
+          color: rgba(255, 255, 255, 0.88);
+        }
+
+        .about-name {
+          margin-top: 20px;
+          font-family: monospace;
+          font-size: clamp(3.2rem, 6.5vw, 5.8rem);
+          font-weight: 800;
+          line-height: 0.96;
+          letter-spacing: -0.065em;
           color: #f4f4f5;
         }
 
@@ -377,51 +348,38 @@ export default function About() {
           margin-top: 30px;
           font-family: monospace;
           font-size: 12px;
-          line-height: 2;
-          color: rgba(255, 255, 255, 0.48);
-        }
-
-        .about-paragraph span {
-          white-space: pre-wrap;
+          line-height: 1.9;
+          color: rgba(255, 255, 255, 0.46);
         }
 
         .about-lanyard {
           position: relative;
           z-index: 20;
+          width: 100%;
           min-width: 0;
+          min-height: 430px;
           pointer-events: auto;
         }
 
         .about-cards {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 18px;
-          margin-top: 30px;
+          gap: 16px;
+          margin-top: 40px;
         }
 
         .about-card {
           position: relative;
-          min-height: 205px;
+          min-height: 195px;
           overflow: hidden;
-          border: 1px solid rgba(255, 255, 255, 0.075);
-          border-radius: 18px;
-          padding: 26px;
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255, 255, 255, 0.045),
-              rgba(255, 255, 255, 0.018)
-            ),
-            rgba(8, 8, 13, 0.72);
-          box-shadow:
-            0 20px 55px rgba(0, 0, 0, 0.24),
-            inset 0 1px 0 rgba(255, 255, 255, 0.025);
-          backdrop-filter: blur(18px);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 16px;
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.018);
           transition:
-            transform 350ms ease,
-            border-color 350ms ease,
-            box-shadow 350ms ease,
-            background 350ms ease;
+            transform 280ms ease,
+            border-color 280ms ease,
+            background 280ms ease;
         }
 
         .about-card::before {
@@ -431,29 +389,15 @@ export default function About() {
           top: 0;
           width: 100%;
           height: 1px;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(167, 139, 250, 0.32),
-            transparent
-          );
+          background: rgba(167, 139, 250, 0.28);
           opacity: 0;
-          transition: opacity 350ms ease;
+          transition: opacity 280ms ease;
         }
 
         .about-card:hover {
-          transform: translateY(-4px);
-          border-color: rgba(167, 139, 250, 0.25);
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255, 255, 255, 0.055),
-              rgba(139, 92, 246, 0.025)
-            ),
-            rgba(8, 8, 13, 0.82);
-          box-shadow:
-            0 24px 65px rgba(0, 0, 0, 0.3),
-            0 0 35px rgba(139, 92, 246, 0.07);
+          transform: translateY(-3px);
+          border-color: rgba(167, 139, 250, 0.2);
+          background: rgba(255, 255, 255, 0.028);
         }
 
         .about-card:hover::before {
@@ -461,113 +405,140 @@ export default function About() {
         }
 
         .about-card-icon {
-          position: relative;
-          z-index: 10;
           display: flex;
-          width: 46px;
-          height: 46px;
+          width: 42px;
+          height: 42px;
           align-items: center;
           justify-content: center;
-          margin-bottom: 25px;
-          border: 1px solid rgba(255, 255, 255, 0.09);
-          border-radius: 13px;
-          color: rgba(255, 255, 255, 0.75);
-          background: rgba(255, 255, 255, 0.025);
-          box-shadow: 0 0 0 rgba(139, 92, 246, 0);
+          margin-bottom: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          color: rgba(255, 255, 255, 0.7);
+          background: rgba(255, 255, 255, 0.02);
           transition:
-            transform 350ms ease,
-            border-color 350ms ease,
-            color 350ms ease,
-            box-shadow 350ms ease;
+            transform 280ms ease,
+            color 280ms ease,
+            border-color 280ms ease;
         }
 
         .about-card:hover .about-card-icon {
-          border-color: rgba(167, 139, 250, 0.28);
-          color: rgba(255, 255, 255, 0.95);
-          box-shadow: 0 0 25px rgba(139, 92, 246, 0.1);
+          transform: translateY(-2px);
+          border-color: rgba(167, 139, 250, 0.22);
+          color: rgba(255, 255, 255, 0.92);
         }
 
-        .about-card:hover .about-icon-bloom {
-          transform: scale(1.04);
+        .about-card h4 {
+          margin: 0;
+          font-family: monospace;
+          font-size: 13px;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.88);
         }
 
-        .about-card:hover .about-icon-pulse {
-          transform: scale(1.06);
+        .about-card p {
+          margin-top: 11px;
+          font-family: monospace;
+          font-size: 11px;
+          line-height: 1.8;
+          color: rgba(255, 255, 255, 0.4);
         }
 
-        .about-card:hover .about-icon-float {
-          transform: translateY(-3px);
+        .about-cv-button {
+          isolation: isolate;
         }
 
         .about-button-shine {
+          position: absolute;
+          inset: 0;
           background: linear-gradient(
             110deg,
-            transparent 25%,
-            rgba(255, 255, 255, 0.22) 48%,
-            transparent 70%
+            transparent 35%,
+            rgba(255, 255, 255, 0.18) 50%,
+            transparent 65%
           );
-          transform: translateX(-120%);
-          animation: aboutButtonShine 4.5s ease-in-out infinite;
+          transform: translateX(-130%);
+          animation: aboutButtonShine 5s ease-in-out infinite;
+          pointer-events: none;
         }
 
         @keyframes aboutButtonShine {
           0%,
-          65%,
+          70%,
           100% {
-            transform: translateX(-120%);
+            transform: translateX(-130%);
           }
 
-          82% {
-            transform: translateX(120%);
+          84% {
+            transform: translateX(130%);
           }
         }
 
         @media (min-width: 900px) {
           .about-main-grid {
             grid-template-columns: minmax(0, 1fr) minmax(420px, 0.82fr);
-            gap: 40px;
+            gap: 35px;
           }
 
           .about-lanyard {
-            margin-top: -40px;
+            min-height: 500px;
+            margin-top: -35px;
           }
         }
 
         @media (min-width: 1200px) {
           .about-main-grid {
             grid-template-columns: minmax(0, 1fr) minmax(500px, 0.82fr);
-            gap: 65px;
+            gap: 60px;
           }
 
           .about-lanyard {
-            margin-top: -70px;
+            min-height: 560px;
+            margin-top: -60px;
           }
         }
 
         @media (max-width: 899px) {
           .about-lanyard {
             order: 2;
-            margin-top: -25px;
+            min-height: 420px;
+            margin-top: -10px;
           }
 
           .about-cards {
-            margin-top: 10px;
+            margin-top: 20px;
           }
         }
 
         @media (max-width: 700px) {
+          .about-name {
+            font-size: clamp(2.8rem, 11vw, 4rem);
+          }
+
+          .about-paragraph {
+            font-size: 11px;
+            line-height: 1.85;
+          }
+
           .about-cards {
             grid-template-columns: 1fr;
             gap: 12px;
           }
 
           .about-card {
-            min-height: 180px;
+            min-height: 165px;
+            padding: 21px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .about-button-shine {
+            animation: none;
           }
 
-          .about-paragraph {
-            font-size: 11px;
-            line-height: 1.9;
+          .about-card,
+          .about-card-icon,
+          .about-cv-button {
+            transition: none;
           }
         }
       `}</style>

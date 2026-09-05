@@ -39,10 +39,10 @@ export default function Lanyard({
   gravity = [0, -40, 0],
   fov = 20,
   transparent = true,
-  frontImage = "public/images/profile.png",
+  frontImage = "/public/images/profile.png",
   backImage = null,
   imageFit = "cover",
-  lanyardImage = "public/images/lanyard.png",
+  lanyardImage = "/public/images/lanyard.png", 
   lanyardWidth = 1,
 }) {
   const [isMobile, setIsMobile] = useState(

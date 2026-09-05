@@ -1,16 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { Download, Github, Shield, Layers3, Rocket } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-
-const Lanyard = dynamic(
-  () => import("@/components/reactbits/lanyard/Lanyard"),
-  {
-    ssr: false,
-  }
-);
 
 const paragraph =
   "I build secure, scalable, and modern digital systems by combining software engineering, infrastructure, automation, networking, and security into one technical workflow.";
@@ -236,13 +228,7 @@ export default function About() {
             }}
             className="lanyard-layer"
           >
-            <Lanyard
-              position={[0, 0, 20]}
-              gravity={[0, -40, 0]}
-              frontImage="/images/profile.jpg"
-              backImage="/images/lanyard.png"
-              lanyardWidth={0.055}
-            />
+            <div className="h-full w-full" />
           </motion.div>
         </div>
 
@@ -277,10 +263,7 @@ export default function About() {
                 <div
                   className={`about-icon about-icon-${item.type} mb-6 flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.09] bg-white/[0.025] text-white/60`}
                 >
-                  <Icon
-                    size={20}
-                    strokeWidth={1.6}
-                  />
+                  <Icon size={20} strokeWidth={1.6} />
                 </div>
 
                 <h3 className="font-mono text-sm font-semibold text-white/90">

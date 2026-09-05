@@ -88,9 +88,9 @@ function LazyLanyard() {
       {visible && (
         <div className={`about-lanyard-inner ${loaded ? "about-lanyard-loaded" : ""}`}>
           <Lanyard
-            position={[0, 0, 17]}
+            position={[0, 0.6, 19]}
             gravity={[0, -40, 0]}
-            fov={18}
+            fov={23}
             transparent
             frontImage="/images/profile.png"
             backImage={null}
@@ -289,11 +289,11 @@ export default function About() {
         .about-label {
           display: inline-block;
           font-family: monospace;
-          font-size: 14px;
-          font-weight: 600;
-          letter-spacing: 0.38em;
+          font-size: 18px;
+          font-weight: 700;
+          letter-spacing: 0.4em;
           text-transform: uppercase;
-          color: rgba(167, 139, 250, 0.82);
+          color: rgba(167, 139, 250, 0.88);
         }
 
         .about-main-grid {
@@ -323,7 +323,7 @@ export default function About() {
         }
 
         .about-who {
-          margin: 0;
+          margin: 0 0 10px;
           font-family: monospace;
           font-size: clamp(1.9rem, 3.4vw, 3rem);
           font-weight: 600;
@@ -333,11 +333,11 @@ export default function About() {
         }
 
         .about-name {
-          margin: 8px 0 0;
+          margin: 0;
           font-family: monospace;
           font-size: clamp(2.8rem, 5.2vw, 4.6rem);
           font-weight: 700;
-          line-height: 1.05;
+          line-height: 1.12;
           letter-spacing: -0.025em;
           color: #f4f4f5;
           opacity: 0;
@@ -354,7 +354,7 @@ export default function About() {
 
         .about-paragraph {
           max-width: 700px;
-          margin: 42px 0 0;
+          margin: 58px 0 0;
           font-family: monospace;
           font-size: 12px;
           line-height: 1.95;
@@ -438,7 +438,7 @@ export default function About() {
           z-index: 20;
           width: 100%;
           min-width: 0;
-          min-height: 560px;
+          min-height: 640px;
           pointer-events: auto;
         }
 
@@ -558,7 +558,7 @@ export default function About() {
           }
 
           .about-lanyard {
-            min-height: 660px;
+            min-height: 780px;
             margin-top: -45px;
           }
         }
@@ -576,7 +576,7 @@ export default function About() {
           }
 
           .about-lanyard {
-            min-height: 740px;
+            min-height: 860px;
             margin-top: -65px;
           }
         }
@@ -584,7 +584,7 @@ export default function About() {
         @media (max-width: 899px) {
           .about-lanyard {
             order: 2;
-            min-height: 560px;
+            min-height: 640px;
             margin-top: 0;
           }
 
@@ -603,8 +603,8 @@ export default function About() {
           }
 
           .about-label {
-            font-size: 13px;
-            letter-spacing: 0.32em;
+            font-size: 15px;
+            letter-spacing: 0.34em;
           }
 
           .about-who {
@@ -633,7 +633,7 @@ export default function About() {
           }
 
           .about-lanyard {
-            min-height: 560px;
+            min-height: 620px;
             margin-top: -5px;
           }
 

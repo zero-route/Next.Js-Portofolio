@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
@@ -88,9 +88,9 @@ function LazyLanyard() {
       {visible && (
         <div className={`about-lanyard-inner ${loaded ? "about-lanyard-loaded" : ""}`}>
           <Lanyard
-            position={[0, 0.5, 15]}
+            position={[0, 1.2, 13]}
             gravity={[0, -40, 0]}
-            fov={26}
+            fov={28}
             transparent
             frontImage="/images/profile.png"
             backImage={null}
@@ -437,10 +437,11 @@ export default function About() {
           position: relative;
           z-index: 20;
           width: 100%;
-          max-width: 420px;
+          max-width: 340px;
+          aspect-ratio: 3 / 4;
+          height: auto;
+          min-height: 0;
           margin: 0 auto;
-          min-width: 0;
-          min-height: 600px;
           pointer-events: auto;
         }
 
@@ -560,9 +561,9 @@ export default function About() {
           }
 
           .about-lanyard {
-            max-width: 460px;
+            max-width: 360px;
+            aspect-ratio: 3 / 4.4;
             margin: 0 0 0 auto;
-            min-height: 700px;
             margin-top: -30px;
           }
         }
@@ -580,9 +581,9 @@ export default function About() {
           }
 
           .about-lanyard {
-            max-width: 500px;
+            max-width: 400px;
+            aspect-ratio: 3 / 4.4;
             margin: 0 0 0 auto;
-            min-height: 760px;
             margin-top: -40px;
           }
         }
@@ -590,9 +591,9 @@ export default function About() {
         @media (max-width: 899px) {
           .about-lanyard {
             order: 2;
-            max-width: 380px;
+            max-width: 340px;
+            aspect-ratio: 3 / 4;
             margin: 0 auto;
-            min-height: 560px;
           }
 
           .about-cards {
@@ -640,8 +641,8 @@ export default function About() {
           }
 
           .about-lanyard {
-            max-width: 300px;
-            min-height: 480px;
+            max-width: 260px;
+            aspect-ratio: 3 / 4;
             margin: -5px auto 0;
           }
 

@@ -38,9 +38,9 @@ const BACK_UV_RECT = {
 };
 
 export default function Lanyard({
-  position = [0, 0.5, 15],
+  position = [0, 1.2, 13],
   gravity = [0, -40, 0],
-  fov = 26,
+  fov = 28,
   transparent = true,
   frontImage = "/images/profile.png",
   backImage = null,
@@ -546,7 +546,7 @@ function Band({
           />
 
           <group
-            scale={5}
+            scale={5.2}
             position={[
               0,
               -1.2,

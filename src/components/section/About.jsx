@@ -88,9 +88,9 @@ function LazyLanyard() {
       {visible && (
         <div className={`about-lanyard-inner ${loaded ? "about-lanyard-loaded" : ""}`}>
           <Lanyard
-            position={[0, 0, 17]}
+            position={[0, 0, 12]}
             gravity={[0, -40, 0]}
-            fov={22}
+            fov={30}
             transparent
             frontImage="/images/profile.png"
             backImage={null}
@@ -323,21 +323,21 @@ export default function About() {
         }
 
         .about-who {
-          margin: 0 0 6px;
+          margin: 0;
           font-family: monospace;
           font-size: clamp(1.9rem, 3.4vw, 3rem);
           font-weight: 600;
-          line-height: 1.1;
+          line-height: 1;
           letter-spacing: -0.02em;
           color: rgba(255, 255, 255, 0.88);
         }
 
         .about-name {
-          margin: 0;
+          margin: 2px 0 0;
           font-family: monospace;
           font-size: clamp(2.8rem, 5.2vw, 4.6rem);
           font-weight: 700;
-          line-height: 1.12;
+          line-height: 1;
           letter-spacing: -0.025em;
           color: #f4f4f5;
           opacity: 0;

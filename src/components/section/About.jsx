@@ -85,7 +85,7 @@ function LazyLanyard() {
           frontImage="/images/profile.png"
           backImage={null}
           imageFit="cover"
-          lanyardImage="/public/images/lanyard.png"
+          lanyardImage="/images/lanyard.png"
           lanyardWidth={0.8}
         />
       )}

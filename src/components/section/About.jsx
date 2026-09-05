@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
@@ -88,9 +88,9 @@ function LazyLanyard() {
       {visible && (
         <div className={`about-lanyard-inner ${loaded ? "about-lanyard-loaded" : ""}`}>
           <Lanyard
-            position={[0, 0.6, 19]}
+            position={[0, 0.5, 15]}
             gravity={[0, -40, 0]}
-            fov={23}
+            fov={26}
             transparent
             frontImage="/images/profile.png"
             backImage={null}
@@ -323,7 +323,7 @@ export default function About() {
         }
 
         .about-who {
-          margin: 0 0 10px;
+          margin: 0 0 6px;
           font-family: monospace;
           font-size: clamp(1.9rem, 3.4vw, 3rem);
           font-weight: 600;
@@ -354,7 +354,7 @@ export default function About() {
 
         .about-paragraph {
           max-width: 700px;
-          margin: 58px 0 0;
+          margin: 32px 0 0;
           font-family: monospace;
           font-size: 12px;
           line-height: 1.95;
@@ -437,8 +437,10 @@ export default function About() {
           position: relative;
           z-index: 20;
           width: 100%;
+          max-width: 420px;
+          margin: 0 auto;
           min-width: 0;
-          min-height: 640px;
+          min-height: 600px;
           pointer-events: auto;
         }
 
@@ -558,8 +560,10 @@ export default function About() {
           }
 
           .about-lanyard {
-            min-height: 780px;
-            margin-top: -45px;
+            max-width: 460px;
+            margin: 0 0 0 auto;
+            min-height: 700px;
+            margin-top: -30px;
           }
         }
 
@@ -576,16 +580,19 @@ export default function About() {
           }
 
           .about-lanyard {
-            min-height: 860px;
-            margin-top: -65px;
+            max-width: 500px;
+            margin: 0 0 0 auto;
+            min-height: 760px;
+            margin-top: -40px;
           }
         }
 
         @media (max-width: 899px) {
           .about-lanyard {
             order: 2;
-            min-height: 640px;
-            margin-top: 0;
+            max-width: 380px;
+            margin: 0 auto;
+            min-height: 560px;
           }
 
           .about-cards {
@@ -633,8 +640,9 @@ export default function About() {
           }
 
           .about-lanyard {
-            min-height: 620px;
-            margin-top: -5px;
+            max-width: 300px;
+            min-height: 480px;
+            margin: -5px auto 0;
           }
 
           .about-cards {

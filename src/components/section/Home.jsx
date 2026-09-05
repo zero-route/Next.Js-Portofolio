@@ -157,7 +157,13 @@ export default function Home() {
       return;
     }
 
+    setMusicSearchOpen(false);
     setVinylOpen(true);
+  };
+
+  const openMusicSearch = () => {
+    setVinylOpen(false);
+    setMusicSearchOpen(true);
   };
 
   const introIcons = [Bot, Music2];
@@ -224,7 +230,7 @@ export default function Home() {
                       }
 
                       if (isMusicIcon) {
-                        openVinylPlayer();
+                        openMusicSearch();
                       }
                     }}
                     variants={{
@@ -239,7 +245,7 @@ export default function Home() {
                     aria-label={
                       isBotIcon
                         ? "Open Astrea AI"
-                        : "Open music player"
+                        : "Open music search"
                     }
                     className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.025] transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/30 hover:bg-purple-500/[0.08] hover:shadow-[0_8px_25px_rgba(139,92,246,0.15)] sm:h-11 sm:w-11"
                   >
